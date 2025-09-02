@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Contact | Ads.cash</title>
+  <link rel="stylesheet" href="assets/vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="shortcut icon" href="assets/images/favicon.png" />
+</head>
+
+<body>
+  <div class="container-scroller">
+  <%- include('ledger/sidebar', { currentPage: 'referrals' }) %>
+  <%- include('ledger/sidebarMini') %>
+  <div class="container-fluid page-body-wrapper">
+    <div class="main-panel-noheader">
+      <div class="content-wrapper">
+        <div class="page-header">
+          <h3 class="page-title"> Referrals </h3>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="./operator">Cash</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Referrals</li>
+            </ol>
+          </nav>
+        </div>
+        <div class="col-xl-12 col-sm-6 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-9">
+                  <div class="d-flex align-items-center align-self-start">
+                    <i class="icon-md mdi mdi-link-variant text-primary ml-auto"></i>
+                    <h3 class="mb-0">&nbsp;&nbsp;&nbsp;Your referral link is: <a href="https://ads.cash?ref=<%= user.PID %>" 
+                        target="_blank"><b>https://ads.cash?ref=<%= user.PID %></b></a></h3>
+                    <p class="text-success ms-2 mb-0 font-weight-medium"></p>
+                  </div>
+                </div>
+              </div>
+              <h6 class="text-muted font-weight-normal">Invite new users with your link to recieve 12% of their earnings for life!.</h6>
+            </div>
+          </div>
+        </div>
+        <%- include('ledger/userReferrals') %>
+      </div>
+      <%- include('ledger/footer') %>
+    </div>
+  </div>
+  </div>
+  <script src="assets/vendors/js/vendor.bundle.base.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    const fileInput = document.getElementById('ticketFile');
+  </script>
+  <script src="assets/js/fileUpload.js"></script>
+</body>
+
+</html>

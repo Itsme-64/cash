@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Contact | Ads.cash</title>
+  <link rel="stylesheet" href="assets/vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="shortcut icon" href="assets/images/favicon.png" />
+</head>
+
+<body>
+  <div class="container-scroller">
+  <%- include('ledger/sidebar', { currentPage: 'tickets' }) %>
+  <%- include('ledger/sidebarMini') %>
+  <div class="container-fluid page-body-wrapper">
+    <div class="main-panel-noheader">
+      <div class="content-wrapper">
+        <div class="page-header">
+          <h3 class="page-title"> Contact </h3>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="./operator">Cash</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Contact</li>
+            </ol>
+          </nav>
+        </div>
+        <div class="col-xl-12 col-sm-6 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-9">
+                  <div class="d-flex align-items-center align-self-start">
+                    <i class="icon-md mdi mdi-comment-alert-outline text-warning ml-auto"></i>
+                    <h3 class="mb-0">&nbsp;&nbsp;&nbsp;For better & faster help, please join our <a
+                        href="https://discord.gg/dhUzNMmVpb" target="_blank">Discord server</a>.</h3>
+                    <p class="text-success ms-2 mb-0 font-weight-medium"></p>
+                  </div>
+                </div>
+              </div>
+              <h6 class="text-muted font-weight-normal">Ask questions in the general chat, or create a ticket in
+                the #ticket channel.</h6>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Create a new ticket</h4>
+                <form class="forms-sample" autocomplete="off" action="/ticket" method="POST"
+                  enctype="multipart/form-data">
+                  <div class="form-group" id="title">
+                    <input type="text" class="form-control" id="ticketTitle" name="ticketTitle" placeholder="Title">
+                  </div>
+                  <div class="form-group" id="ticket-body">
+                    <textarea class="form-control" id="ticketBody" name="ticketBody" placeholder="body" rows="10"></textarea>
+                  </div>
+                  <!-- <div class="form-group">
+                    <label>Upload a file [optional]</label>
+                    <div class="input-group d-flex align-items-center">
+                      <input type="text" class="form-control file-upload-info" id="file-name-display" disabled
+                        placeholder="Upload an image, screenshot, or PDF file">
+                      <input type="file" id="ticketFile" name="ticketFile" class="d-none">
+                      <button type="button" class="btn btn-primary ms-2" id="upload-btn">Upload</button>
+                    </div>
+                  </div> -->
+                  <h6 class="text-muted font-weight-normal">
+                    Please allow up to 5 business days for a response.<br>
+                    ^ Tickets are sorted by oldest first so bumping will <b>not</b> improve response time, thank
+                    you.
+                  </h6><br>
+                  <button type="submit" class="btn btn-primary me-2">Send</button>
+                  <button class="btn btn-dark">Clear</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <%- include('ledger/userTickets') %>
+      </div>
+      <%- include('ledger/footer') %>
+    </div>
+  </div>
+  </div>
+  <script src="assets/vendors/js/vendor.bundle.base.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    const fileInput = document.getElementById('ticketFile');
+  </script>
+  <script src="assets/js/fileUpload.js"></script>
+</body>
+
+</html>

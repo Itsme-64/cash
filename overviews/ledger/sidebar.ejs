@@ -1,0 +1,136 @@
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <div class="sidebar-brand-wrapper align-items-center justify-content-center fixed-top">
+        <a class="sidebar-brand brand-logo" href="./operator"><img src="assets/images/logo.svg" alt="logo" /></a>
+        <a class="sidebar-brand brand-logo-mini" href="./operator"><img src="assets/images/logo-mini.svg"
+                alt="logo" /></a>
+    </div>
+    <ul class="nav">
+        <li class="nav-item profile">
+            <div class="profile-desc">
+                <div class="profile-pic">
+                    <div class="count-indicator">
+                        <img class="img-xs rounded-circle" 
+                            src="assets/images/profile/user/<%= user.PID %>" 
+                            onerror="this.src='assets/images/profile/default.png'" 
+                            alt="user profile picture">
+                        <span class="count bg-success"></span>
+                    </div>
+                    <div class="profile-name">
+                        <h5 class="mb-0 font-weight-normal"><%= user.username %></h5>
+                        <% if (user.premium) { %>
+                            <span>Premium</span>
+                        <% } else { %>
+                            <span>Member</span>
+                        <% } %>
+                    </div>
+                </div>
+                <a href="#" id="profile-dropdown" data-bs-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></a>
+                <div class="dropdown-menu dropdown-menu-right sidebar-dropdown preview-list"
+                    aria-labelledby="profile-dropdown">
+                    <a href="./you" class="dropdown-item preview-item">
+                        <div class="preview-thumbnail">
+                            <div class="preview-icon bg-dark rounded-circle">
+                                <i class="mdi mdi-cog text-primary"></i>
+                            </div>
+                        </div>
+                        <div class="preview-item-content">
+                            <p class="preview-subject ellipsis mb-1 text-small">Account</p>
+                        </div>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="./you#password" class="dropdown-item preview-item">
+                        <div class="preview-thumbnail">
+                            <div class="preview-icon bg-dark rounded-circle">
+                                <i class="mdi mdi-form-textbox-password text-warning"></i>
+                            </div>
+                        </div>
+                        <div class="preview-item-content">
+                            <p class="preview-subject ellipsis mb-1 text-small">Password</p>
+                        </div>
+                    </a>
+                    <div class="dropdown-divider"></div> <!-- logout form -->
+                    <form action="/logout?_method=DELETE" method="post">
+                        <button type="submit" class="dropdown-item preview-item">
+                            <div class="preview-thumbnail">
+                                <div class="preview-icon bg-dark rounded-circle">
+                                    <i class="mdi mdi-logout text-danger"></i>
+                                </div>
+                            </div>
+                            <div class="preview-item-content">
+                                <p class="preview-subject ellipsis mb-1 text-small">Log out</p>
+                            </div>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </li>
+        <li class="nav-item nav-category">
+            <span class="nav-link">Navigation</span>
+        </li>
+        <li class="nav-item menu-items <%= currentPage === 'dashboard' ? 'active' : '' %>">
+            <a class="nav-link" href="./operator">
+                <span class="menu-icon">
+                    <i class="mdi mdi-speedometer text-primary"></i>
+                </span>
+                <span class="menu-title">Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-item menu-items <%= currentPage === 'createNewLink' ? 'active' : '' %>">
+            <a class="nav-link" href="./new">
+                <span class="menu-icon">
+                    <i class="mdi mdi-link-variant-plus text-success"></i>
+                </span>
+                <span class="menu-title">Create link</span>
+            </a>
+        </li>
+        <li class="nav-item menu-items <%= currentPage === 'payments' ? 'active' : '' %>">
+            <a class="nav-link" href="./payment">
+                <span class="menu-icon">
+                    <i class="mdi mdi-currency-usd text-success"></i>
+                </span>
+                <span class="menu-title">Payments</span>
+                <i class="menu-arrow"></i>
+            </a>
+        </li>
+        <li class="nav-item menu-items <%= currentPage === 'frequentlyAskedQuestions' ? 'active' : '' %>">
+            <a class="nav-link" href="./faq">
+                <span class="menu-icon">
+                    <i class="mdi mdi-tooltip-question-outline text-info"></i>
+                </span>
+                <span class="menu-title">F.A.Q.</span>
+                <i class="menu-arrow"></i>
+            </a>
+        </li>
+        <li class="nav-item menu-items <%= currentPage === 'tickets' ? 'active' : '' %>">
+            <a class="nav-link" href="./ticket">
+                <span class="menu-icon">
+                    <i class="mdi mdi-ticket-confirmation-outline text-info"></i>
+                </span>
+                <span class="menu-title">Contact</span>
+                <i class="menu-arrow"></i>
+            </a>
+        </li>
+        <li class="nav-item menu-items <%= currentPage === 'referrals' ? 'active' : '' %>">
+            <a class="nav-link" href="./referral">
+                <span class="menu-icon">
+                    <i class="mdi mdi-bullhorn-outline text-danger"></i>
+                </span>
+                <span class="menu-title">Referrals</span>
+                <i class="menu-arrow"></i>
+            </a>
+        </li>
+        <li class="nav-item menu-items <%= currentPage === 'advertise' ? 'active' : '' %>">
+            <a class="nav-link" href="./advertise">
+                <span class="menu-icon">
+                    <i class="mdi mdi-bank-plus text-danger"></i>
+                </span>
+                <span class="menu-title">Advertise</span>
+            </a>
+        </li>
+    </ul>
+    <li class="nav-item nav-settings d-none d-md-block">
+        <a class="scroll-top" href="#">
+            <i class="mdi mdi-arrow-up"></i>
+        </a>
+    </li>
+</nav>

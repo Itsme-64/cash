@@ -1,0 +1,59 @@
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <div class="sidebar-brand-wrapper align-items-center justify-content-center fixed-top">
+        <a class="sidebar-brand brand-logo" href="/"><img src="assets/images/logo.svg" alt="logo" /></a>
+        <a class="sidebar-brand brand-logo-mini" href="/"><img src="assets/images/logo-mini.svg"
+                alt="logo" /></a>
+    </div>
+    <ul class="nav">
+        <li class="nav-item nav-category">
+            <span class="nav-link">Navigation</span>
+        </li>
+        <li class="nav-item menu-items">
+            <a class="nav-link" href="/operator">
+                <span class="menu-icon">
+                    <i class="mdi mdi-speedometer text-primary"></i>
+                </span>
+                <span class="menu-title">Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-item menu-items <%= currentPage === 'frequentlyAskedQuestions' ? 'active' : '' %>">
+            <a class="nav-link" href="/faq">
+                <span class="menu-icon">
+                    <i class="mdi mdi-tooltip-question-outline text-info"></i>
+                </span>
+                <span class="menu-title">F.A.Q.</span>
+                <i class="menu-arrow"></i>
+            </a>
+        </li>
+        <li class="nav-item menu-items <%= currentPage === 'tickets' ? 'active' : '' %>">
+            <a class="nav-link" href="/ticket">
+                <span class="menu-icon">
+                    <i class="mdi mdi-ticket-confirmation-outline text-info"></i>
+                </span>
+                <span class="menu-title">Contact</span>
+                <i class="menu-arrow"></i>
+            </a>
+        </li>
+        <li class="nav-item menu-items">
+            <a class="nav-link" href="/advertise">
+                <span class="menu-icon">
+                    <i class="mdi mdi-bank-plus text-danger"></i>
+                </span>
+                <span class="menu-title">Advertise</span>
+            </a>
+        </li>
+        <li class="nav-item profile">
+            <div class="profile-desc">
+                <a class="btn btn-success sign-up-button" href="/register">Sign up</a>
+            </div>
+            <div class="profile-desc">
+                <a class="btn btn-success log-in-button" href="/login">Log in</a>
+            </div>
+        </li>
+    </ul>
+    <li class="nav-item nav-settings d-none d-lg-block">
+        <a class="scroll-top" href="#">
+            <i class="mdi mdi-arrow-up"></i>
+        </a>
+    </li>
+</nav>

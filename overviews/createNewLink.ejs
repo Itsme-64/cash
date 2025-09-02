@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>New Link | Ads.cash</title>
+  <!-- css here -->
+  <link rel="stylesheet" href="assets/vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="shortcut icon" href="assets/images/favicon.png" />
+</head>
+
+<body>
+  <div class="container-scroller">
+    <%- include('ledger/sidebar', { currentPage: 'createNewLink' }) %>
+      <%- include('ledger/sidebarMini') %>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+          <div class="main-panel-noheader">
+            <div class="content-wrapper">
+              <div class="page-header">
+                <h3 class="page-title"> Create Link </h3>
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="./operator">Cash</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Create Link</li>
+                  </ol>
+                </nav>
+              </div>
+              <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">Shorten a new link</h4>
+                      <form action="/links" class="forms-sample" autocomplete="off" method="POST">
+                        <div class="form-check form-check-flat form-check-primary">
+                          <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input" id="monetization" name="monetization"
+                              checked> Monetization
+                            enabled </label> <!-- monetization disabled, 5 per month -->
+                        </div>
+                        <div id="monetization-options" style="display: block;" class="mt-2">
+                          <div class="btn-group" role="group" style="margin-bottom: 1rem">
+                            <input type="radio" class="btn-check" name="monetizationDuration" id="option1" value="5000">
+                            <label class="btn btn-outline-primary" for="option1">5s</label>
+                            <input type="radio" class="btn-check" name="monetizationDuration" id="option2" value="10000"
+                              checked>
+                            <label class="btn btn-outline-primary" for="option2">10s (default)</label>
+                            <input type="radio" class="btn-check" name="monetizationDuration" id="option3"
+                              value="15000">
+                            <label class="btn btn-outline-primary" for="option3">15s</label>
+                          </div>
+                        </div>
+                        <div class="form-check form-check-flat form-check-primary">
+                          <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input" id="bulkToggle"> Bulk shorten links </label>
+                          <!-- add more logic backend -->
+                        </div>
+                        <div class="form-group hidden-label" id="singleLinkInput">
+                          <label for="singleLink" type="hidden"></label>
+                          <input type="url" class="form-control" id="singleLink" name="singleLink"
+                            placeholder="https://" required>
+                        </div>
+                        <div class="form-group" id="bulkLinkInput" style="display: none;">
+                          <label for="singleLink">Please enter only one link per line</label>
+                          <textarea class="form-control" id="bulkLinks" placeholder="https://" rows="5"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary me-2">Shrink</button>
+                        <button class="btn btn-dark">Clear</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <%- include('ledger/userLinks', { width: 12 }) %>
+              </div>
+              <%- include('ledger/infoCards') %>
+            </div>
+            <!-- content-wrapper ends -->
+            <%- include('ledger/footer') %>
+          </div>
+          <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+  <!-- javascript here -->
+  <script src="assets/vendors/js/vendor.bundle.base.js"></script>
+  <script src="assets/vendors/chart.js/chart.umd.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/createNewLink.js"></script>
+</body>
+
+</html>
+
+<!-- with charts make a link creation over time display/chart -->

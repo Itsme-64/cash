@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="This page answers all your questions concerning () in regards to Ads.Cash, which is a free and user-friendly tool that allows users to monetize and shorten their url links." />
+  <title>Frequently Asked Questions | Ads.cash</title>  <!-- complete ^ -->
+  <link rel="stylesheet" href="assets/vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="shortcut icon" href="assets/images/favicon.png" />
+</head>
+
+<body>
+  <div class="container-scroller">
+  <% if (isAuthenticatedFAQ) { %>
+    <%- include('ledger/sidebar', { currentPage: 'frequentlyAskedQuestions' }) %>
+  <% } else { %>
+    <%- include('ledger/index/sidebar', { currentPage: 'frequentlyAskedQuestions' }) %>
+  <% } %>
+  <%- include('ledger/sidebarMini') %>
+    <div class="container-fluid page-body-wrapper">
+      <div class="main-panel-noheader">
+        <div class="content-wrapper">
+          <div class="page-header">
+            <h3 class="page-title"> Frequently Asked Questions </h3>
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="./operator">Cash</a></li>
+                <li class="breadcrumb-item active" aria-current="page">F.A.Q.</li>
+              </ol>
+            </nav>
+          </div>
+          <div class="row">
+            <div class="col-md-6 d-flex align-items-stretch">
+              <div class="row">
+                <div class="col-md-12 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">Question</h4>
+                      <p>Answer</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">Question</h4>
+                      <p>Answer</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">Question</h4>
+                      <p>Answer</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 d-flex align-items-stretch">
+              <div class="row">
+                <div class="col-md-12 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">Question</h4>
+                      <p>Answer</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">Question</h4>
+                      <p>Answer</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">Question</h4>
+                      <p>Answer</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <%- include('ledger/infoCards') %>
+        </div>
+        <%- include('ledger/footer') %>
+      </div>
+    </div>
+  </div>
+  <script src="assets/vendors/js/vendor.bundle.base.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+
+</html>
