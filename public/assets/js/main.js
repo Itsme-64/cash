@@ -6,7 +6,10 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-document.getElementById("year").textContent = new Date().getFullYear();
+const yearElement = document.getElementById("year");
+if (yearElement) {  
+  yearElement.textContent = new Date().getFullYear();  
+}
 
 const toggleBtn = document.getElementById('toggleSidebar');
 const sidebar = document.getElementById('sidebar');
@@ -26,13 +29,17 @@ function closeFullSidebar() {
 }
 
 // Open full sidebar
-toggleBtn.addEventListener('click', function(e) {
-  e.preventDefault();
-  openFullSidebar();
-});
+if (toggleBtn) {
+  toggleBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    openFullSidebar();
+  });
+}
 
 // Close full sidebar
-miniClose.addEventListener('click', function(e) {
-  e.preventDefault();
-  closeFullSidebar();
-});
+if (miniClose) {
+  miniClose.addEventListener('click', function(e) {
+    e.preventDefault();
+    closeFullSidebar();
+  });
+}

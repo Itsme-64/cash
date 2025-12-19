@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import path from 'path';
 import passport from 'passport';
 import flash from 'express-flash';
+import upload from 'express-fileupload';
 import methodOverride from 'method-override';
 import pages from './router.js';
 import initializePassport from './middleware/passport-config.js';
@@ -38,7 +39,10 @@ app.set('view engine', 'ejs');
 app.set('views', 'overviews');
 
 app.use('/assets', express.static(path.join(__dirname, 'public', 'assets')));
-app.use(express.urlencoded({ extended: false }));
+app.use('/vendor', express.static(path.join(__dirname, 'node_modules')));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(upload());
 app.use(flash());
 app.use(passport.initialize())
 app.use(passport.session())

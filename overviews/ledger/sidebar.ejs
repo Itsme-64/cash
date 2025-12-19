@@ -10,8 +10,11 @@
                 <div class="profile-pic">
                     <div class="count-indicator">
                         <img class="img-xs rounded-circle" 
-                            src="assets/images/profile/user/<%= user.PID %>" 
-                            onerror="this.src='assets/images/profile/default.png'" 
+                            <% if (user.hasProfile) { %>
+                                src="assets/images/profile/user/<%= user.PID %>.jpg"
+                            <% } else { %>
+                                src="assets/images/profile/default.png"
+                            <% } %>
                             alt="user profile picture">
                         <span class="count bg-success"></span>
                     </div>
@@ -73,6 +76,14 @@
                     <i class="mdi mdi-speedometer text-primary"></i>
                 </span>
                 <span class="menu-title">Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-item menu-items <%= currentPage === 'analytics' ? 'active' : '' %>">
+            <a class="nav-link" href="./analytics">
+                <span class="menu-icon">
+                    <i class="mdi mdi-finance text-primary"></i>
+                </span>
+                <span class="menu-title">Analytics</span>
             </a>
         </li>
         <li class="nav-item menu-items <%= currentPage === 'createNewLink' ? 'active' : '' %>">

@@ -13,11 +13,16 @@
                         </tr>
                     </thead>
                     <% if (Array.isArray(tickets) && tickets.length > 0) { %>
-                        <% tickets.forEach(ticket => { %>
+                        <% tickets.slice().reverse().forEach(ticket => { %>
                             <tbody>
                                 <tr>
-                                    <td><%= ticket.title %></td>
-                                    <td>USD <%= ticket.updatedAt %></td>
+                                    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><a href="tickets/<%= ticket.shortID %>" target="_blank"><%= ticket.title %></a></td>
+                                    <td><%= new Date(ticket.updatedAt).toLocaleDateString("en-US", {
+                                            month: "long",
+                                            day: "numeric",
+                                            year: "numeric"
+                                        }) %>
+                                    </td>
                                     <td># <%= ticket.shortID %></td>
                                     <td>
                                         <% if (ticket.status == 'open') { %>

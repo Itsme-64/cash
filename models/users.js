@@ -7,8 +7,9 @@ const userSchema = new mongoose.Schema({
     PID: {
         type: String,
         required: true,
-        default: crypto.randomBytes(12).toString('hex'),
-        immutable: true
+        default: crypto.randomBytes(6).toString('hex'), 
+        immutable: true,
+        unique: true
     },
     username: {
         type: String,
@@ -78,20 +79,23 @@ const userSchema = new mongoose.Schema({
         default: false
     },
     links: {
-        type: [String],
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Link',
         default: []
     },
     tickets: {
-        type: [String],
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Ticket',
         default: []
     },
     paymentHistory: {
-        type: [String],
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Payment',
         default: []
     },
     payoutMethod: {
         type: String,
-        enum: ['PayPal', 'none'],
+        enum: ['PayPal', 'Bitcoin', 'none'],
         default: 'none'
     },
     paymentMethod: {
@@ -104,11 +108,20 @@ const userSchema = new mongoose.Schema({
         required: false,
         lowercase: true
     },
+    btcAddress: {
+        type: String,
+        required: false
+    },
     referrals: {
-        type: [String],
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'User',
         default: []
     },
     referrer: {
+        type: String,
+        required: false
+    },
+    hasProfile: {
         type: Boolean,
         default: false
     }
