@@ -3,7 +3,11 @@
         <div class="card-body">
             <div class="d-flex flex-row justify-content-between">
                 <h4 class="card-title mb-1">Shortened Links</h4>
+<<<<<<< HEAD
                 <p class="text-muted mb-1">shows up to 16 links</p>
+=======
+                <p class="text-muted mb-1">data | links <%= currentPage * 16 - 16 %> to <%= currentPage === totalPages ? totalPages % 16 : currentPage * 16 %></p>
+>>>>>>> 5b5b7dd7d64f551658a8c25e0300f564a1afee50
             </div>
             <div class="row">
                 <div class="col-12">
@@ -66,39 +70,41 @@
                             </div>
                         <% } %>
                     </div>
-                    <div class="mt-3">
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination">
-                                <li class="page-item <%= currentPage === 1 ? 'active' : '' %>">
-                                    <a class="page-link" href="?page=1#userLinks">1</a>
-                                </li>
-                                <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
-                                    <a class="page-link" href="?page=<%= currentPage - 1 %>#userLinks">&laquo;</a>
-                                </li>
-                                <% 
-                                    let middlePages = [];
-                                    if (totalPages <= 5) {
-                                        for (let i = 2; i < totalPages; i++) middlePages.push(i);
-                                    } else {
-                                        let start = Math.max(2, currentPage);
-                                        let end = Math.min(totalPages - 1, start + 1);
-                                        middlePages = [start, end].filter((v, i, a) => a.indexOf(v) === i);
-                                    }
-                                %>
-                                <% middlePages.forEach(page => { %>
-                                    <li class="page-item <%= currentPage === page ? 'active' : '' %>">
-                                        <a class="page-link" href="?page=<%= page %>#userLinks"><%= page %></a>
+                    <% if (Array.isArray(links) && links.length > 16) { %>
+                        <div class="mt-3">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination">
+                                    <li class="page-item <%= currentPage === 1 ? 'active' : '' %>">
+                                        <a class="page-link" href="?page=1#userLinks">1</a>
                                     </li>
-                                <% }) %>
-                                <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
-                                    <a class="page-link" href="?page=<%= currentPage + 1 %>#userLinks">&raquo;</a>
-                                </li>
-                                <li class="page-item <%= currentPage === totalPages ? 'active' : '' %>">
-                                    <a class="page-link" href="?page=<%= totalPages %>#userLinks"><%= totalPages %></a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
+                                    <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                                        <a class="page-link" href="?page=<%= currentPage - 1 %>#userLinks">&laquo;</a>
+                                    </li>
+                                    <% 
+                                        let middlePages = [];
+                                        if (totalPages <= 5) {
+                                            for (let i = 2; i < totalPages; i++) middlePages.push(i);
+                                        } else {
+                                            let start = Math.max(2, currentPage);
+                                            let end = Math.min(totalPages - 1, start + 1);
+                                            middlePages = [start, end].filter((v, i, a) => a.indexOf(v) === i);
+                                        }
+                                    %>
+                                    <% middlePages.forEach(page => { %>
+                                        <li class="page-item <%= currentPage === page ? 'active' : '' %>">
+                                            <a class="page-link" href="?page=<%= page %>#userLinks"><%= page %></a>
+                                        </li>
+                                    <% }) %>
+                                    <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                                        <a class="page-link" href="?page=<%= currentPage + 1 %>#userLinks">&raquo;</a>
+                                    </li>
+                                    <li class="page-item <%= currentPage === totalPages ? 'active' : '' %>">
+                                        <a class="page-link" href="?page=<%= totalPages %>#userLinks"><%= totalPages %></a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    <% } %>
                 </div>
             </div>
         </div>
