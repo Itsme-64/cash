@@ -9,6 +9,7 @@ import pages from './router.js';
 import initializePassport from './middleware/passport-config.js';
 import setupSession from './middleware/session.js';
 import User from './models/users.js';
+import { registerJobs } from './jobs/time-is-money.js';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -56,3 +57,5 @@ app.use((req, res, next) => {
 app.use('/', pages);
 
 app.listen(PORT, () => console.log(`Server Running on port ${PORT}`));
+
+registerJobs();
