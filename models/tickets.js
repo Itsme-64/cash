@@ -12,6 +12,7 @@ const ticketSchema = new mongoose.Schema({
         type: String,
         required: true,
         default: shortId.generate(),
+        unique: true,
         immutable: true
     },
     title: {
@@ -52,8 +53,10 @@ const ticketSchema = new mongoose.Schema({
         default: 'open'
     },
     files: {
-        type: [String],
-        default: []
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 6
     }
 }, { timestamps: true });
 

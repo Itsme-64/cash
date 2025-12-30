@@ -12,6 +12,7 @@ const paymentSchema = new mongoose.Schema({
         type: String,
         required: true,
         default: shortId.generate(),
+        unique: true,
         immutable: true
     },
     amount: {

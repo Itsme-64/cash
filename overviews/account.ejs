@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Your Account | Ads.cash</title>
-  <link rel="stylesheet" href="assets/vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="vendor/@mdi/font/css/materialdesignicons.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="shortcut icon" href="assets/images/favicon.png" />
 </head>
@@ -40,19 +40,20 @@
                     <div class="form-group row">
                       <label for="name" class="col-sm-3 col-form-label">Full Name: *</label>
                       <div class="col-sm-9">
-                        <input disabled type="text" class="form-control" id="name" name="name" value="<%= user.name %>">
+                        <input disabled type="text" class="form-control" id="name" name="name" autocomplete="name" 
+                          <% if (user.name) { %> value="<%= user.name %>" <% } %>>
                       </div>
                     </div>
                     <div class="form-group row">
                       <label for="line1" class="col-sm-3 col-form-label">Address: (line 1) *</label>
                       <div class="col-sm-9">
-                        <input disabled type="text" class="form-control" id="line1" name="line1" value="<%= user.address.line1 %>">
+                        <input disabled type="text" class="form-control" id="line1" name="line1" autocomplete="address-line1" value="<%= user.address.line1 %>">
                       </div>
                     </div>
                     <div class="form-group row">
                       <label for="line2" class="col-sm-3 col-form-label">Address: (line 2)</label>
                       <div class="col-sm-9">
-                        <input disabled type="text" class="form-control" id="line2" name="line2" value="<%= user.address.line2 %>">
+                        <input disabled type="text" class="form-control" id="line2" name="line2" autocomplete="address-line2" value="<%= user.address.line2 %>">
                       </div>
                     </div>
                     <div class="form-group row">
@@ -64,21 +65,21 @@
                     <div class="form-group row">
                       <label for="zip" class="col-sm-3 col-form-label">Zip Code: *</label>
                       <div class="col-sm-9">
-                        <input disabled type="text" class="form-control" id="zip" name="zip" value="<%= user.address.zip %>">
+                        <input disabled type="text" class="form-control" id="zip" name="zip" autocomplete="postal-code" value="<%= user.address.zip %>">
                       </div>
                     </div>
                     <div class="form-group row">
                       <label for="country" class="col-sm-3 col-form-label">Country: *</label>
                       <div class="col-sm-9">
-                        <select disabled class="form-select" id="country" name="country" value="<%= user.address.country %>">
-                          <option>Countries</option>
+                        <select disabled class="form-select" id="country" name="country" autocomplete="country" value="<%= user.address.country %>">
+                          <%- include('ledger/assets/countries') %>
                         </select>
                       </div>
                     </div>
                     <div class="form-group row">
                       <label for="tel" class="col-sm-3 col-form-label">Phone number:</label>
                       <div class="col-sm-9">
-                        <input disabled type="tel" class="form-control" id="tel" name="tel" value="<%= user.tel %>">
+                        <input disabled type="tel" class="form-control" id="tel" name="tel" autocomplete="tel" value="<%= user.tel %>">
                       </div>
                     </div>
                     <div class="form-group row">
@@ -87,15 +88,22 @@
                         <div class="input-group d-flex align-items-center">
                           <input type="text" class="form-control file-upload-info" id="file-name-display" disabled
                             placeholder="Only png & jpg/jpeg files">
-                          <input disabled type="file" id="userIcon" name="userIcon" class="d-none">
+                          <input disabled type="file" id="userIcon" name="userIcon" class="d-none" accept=".jpg,.png,.jpeg,.webp">
                           <button disabled type="button" class="btn btn-primary ms-2"
                             id="upload-btn">Upload</button>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <button disabled type="submit" id="submitBtn" class="btn btn-primary me-2">Update</button>
-                  <button class="btn btn-dark">Cancel</button>
+                  <div class="d-flex align-items-center">
+                    <button disabled type="submit" id="submitBtn" class="btn btn-primary me-2">Update</button>
+                    <button disabled id="cancelBtn" type="button" class="btn btn-dark" style="margin-left: 0.15rem">Cancel</button>
+                    <p class="text-danger mb-0" style="margin-left: 1rem">
+                      <% if (typeof errors != 'undefined' && form == 'updateAccountInformation') { %>
+                        <%= errors[0].msg %>
+                      <% } %>
+                    </p>
+                  </div>
                 </form>
                 <div class="form-group row" style="margin-top: 4rem;">
                   <label for="userEmail" class="col-sm-3 col-form-label">Email address:</label>
@@ -115,7 +123,7 @@
                 <div class="form-group row">
                   <label for="username" class="col-sm-3 col-form-label">Username:</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control" id="username" value="<%= user.username %>" readonly>
+                    <input type="text" class="form-control" id="username" value="<%= user.username %>" autocomplete="username" readonly>
                   </div>
                 </div>
                 <div class="form-group row">
@@ -130,8 +138,8 @@
               Navigation:<br>
               <a href="#account" style="display: inline-block; margin-top: 0.2rem;">account</a><br>
               <a href="#payment" style="display: inline-block; margin-top: 0.2rem;">payment</a><br>
-              <a href="#password" style="display: inline-block; margin-top: 0.2rem;">password</a><br>
-              <a href="#autoPayments" style="display: inline-block; margin-top: 0.2rem;">auto payment</a><br>
+              <a href="#updatePassword" style="display: inline-block; margin-top: 0.2rem;">password</a><br>
+              <a href="#autoPayoutsHref" style="display: inline-block; margin-top: 0.2rem;">auto payment</a><br>
               <a href="#premium" style="display: inline-block; margin-top: 0.2rem;">premium</a>
             </h6>
           </div>
@@ -144,24 +152,28 @@
                     <div class="form-group">
                       <label for="payoutMethod">Payout method</label>
                       <select class="form-select" id="payoutMethod" name="payoutMethod" required>
-                        <option value="none"
-                          <% if (!user.payoutMethod) { %>
-                            selected default
-                          <% } %>
-                        >Choose method</option>
-                        <option value="PayPal"
-                          <% if (user.payoutMethod == "PayPal") { %>
-                            selected
-                          <% } %>
-                        >PayPal</option>
+                        <option value="none" <% if (!user.payoutMethod) { %> selected <% } %>>Choose method</option>
+                        <option value="PayPal" <% if (user.payoutMethod == "PayPal") { %> selected <% } %>>PayPal</option>
+                        <option value="Bitcoin" <% if (user.payoutMethod == "Bitcoin") { %> selected <% } %>>Bitcoin</option>
                       </select>
                     </div>
-                    <div class="form-group">
+                    <div id="paypalFormGroup" class="form-group">
                       <label for="paypalEmail">PayPal email address</label>
-                      <input type="email" class="form-control" id="paypalEmail" name="paypalEmail" placeholder="Email" value="<%= user.paypalEmail %>" required>
+                      <input type="email" class="form-control" id="paypalEmail" name="paypalEmail" placeholder="Email" value="<%= user.paypalEmail %>">
                     </div>
-                    <button type="submit" class="btn btn-primary me-2">Update information</button>
-                    <button class="btn btn-dark">Cancel</button>
+                    <div id="btcFormGroup" class="form-group">
+                      <label for="btcAddress">Bitcoin address</label>
+                      <input type="text" class="form-control" id="btcAddress" name="btcAddress" placeholder="Address" value="<%= user.btcAddress %>">
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <button type="submit" class="btn btn-primary me-2">Update information</button>
+                      <button type="reset" class="btn btn-dark" style="margin-left: 0.15rem">Clear</button>
+                      <p class="text-danger mb-0" style="margin-left: 1rem">
+                        <% if (typeof errors != 'undefined' && form == 'updatePaymentInformation') { %>
+                          <%= errors[0].msg %>
+                        <% } %>
+                      </p>
+                    </div>
                   </form>
                 </div>
               </div>
@@ -169,26 +181,35 @@
             <div class="col-md-6 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title" id="password">Update Password</h4>
+                  <h4 class="card-title" id="updatePassword">Update Password</h4>
                   <p class="card-description">Forgot your password? Reset it <a href="#">here</a>!</p>
                   <form class="forms-sample" action="/updatePassword" method="post">
                     <div class="form-group">
                       <label for="password">Current password</label>
                       <input type="password" class="form-control" id="password" name="password"
-                        placeholder="your password" required>
+                        placeholder="your password" autocomplete="current-password" required>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group position-relative">
                       <label for="newPassword">New password</label>
-                      <input type="password" class="form-control" id="newPassword" minlength="8" 
-                        name="newPassword" placeholder="strong password" required>
+                      <input type="password" class="form-control countedInput" id="newPassword" minlength="8" 
+                        name="newPassword" placeholder="strong password" autocomplete="new-password" required>
+                      <small class="position-absolute bottom-0 end-0 pe-2 pb-1 text-danger counter"></small>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group position-relative">
                       <label for="newPasswordVerification">Re new password</label>
-                      <input type="password" class="form-control" id="newPasswordVerification" minlength="8"
-                        name="newPasswordVerification" placeholder="same strong password" required>
+                      <input type="password" class="form-control countedInput" id="newPasswordVerification" minlength="8"
+                        name="newPasswordVerification" placeholder="same strong password" autocomplete="new-password" required>
+                      <small class="position-absolute bottom-0 end-0 pe-2 pb-1 text-danger counter"></small>
                     </div>
-                    <button type="submit" class="btn btn-primary me-2">Update password</button>
-                    <button class="btn btn-dark">Cancel</button>
+                    <div class="d-flex align-items-center">
+                      <button type="submit" class="btn btn-primary me-2">Update password</button>
+                      <button type="reset" class="btn btn-dark" style="margin-left: 0.15rem">Clear</button>
+                      <p class="text-danger mb-0" style="margin-left: 1rem">
+                        <% if (typeof errors != 'undefined' && form == 'updatePassword') { %>
+                          <%= errors[0].msg %>
+                        <% } %>
+                      </p>
+                    </div>
                   </form>
                 </div>
               </div>
@@ -196,7 +217,7 @@
             <div class="col-md-6 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title" id="autoPayouts">Automatic Payouts</h4>
+                  <h4 class="card-title" id="autoPayoutsHref">Automatic Payouts</h4>
                   <p class="card-description">Automatically submit a new payout request on the first of each 
                     month if the payout threshold is met</p>
                   <form class="forms-sample" action="/updateAutomaticPayouts" method="post">
@@ -204,8 +225,14 @@
                       <label class="form-check-label" for="autoPayouts">
                         <input type="checkbox" class="form-check-input" id="autoPayouts" name="autoPayouts" value="true"> Enable automatic payment requests </label>
                     </div>
-                    <button type="submit" class="btn btn-primary me-2" style="margin-top: 0.75rem;">Update
-                      selection</button>
+                    <div class="d-flex align-items-center">
+                      <button type="submit" class="btn btn-primary me-2" style="margin-top: 0.75rem;">Update selection</button>
+                      <p class="text-danger mb-0" style="margin-left: 1rem">
+                        <% if (typeof errors != 'undefined' && form == 'updateAutomaticPayouts') { %>
+                          <%= errors[0].msg %>
+                        <% } %>
+                      </p>
+                    </div>
                   </form>
                 </div>
               </div>
@@ -251,8 +278,14 @@
                       <input type="checkbox" class="form-check-input" name="premiumStatus" id="premiumStatus">
                       Enable premium subscription </label>
                   </div>
-                  <button type="submit" class="btn btn-primary me-2" style="margin-top: 0.75rem;">Update
-                    Selection</button>
+                  <div class="d-flex align-items-center">
+                    <button type="submit" class="btn btn-primary me-2" style="margin-top: 0.75rem;">Update selection</button>
+                    <p class="text-danger mb-0" style="margin-left: 1rem"> <!-- make ts -->
+                      <% if (typeof errors != 'undefined' && form == "") { %> 
+                        <%= errors[0].msg %>
+                      <% } %>
+                    </p>
+                  </div>
                 </form>
               </div>
             </div>
@@ -262,13 +295,14 @@
       </div>
     </div>
   </div>
-  <script src="assets/vendors/js/vendor.bundle.base.js"></script>
+  <script src="vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="assets/js/main.js"></script>
   <script src="assets/js/account.js"></script>
   <script>
     const fileInput = document.getElementById('userIcon');
   </script>
   <script src="assets/js/fileUpload.js"></script>
+  <script src="assets/js/liveValidate.js"></script>
 </body>
 
 </html>

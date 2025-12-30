@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Contact | Ads.cash</title>
-  <link rel="stylesheet" href="assets/vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="vendor/@mdi/font/css/materialdesignicons.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="shortcut icon" href="assets/images/favicon.png" />
 </head>
@@ -52,27 +52,34 @@
                 <form class="forms-sample" autocomplete="off" action="/ticket" method="POST"
                   enctype="multipart/form-data">
                   <div class="form-group" id="title">
-                    <input type="text" class="form-control" id="ticketTitle" name="ticketTitle" placeholder="Title">
+                    <input type="text" class="form-control" id="ticketTitle" name="ticketTitle" placeholder="Title" value="<%= data.ticketTitle || '' %>">
                   </div>
                   <div class="form-group" id="ticket-body">
-                    <textarea class="form-control" id="ticketBody" name="ticketBody" placeholder="body" rows="10"></textarea>
+                    <textarea class="form-control" id="ticketBody" name="ticketBody" placeholder="Body" rows="10" maxlength="20000" value="<%= data.ticketBody || '' %>"></textarea>
                   </div>
-                  <!-- <div class="form-group">
-                    <label>Upload a file [optional]</label>
+                  <div class="form-group">
+                    <label for="ticketFiles">Upload up to 6 files [optional]</label>
                     <div class="input-group d-flex align-items-center">
                       <input type="text" class="form-control file-upload-info" id="file-name-display" disabled
                         placeholder="Upload an image, screenshot, or PDF file">
-                      <input type="file" id="ticketFile" name="ticketFile" class="d-none">
+                      <input type="file" id="ticketFiles" name="ticketFiles" class="d-none" accept=".jpg,.png,.jpeg,.webp,.pdf" multiple>
                       <button type="button" class="btn btn-primary ms-2" id="upload-btn">Upload</button>
                     </div>
-                  </div> -->
+                  </div>
                   <h6 class="text-muted font-weight-normal">
                     Please allow up to 5 business days for a response.<br>
                     ^ Tickets are sorted by oldest first so bumping will <b>not</b> improve response time, thank
                     you.
                   </h6><br>
-                  <button type="submit" class="btn btn-primary me-2">Send</button>
-                  <button class="btn btn-dark">Clear</button>
+                  <div class="d-flex align-items-center">
+                    <button type="submit" class="btn btn-primary me-2">Send</button>
+                    <button type="reset" class="btn btn-dark" style="margin-left: 0.15rem">Clear</button>
+                    <p class="text-danger mb-0" style="margin-left: 1rem">
+                      <% if (typeof errors != 'undefined') { %>
+                        <%= errors[0].msg %>
+                      <% } %>
+                    </p>
+                  </div>
                 </form>
               </div>
             </div>
@@ -84,10 +91,10 @@
     </div>
   </div>
   </div>
-  <script src="assets/vendors/js/vendor.bundle.base.js"></script>
+  <script src="vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="assets/js/main.js"></script>
   <script>
-    const fileInput = document.getElementById('ticketFile');
+    const fileInput = document.getElementById('ticketFiles');
   </script>
   <script src="assets/js/fileUpload.js"></script>
 </body>
