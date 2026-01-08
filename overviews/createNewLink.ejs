@@ -36,9 +36,13 @@
                   <form action="/new" class="forms-sample" autocomplete="off" method="POST">
                     <div class="form-check form-check-flat form-check-primary">
                       <label class="form-check-label">
-                        <input type="checkbox" class="form-check-input" id="monetization" name="monetization"
-                          checked> Monetization
-                        enabled </label> <!-- monetization disabled, 5 per month -->
+                        <span id="monetization-label" data-count="<%= count %>">Monetization enabled</span>
+                        <input type="checkbox" class="form-check-input" id="monetization" name="monetization" checked 
+                          <% if (maxLinksReached) { %>
+                            disabled
+                          <% } %>
+                        >
+                      </label>
                     </div>
                     <div id="monetization-options" style="display: block;" class="mt-2">
                       <div class="btn-group" role="group" style="margin-bottom: 1rem">
@@ -87,8 +91,9 @@
     </div>
   </div>
   <script src="vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/js/main.js"></script>
+  
   <script src="assets/js/createNewLink.js"></script>
+  <script src="assets/js/main.js"></script>
 </body>
 
 </html>

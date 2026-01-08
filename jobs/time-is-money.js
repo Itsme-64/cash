@@ -5,6 +5,12 @@ export function registerJobs() {
     automaticPayoutsJob()
 }
 
-const automaticPayoutsJob = schedule.scheduleJob('0 0 0 1 * *', () => {
-    automaticPayouts
-});
+function automaticPayoutsJob() {
+    schedule.scheduleJob('0 0 0 1 * *', async () => {
+        try {
+            await automaticPayouts();
+        } catch (err) {
+            console.error('Automatic payouts job failed:', err);
+        }
+    });
+}

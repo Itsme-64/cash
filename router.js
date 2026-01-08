@@ -10,7 +10,7 @@ import { processUserImage } from './middleware/image-config.js';
 import { shortIdValidation } from './middleware/shortId-config.js';
 import { processTicketFiles } from './middleware/ticket-files-config.js';
 import { checkAuthenticated, checkNotAuthenticated } from './middleware/auth.js';
-import { getPaymentData, getReferralData, getTicketValidation, getLinkData } from './middleware/router-helpers.js';
+import { getPaymentData, getReferralData, getTicketValidation, getLinkData, monthlyMonetization } from './middleware/router-helpers.js';
 import { newLinkValidation, 
          paymentValidation, 
          ticketValidation, 
@@ -22,7 +22,8 @@ import { newLinkValidation,
          updatePaymentInformationValidation, 
          updatePasswordValidation } from './middleware/validation.js';
 
-const router = express.Router(); // chart.js/analytics page, password reset functionality + emails, automatic payments (cron jobs), Advertise page
+const router = express.Router(); // chart.js/analytics page, password reset functionality + emails, Advertise page
+
 //Pages
 router.get('/', checkNotAuthenticated, (req, res) => {
     res.render('index')
@@ -45,8 +46,9 @@ router.get('/faq', (req, res) => {
 router.get('/new', checkAuthenticated, async (req, res) => {
     try {
         const linkData = await getLinkData(req)
+        const monetizationData = await monthlyMonetization(req)
         
-        res.render('createNewLink', { ...linkData, data: {} })
+        res.render('createNewLink', { ...linkData, ...monetizationData, data: {} })
     } catch (err) {
         console.error(err)
         res.status(500).send('Server error')
