@@ -20,7 +20,7 @@ import { newLinkValidation,
          sendEmailValidation, 
          updateAccountValidation, 
          updatePaymentInformationValidation, 
-         updatePasswordValidation } from './middleware/validation.js';
+         updatePasswordValidation } from './middleware/validation.js'; // Login background image
 
 const router = express.Router(); // chart.js/analytics page, password reset functionality + emails, automatic payments (cron jobs), Advertise page
 //Pages
@@ -141,7 +141,12 @@ router.get('/privacy', (req, res) => {
     res.render('user/privacyPolicy')
 });
 
-//Errors
+// Redirect
+router.get('/discord', (req, res) => {
+    res.redirect('https://discord.gg/dhUzNMmVpb')
+});
+
+// Errors
 // router.use((req, res) => {
 //     res.status(400).render('error/400')
 // });
@@ -487,8 +492,8 @@ router.get('/:link', async (req, res) => { //complete this
     }
 });
 
-router.get('/example', (req, res) => { //set up
-    res.render('adPage')
+router.get('/example', (req, res) => { //set up; redirect to an ad link that redirects to website home page.
+    res.render('...')
 });
 
 router.get('/tickets/:link', checkAuthenticated, async (req, res) => {

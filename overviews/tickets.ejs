@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Contact | Ads.cash</title>
+  <title>Contact | Ads.cash</title> <!-- description -->
   <link rel="stylesheet" href="vendor/@mdi/font/css/materialdesignicons.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="shortcut icon" href="assets/images/favicon.png" />
@@ -33,8 +33,9 @@
                 <div class="col-9">
                   <div class="d-flex align-items-center align-self-start">
                     <i class="icon-md mdi mdi-comment-alert-outline text-warning ml-auto"></i>
-                    <h3 class="mb-0">&nbsp;&nbsp;&nbsp;For better & faster help, please join our <a
-                        href="https://discord.gg/dhUzNMmVpb" target="_blank">Discord server</a>.</h3>
+                    <h3 class="mb-0">&nbsp;&nbsp;&nbsp;For better & faster help, please join our 
+                      <a href="/discord" target="_blank">Discord server</a>.
+                    </h3>
                     <p class="text-success ms-2 mb-0 font-weight-medium"></p>
                   </div>
                 </div>
@@ -55,7 +56,9 @@
                     <input type="text" class="form-control" id="ticketTitle" name="ticketTitle" placeholder="Title" value="<%= data.ticketTitle || '' %>">
                   </div>
                   <div class="form-group" id="ticket-body">
-                    <textarea class="form-control" id="ticketBody" name="ticketBody" placeholder="Body" rows="10" maxlength="20000" value="<%= data.ticketBody || '' %>"></textarea>
+                    <textarea class="form-control" id="ticketBody" name="ticketBody" placeholder="Body" rows="10" maxlength="20000" 
+                      value="<%= data.ticketBody || '' %>">
+                    </textarea>
                   </div>
                   <div class="form-group">
                     <label for="ticketFiles">Upload up to 6 files [optional]</label>
