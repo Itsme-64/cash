@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description"
+    content="Ads.cash advertisement page" />
+  <title>Ads.cash</title>
+  <link rel="stylesheet" href="vendor/@mdi/font/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="shortcut icon" href="assets/images/favicon.png" />
+</head>
+
+<body>
+    <div class="container-scroller">
+        <div class="container-fluid page-body-wrapper">
+            <div class="main-panel">
+                <nav class="navbar p-0 fixed-top d-flex flex-row">
+                    <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
+                        <ul class="navbar-nav w-100">
+                            <li class="nav-item w-100">
+                                <form action="./new" method="GET" class="nav-link mt-2 mt-md-0 d-md-flex search w-100"
+                                    style="gap: 0.5rem;" autocomplete="off">
+                                    <input type="text" class="form-control" name="url" placeholder="Enter long URL">
+                                    <button type="submit" class="btn btn-success create-new-button">+ Create New Link</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <%- include('ledger/footer') %> <!-- make a clickable dropdown button to view footer -->
+            </div>
+        </div>
+    </div>
+    <script src="vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>
