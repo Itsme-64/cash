@@ -20,9 +20,9 @@ import { newLinkValidation,
          sendEmailValidation, 
          updateAccountValidation, 
          updatePaymentInformationValidation, 
-         updatePasswordValidation } from './middleware/validation.js'; // Login background image
+         updatePasswordValidation } from './middleware/validation.js';
 
-const router = express.Router(); // chart.js/analytics page, password reset functionality + emails, Advertise page
+const router = express.Router();
 
 //Pages
 router.get('/', checkNotAuthenticated, (req, res) => {
