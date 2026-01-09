@@ -37,18 +37,21 @@ function toggleMonetizationOptions() {
 
     const remaining = 5 - count;
 
-    monetizationLabel.innerHTML = monetizationCheckbox.checked
-        ? 'Monetization enabled'
-        : `Monetization disabled (max 5 per month, you have <span id="monetization-remaining">&nbsp;${remaining}&nbsp;</span> left)`;
-
-    const remainingSpan = document.getElementById('monetization-remaining');
-
-    if (remaining == 0) {
-        remainingSpan.classList.add('text-danger');
-    } else if (remaining <= 1) {
-        remainingSpan.classList.add('text-warning');
+    if (monetizationCheckbox.checked) {
+        monetizationLabel.innerHTML = 'Monetization enabled'
     } else {
-        remainingSpan.classList.add('text-success');
+        monetizationLabel.innerHTML =
+            `Monetization disabled (max 5 per month, you have <span id="monetization-remaining">&nbsp;${remaining}&nbsp;</span> left)`;
+
+        const remainingSpan = document.getElementById('monetization-remaining');
+
+        if (remaining == 0) {
+            remainingSpan.classList.add('text-danger');
+        } else if (remaining <= 1) {
+            remainingSpan.classList.add('text-warning');
+        } else {
+            remainingSpan.classList.add('text-success');
+        }
     }
 }
 
