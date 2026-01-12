@@ -475,7 +475,7 @@ router.post('/updateAutomaticPayouts', checkAuthenticated, async (req, res) => {
 });
 
 //Short Links
-router.get('/:link', async (req, res) => { //complete this
+router.get('/:link', async (req, res) => {
     try {
         const url = await Link.findOne({ short: req.params.link })
         if (url === null) {
@@ -485,7 +485,7 @@ router.get('/:link', async (req, res) => { //complete this
         url.clicks++
         url.save()
 
-        res.render('adPage', { url })
+        res.render('ads/adPage', { url })
     } catch (err) {
         console.error(err)
         res.status(500).send('Server error')  
@@ -493,7 +493,9 @@ router.get('/:link', async (req, res) => { //complete this
 });
 
 router.get('/example', (req, res) => { //set up; redirect to an ad link that redirects to website home page.
-    res.render('...')
+    const url = "example"
+    
+    res.render('ads/adPage', { url })
 });
 
 router.get('/tickets/:link', checkAuthenticated, async (req, res) => {
