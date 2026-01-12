@@ -6,6 +6,7 @@ import flash from 'express-flash';
 import upload from 'express-fileupload';
 import methodOverride from 'method-override';
 import pages from './router.js';
+import { registerJobs } from './jobs/time-is-money.js';
 import initializePassport from './middleware/passport-config.js';
 import setupSession from './middleware/session.js';
 import User from './models/users.js';
@@ -56,3 +57,5 @@ app.use((req, res, next) => {
 app.use('/', pages);
 
 app.listen(PORT, () => console.log(`Server Running on port ${PORT}`));
+
+registerJobs();

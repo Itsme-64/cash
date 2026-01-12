@@ -61,11 +61,30 @@ export async function getLinkData(req) {
 
     const totalPages = Math.ceil(totalLinks / limit);
 
-  if (req.xhr) {
-    return res.render('ledger/userLinks', { links }, (err, html) => {
-      res.send(html);
-    });
-  }
+    if (req.xhr) {
+        return res.render('ledger/userLinks', { links }, (err, html) => {
+            res.send(html);
+        });
+    }
 
     return { totalPages, links, currentPage }
+}
+
+export async function monthlyMonetization(req) {
+    const links = await Link.find({ user: req.user._id });
+    let count = 0;
+
+    const currentDate = new Date();
+    const month = currentDate.getMonth();
+    const year = currentDate.getFullYear();
+
+    for (const link of links) {
+        const linkDate = new Date(link.createdAt);
+        if (!link.monetization && linkDate.getMonth() == month && linkDate.getFullYear() == year) {
+            ++count;
+            if (count >= 5) break;
+        }
+    }
+
+    return { maxLinksReached: count >= 5, count }
 }
