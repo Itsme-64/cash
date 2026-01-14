@@ -25153,7 +25153,7 @@ option:checked {
   height: 89vh;
 }
 
-/* custom itsme64 */
+/* Custom 159.cash */
 .scroll-top {
   position: fixed;
   color: #6c7293;
@@ -25244,5 +25244,31 @@ html {
 /* Ad Page */
 
 .ad-container {
-  flex: 1 1 auto;
+    flex: 1 1 auto !important;
+    display: flex !important; 
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+}
+
+#footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    transform: translateY(100%);
+    transition: transform 0.3s ease-in-out;
+    background-color: #222;
+    color: #fff;
+    padding: 1rem 2rem;
+    z-index: 1000;
+}
+
+#footer.show {
+    transform: translateY(0);
+}
+
+#footerButton i {
+    transition: transform 0.3s ease-in-out;
+    display: inline-block;
 }

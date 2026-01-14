@@ -144,10 +144,15 @@ router.get('/privacy', (req, res) => {
     res.render('user/privacyPolicy')
 });
 
-router.get('/reportAdvertisement', (req, res) => {
+router.get('/reportAdvertisement', async (req, res) => {
+    const url = await Link.findOne({ short: req.query.link })
+    let redirect = ''
+    url ? redirect = `destination:${url.full}`  : redirect = 'previous'
+
     const message = "Thank you for your report, it has been submitted and will be handled shortly. "
                   + "We appreciate your efforts to help make 159.cash a better place!"
-    res.render('user/error', { number: 'Rep.', redirect: 'destination', message })
+
+    res.render('user/error', { number: 'Rep.', redirect , message })
 });
 
 // Redirect
@@ -467,18 +472,18 @@ router.post('/updateAutomaticPayouts', checkAuthenticated, async (req, res) => {
     }
 });
 
-// Short Links
+// Ads
 router.get('/:link', async (req, res) => {
     try {
         const url = await Link.findOne({ short: req.params.link })
-        if (url === null) {
+        if (url === null || !url.status) {
             return res.status(404).render('error/404')
         }
 
         url.clicks++
         url.save()
 
-        res.render('ads/adPage', { url })
+        url.monetization ? res.render('ads/adPage', { url }) : res.redirect(url.full)
     } catch (err) {
         console.error(err)
         res.status(500).send('Server error')  
@@ -491,6 +496,7 @@ router.get('/example', (req, res) => {
     res.render('ads/adPage', { url })
 });
 
+// Tickets
 router.get('/tickets/:link', checkAuthenticated, async (req, res) => {
     try {
         const ticket = await Ticket.findOne({ shortID: req.params.link })
