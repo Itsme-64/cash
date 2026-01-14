@@ -1,6 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import passport from 'passport';
+import fileUpload from 'express-fileupload';
 import Link from './models/links.js';
 import User from './models/users.js';
 import Payment from './models/payments.js';
@@ -143,117 +144,6 @@ router.get('/privacy', (req, res) => {
     res.render('user/privacyPolicy')
 });
 
-// Errors
-router.use((req, res) => {
-    const message = "Your browser sent a request this server could not understand"
-    res.status(400).render('user/error', { number: 400, redirect: "previous", message })
-});
-
-router.use((req, res) => {
-    const message = "Authentication required!";
-    res.status(401).render('user/error', { number: 401, redirect: "home", message })
-});
-
-router.use((req, res) => {
-    const message = "A payment is required to proceed";
-    res.status(402).render('user/error', { number: 402, redirect: "previous", message })
-});
-
-router.use((req, res) => {
-    const message = "You do not have permission to access this page"
-    res.status(403).render('user/error', { number: 403, redirect: "previous", message })
-});
-
-router.use((req, res) => {
-    const message = "The page you're looking for was not found."
-    res.status(404).render('user/error', { number: 404, redirect: "previous", message })
-});
-
-router.use((req, res) => {
-    const message = "Method not allowed!";
-    res.status(405).render('user/error', { number: 405, redirect: "previous", message })
-});
-
-router.use((req, res) => {
-    const message = "Content not acceptable!";
-    res.status(406).render('user/error', { number: 406, redirect: "previous", message })
-});
-
-router.use((req, res) => {
-    const message = "Request timeout!";
-    res.status(408).render('user/error', { number: 408, redirect: "previous", message })
-});
-
-router.use((req, res) => {
-    const message = "Resource conflict!";
-    res.status(409).render('user/error', { number: 409, redirect: "previous", message })
-});
-
-router.use((req, res) => {
-    const message = "Resource no longer available!";
-    res.status(410).render('user/error', { number: 410, redirect: "home", message })
-});
-
-router.use((req, res) => {
-    const message = "File too large!";
-    res.status(413).render('user/error', { number: 413, redirect: "previous", message })
-});
-
-router.use((req, res) => {
-    const message = "URL too long!";
-    res.status(414).render('user/error', { number: 414, redirect: "previous", message })
-});
-
-router.use((req, res) => {
-    const message = "Unsupported file type!";
-    res.status(415).render('user/error', { number: 415, redirect: "previous", message })
-});
-
-router.use((req, res) => {
-    const message = "I'm a teapot!";
-    res.status(418).render('user/error', { number: 418, redirect: "previous", message })
-});
-
-router.use((req, res) => {
-    const message = "Unprocessable request!";
-    res.status(422).render('user/error', { number: 422, redirect: "previous", message })
-});
-
-router.use((req, res) => {
-    const message = "Too many requests!";
-    res.status(429).render('user/error', { number: 429, redirect: "home", message })
-});
-
-router.use((req, res,) => {
-    const message = "Internal server error!";
-    res.status(500).render('user/error', { number: 500, redirect: "home", message })
-});
-
-router.use((req, res) => {
-    const message = "Feature not implemented!";
-    res.status(501).render('user/error', { number: 501, redirect: "home", message })
-});
-
-router.use((req, res) => {
-    const message = "Bad gateway!";
-    res.status(502).render('user/error', { number: 502, redirect: "home", message })
-});
-
-router.use((req, res) => {
-    const message = "Service unavailable!";
-    res.status(503).render('user/error', { number: 503, redirect: "home", message })
-});
-
-router.use((req, res) => {
-    const message = "Gateway timeout!";
-    res.status(504).render('user/error', { number: 504, redirect: "home", message })
-});
-
-router.use((req, res) => {
-    const message = "Infinite loop detected!";
-    res.status(508).render('user/error', { number: 508, redirect: "home", message })
-});
-
 // Redirect
 router.get('/discord', (req, res) => {
     res.redirect('https://discord.gg/dhUzNMmVpb')
@@ -311,6 +201,7 @@ router.post('/:link/status', checkAuthenticated, async (req, res) => {
     try {
         const user = await User.findById(req.user._id)
         const shortLink = await Link.findOne({ short: req.params.link })
+        const source = req.query.source
 
         if (shortLink && user.links.includes(shortLink._id)) {
             shortLink.status = !shortLink.status
@@ -318,7 +209,7 @@ router.post('/:link/status', checkAuthenticated, async (req, res) => {
 
         await shortLink.save()
 
-        res.redirect('/new')
+        return source === 'operator' ? res.redirect('/operator') : res.redirect('/new')
     } catch (err) {
         console.error(err)
         res.status(500).send('Server error')
@@ -353,7 +244,7 @@ router.post('/payment', checkAuthenticated, paymentValidation, async (req, res) 
     }
 });
 
-router.post('/ticket', checkAuthenticated, ticketValidation, async (req, res) => {
+router.post('/ticket', checkAuthenticated, ticketValidation, fileUpload(), async (req, res) => {
 
     const user = req.user;
     const tickets = await Ticket.find({ user: user._id })
@@ -465,7 +356,7 @@ router.post('/sendEmail', checkNotAuthenticated, sendEmailValidation, async (req
     const {name, email, subject, message} = req.body
 });
 
-router.post('/updateAccountInformation', updateAccountValidation, async (req, res) => {
+router.post('/updateAccountInformation', updateAccountValidation, fileUpload(), async (req, res) => {
   
     const user = req.user
 
@@ -570,7 +461,7 @@ router.post('/updateAutomaticPayouts', checkAuthenticated, async (req, res) => {
     }
 });
 
-//Short Links
+// Short Links
 router.get('/:link', async (req, res) => {
     try {
         const url = await Link.findOne({ short: req.params.link })
@@ -588,7 +479,7 @@ router.get('/:link', async (req, res) => {
     }
 });
 
-router.get('/example', (req, res) => { //set up; redirect to an ad link that redirects to website home page.
+router.get('/example', (req, res) => {
     const url = "example"
     
     res.render('ads/adPage', { url })
@@ -620,3 +511,119 @@ router.delete('/logout', checkAuthenticated, async (req, res, next) => {
 });
 
 export default router;
+
+// Errors
+router.use((req, res) => {
+    const message = "The page you're looking for was not found."
+    res.status(404).render('user/error', { number: 404, redirect: "previous", message })
+});
+
+// router.use((req, res) => {
+//     const message = "Your browser sent a request this server could not understand"
+//     res.status(400).render('user/error', { number: 400, redirect: "previous", message })
+// });
+
+// router.use((req, res) => {
+//     const message = "Authentication required!";
+//     res.status(401).render('user/error', { number: 401, redirect: "home", message })
+// });
+
+// router.use((req, res) => {
+//     const message = "A payment is required to proceed";
+//     res.status(402).render('user/error', { number: 402, redirect: "previous", message })
+// });
+
+// router.use((req, res) => {
+//     const message = "You do not have permission to access this page"
+//     res.status(403).render('user/error', { number: 403, redirect: "previous", message })
+// });
+
+// router.use((req, res) => {
+//     const message = "The page you're looking for was not found."
+//     res.status(404).render('user/error', { number: 404, redirect: "previous", message })
+// });
+
+// router.use((req, res) => {
+//     const message = "Method not allowed!";
+//     res.status(405).render('user/error', { number: 405, redirect: "previous", message })
+// });
+
+// router.use((req, res) => {
+//     const message = "Content not acceptable!";
+//     res.status(406).render('user/error', { number: 406, redirect: "previous", message })
+// });
+
+// router.use((req, res) => {
+//     const message = "Request timeout!";
+//     res.status(408).render('user/error', { number: 408, redirect: "previous", message })
+// });
+
+// router.use((req, res) => {
+//     const message = "Resource conflict!";
+//     res.status(409).render('user/error', { number: 409, redirect: "previous", message })
+// });
+
+// router.use((req, res) => {
+//     const message = "Resource no longer available!";
+//     res.status(410).render('user/error', { number: 410, redirect: "home", message })
+// });
+
+// router.use((req, res) => {
+//     const message = "File too large!";
+//     res.status(413).render('user/error', { number: 413, redirect: "previous", message })
+// });
+
+// router.use((req, res) => {
+//     const message = "URL too long!";
+//     res.status(414).render('user/error', { number: 414, redirect: "previous", message })
+// });
+
+// router.use((req, res) => {
+//     const message = "Unsupported file type!";
+//     res.status(415).render('user/error', { number: 415, redirect: "previous", message })
+// });
+
+// router.use((req, res) => {
+//     const message = "I'm a teapot!";
+//     res.status(418).render('user/error', { number: 418, redirect: "previous", message })
+// });
+
+// router.use((req, res) => {
+//     const message = "Unprocessable request!";
+//     res.status(422).render('user/error', { number: 422, redirect: "previous", message })
+// });
+
+// router.use((req, res) => {
+//     const message = "Too many requests!";
+//     res.status(429).render('user/error', { number: 429, redirect: "home", message })
+// });
+
+// router.use((req, res,) => {
+//     const message = "Internal server error!";
+//     res.status(500).render('user/error', { number: 500, redirect: "home", message })
+// });
+
+// router.use((req, res) => {
+//     const message = "Feature not implemented!";
+//     res.status(501).render('user/error', { number: 501, redirect: "home", message })
+// });
+
+// router.use((req, res) => {
+//     const message = "Bad gateway!";
+//     res.status(502).render('user/error', { number: 502, redirect: "home", message })
+// });
+
+// router.use((req, res) => {
+//     const message = "Service unavailable!";
+//     res.status(503).render('user/error', { number: 503, redirect: "home", message })
+// });
+
+// router.use((req, res) => {
+//     const message = "Gateway timeout!";
+//     res.status(504).render('user/error', { number: 504, redirect: "home", message })
+// });
+
+// router.use((req, res) => {
+//     const message = "Infinite loop detected!";
+//     res.status(508).render('user/error', { number: 508, redirect: "home", message })
+// });

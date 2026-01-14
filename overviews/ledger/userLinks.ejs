@@ -3,7 +3,7 @@
         <div class="card-body">
             <div class="d-flex flex-row justify-content-between">
                 <h4 class="card-title mb-1">Shortened Links</h4>
-                <p class="text-muted mb-1">data | links <%= currentPage * 16 - 16 %> to <%= currentPage === totalPages ? totalPages % 16 : currentPage * 16 %></p>
+                <p class="text-muted mb-1">data | <%= currentPage * 16 - 16 %> to <%= currentPage === totalPages ? totalPages % 16 : currentPage * 16 %></p>
             </div>
             <div class="row">
                 <div class="col-12">
@@ -12,7 +12,7 @@
                             <% links.slice().reverse().forEach(link => { %>
                                 <div class="preview-item border-bottom scrollableCard">
                                     <div class="preview-thumbnail">
-                                        <form action="/<%= link.short %>/status" method="POST">
+                                        <form action="/<%= link.short %>/status?source=<%= source %>" method="POST">
                                             <button type="submit" class="btn btn-link p-0 border-0 bg-transparent">
                                                 <% if (link.status) { %>
                                                     <div class="preview-icon bg-primary" title="deactivate link">

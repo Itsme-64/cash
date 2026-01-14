@@ -43,7 +43,6 @@ app.use('/assets', express.static(path.join(__dirname, 'public', 'assets')));
 app.use('/vendor', express.static(path.join(__dirname, 'node_modules')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(upload());
 app.use(flash());
 app.use(passport.initialize())
 app.use(passport.session())
