@@ -30,7 +30,9 @@
                                 <div class="col-12 text-center mt-xl-2">
                                     <% if (redirect == "previous") { %>
                                         <a class="text-white font-weight-medium" href="javascript: history.go(-1)">Take me back!</a>
-                                        <% } else { %>
+                                    <% } else if (redirect == "destination") { %>
+                                        <a class="text-white font-weight-medium" href="./">Continue to destination</a>
+                                    <% } else { %>
                                         <a class="text-white font-weight-medium" href="./">Back to home</a>
                                     <% } %>
                                 </div>

@@ -12,24 +12,63 @@
   <link rel="shortcut icon" href="assets/images/favicon.png" />
 </head>
 
-<body>
+<body> <!-- Router needs to submit (a lot) of data about the ad-link that needs to be used here -->
     <div class="container-scroller" style="margin: 0px">
         <div class="container-fluid page-body-wrapper">
             <div class="main-panel">
                 <nav class="navbar p-0 fixed-top d-flex flex-row">
                     <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
-                        <ul class="navbar-nav w-100">
-                            <li class="nav-item w-100">
-                                <form action="./new" method="GET" class="nav-link mt-2 mt-md-0 d-md-flex search w-100"
-                                    style="gap: 0.5rem;" autocomplete="off">
-                                    <input type="text" class="form-control" name="url" placeholder="Enter long URL">
-                                    <button type="submit" class="btn btn-success create-new-button">+ Create New Link</button>
-                                </form>
+                        <ul class="navbar-nav d-flex flex-row flex-wrap align-items-center gap-4 w-100">
+                            <li class="d-flex align-items-center gap-3">
+                                <img class="index-logo-img" src="/assets/images/logo-full.svg" alt="logo" style="max-width: 15rem;"/>
+                                <p class="mb-0 mb-0 d-none d-xl-block">The new #1 ad-link <br> shortening service</p>
+                            </li>
+                            <li class="vr mx-3 d-none d-lg-block"></li>
+                            <div class="flex-grow-1"></div>
+                            <% if (true) { %>
+                                <li class="d-flex gap-2 justify-content-center justify-content-md-end">
+                                    <p class="text-muted mb-0 d-none d-lg-block">
+                                        The content shown below is an advertisement<br>
+                                        You will be redirected after the countdown
+                                    </p>
+                                    <h1 class="text-muted mb-0">5</h1>
+                                </li>
+                            <% } else { %>
+                                <li class="d-flex gap-2 flex-wrap justify-content-center justify-content-md-end">
+                                    <p class="text-muted mb-0 d-none d-lg-block">
+                                        The content shown below is an advertisement <br>
+                                        After the countdown, press 'Skip' to proceed
+                                    </p>
+                                    <a class="btn btn-success create-new-button" href="<%= %>">Skip in 5s</a>
+                                </li>
+                            <% } %>
+                            <div class="flex-grow-1"></div>
+                            <li class="d-flex justify-content-start">
+                            <a class="btn btn-success" href="/register">
+                                <span class="d-none d-md-inline">
+                                    Sign Up&nbsp;&nbsp;|&nbsp;&nbsp;
+                                </span>
+                                Start Earning Today
+                            </a>
                             </li>
                         </ul>
                     </div>
                 </nav>
-                <%- include('../ledger/footer') %> <!-- make a clickable dropdown button to view footer -->
+                <div class="ad-container"> <!-- add a perfectly fitting body -->
+                    <!-- insert advertisements here -->
+                </div> <!-- make a clickable dropdown button to view footer --> 
+                <footer class="footer">
+                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © <span id="year"></span> 
+                            <a href="./index" target="_blank">Ads.Cash</a>. All rights reserved.
+                        </span>
+                        <span class="text-muted float-none float-sm-end d-block mt-1 mt-sm-0 text-center">
+                            <a href="/reportAdvertisement" target="_blank">Report Ad</a> - 
+                            <a href="/privacy" target="_blank">Privacy Policy</a> - 
+                            <a href="/tos" target="_blank">Terms of Service</a>
+                        </span>
+                    </div>
+                </footer>
             </div>
         </div>
     </div>

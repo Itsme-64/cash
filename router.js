@@ -144,6 +144,12 @@ router.get('/privacy', (req, res) => {
     res.render('user/privacyPolicy')
 });
 
+router.get('/reportAdvertisement', (req, res) => {
+    const message = "Thank you for your report, it has been submitted and will be handled shortly. "
+                  + "We appreciate your efforts to help make 159.cash a better place!"
+    res.render('user/error', { number: 'Rep.', redirect: 'destination', message })
+});
+
 // Redirect
 router.get('/discord', (req, res) => {
     res.redirect('https://discord.gg/dhUzNMmVpb')

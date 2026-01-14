@@ -25240,3 +25240,9 @@ html {
 .scrollableCard {
   margin-right: 0.4vw;
 }
+
+/* Ad Page */
+
+.ad-container {
+  flex: 1 1 auto;
+}
