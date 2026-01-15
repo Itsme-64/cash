@@ -181,7 +181,8 @@ router.post('/new', checkAuthenticated, newLinkValidation, async (req, res) => {
                     user: user._id,
                     full: fullLink,
                     monetization: req.body.monetization,
-                    duration: req.body.monetizationDuration
+                    duration: req.body.monetizationDuration,
+                    redirectInstantly : req.body.redirectInstantly
                 });
 
                 createdLinks.push(link);

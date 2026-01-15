@@ -44,6 +44,11 @@ const linkSchema = new mongoose.Schema({
         required: true,
         default: true
     },
+    redirectInstantly: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
     earnings: {
         type: Number,
         required: false,

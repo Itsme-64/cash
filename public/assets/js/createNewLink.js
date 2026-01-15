@@ -57,3 +57,28 @@ function toggleMonetizationOptions() {
 
 monetizationCheckbox.addEventListener('change', toggleMonetizationOptions);
 toggleMonetizationOptions();
+
+
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+});
+
+
+const warningTextElement = document.getElementById('monetization-warning');
+
+const radioButtonOne = document.getElementById('option1');
+const radioButtonTwo = document.getElementById('option2');
+const radioButtonThree = document.getElementById('option3');
+const redirectCheckbox = document.getElementById('redirectInstantly')
+
+const monetizationElements = [monetizationCheckbox, radioButtonOne, redirectCheckbox, radioButtonTwo, radioButtonThree];
+monetizationElements.forEach(element => {
+    element.addEventListener('change', () => {
+        if (!monetizationCheckbox.checked || redirectCheckbox.checked || !(radioButtonTwo.checked || radioButtonThree.checked)) {
+            warningTextElement.textContent = "The current settings are not optimal for your income!";
+        } else {
+            warningTextElement.textContent = '';
+        }
+    });
+});
