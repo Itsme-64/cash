@@ -473,7 +473,27 @@ router.post('/updateAutomaticPayouts', checkAuthenticated, async (req, res) => {
     }
 });
 
+// Tickets
+router.get('/tickets/:link', checkAuthenticated, async (req, res) => {
+    try {
+        const ticket = await Ticket.findOne({ shortID: req.params.link })
+        const user = await User.findById(req.user._id)
+        getTicketValidation(user, ticket)
+
+        res.render('ticket', { ticket, data: {} })
+    } catch (err) {
+        console.error(err)
+        res.status(500).send('Server error')  
+    }
+});
+
 // Ads
+router.get('/example', (req, res) => {
+    const url = { full: '/', short: 'example', redirectInstantly: false, duration: 5000 }
+    
+    res.render('ads/adPage', { url })
+});
+
 router.get('/:link', async (req, res) => {
     try {
         const url = await Link.findOne({ short: req.params.link })
@@ -485,26 +505,6 @@ router.get('/:link', async (req, res) => {
         url.save()
 
         url.monetization ? res.render('ads/adPage', { url }) : res.redirect(url.full)
-    } catch (err) {
-        console.error(err)
-        res.status(500).send('Server error')  
-    }
-});
-
-router.get('/example', (req, res) => {
-    const url = "example"
-    
-    res.render('ads/adPage', { url })
-});
-
-// Tickets
-router.get('/tickets/:link', checkAuthenticated, async (req, res) => {
-    try {
-        const ticket = await Ticket.findOne({ shortID: req.params.link })
-        const user = await User.findById(req.user._id)
-        getTicketValidation(user, ticket)
-
-        res.render('ticket', { ticket, data: {} })
     } catch (err) {
         console.error(err)
         res.status(500).send('Server error')  

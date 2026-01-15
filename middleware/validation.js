@@ -33,7 +33,7 @@ export const newLinkValidation = [
     body('monetizationDuration')
         .notEmpty().withMessage('Ad duration cannot be empty')
         .isInt({ min: 5000, max: 15000 }).withMessage('Ad duration must be a number between 5000 and 15000'),
-    body('redirectInstantly').toBoolean.optional({ checkFalsy: true})
+    body('redirectInstantly').toBoolean().optional({ checkFalsy: true})
 ];
 
 export const paymentValidation = [

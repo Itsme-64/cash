@@ -14,8 +14,8 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <% if (Array.isArray(referrals) && referrals.length > 0) { %>
-                                <% tickets.forEach(ticket => { %>
+                            <% if (Array.isArray(user.referrals) && user.referrals.length > 0) { %>
+                                <% user.referrals.forEach(referral => { %>
                                     <td><%= referralAmount %></td>
                                     <td><%= totalReferralClicks %></td>
                                     <td>USD <%= totalReferralEarnings %></td>

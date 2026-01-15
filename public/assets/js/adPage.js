@@ -1,5 +1,5 @@
-const redirectInstantly = "<%= url.redirectInstantly %>"
-const duration = "<%= url.duration %>";
+const redirectInstantly = document.body.dataset.redirectInstantly === "true";
+const duration = Number(document.body.dataset.duration);
 
 let seconds = duration / 1000;
 let countDownElement;
@@ -8,13 +8,13 @@ redirectInstantly ? countDownElement = document.getElementById('countdownText')
                     : countDownElement = document.getElementById("countdownButton");
 
 const updateCountdown = setInterval(() => {
-    if (seconds <= 0)  redirect();
-
     if (redirectInstantly) {
         countDownElement.textContent = seconds;
     } else {
         countDownElement.textContent = `Skip in ${seconds}`;
     }
+
+    if (seconds <= 0) redirect();
 
     --seconds;
 }, 1000);
@@ -24,12 +24,13 @@ function redirect() {
 
     if (redirectInstantly) {
         countDownElement.textContent = 0;
-        window.location.href = "<%= url.full %>";
+        window.location.href = document.body.dataset.urlFull;
     } else {
         countDownElement.textContent = "Skip";
         countDownElement.classList.remove("disabled");
     }
 }
+
 
 document.addEventListener("DOMContentLoaded", function() {
     const footerButton = document.getElementById("footerButton");

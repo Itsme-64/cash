@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 import path from 'path';
 import passport from 'passport';
 import flash from 'express-flash';
-import upload from 'express-fileupload';
 import methodOverride from 'method-override';
 import pages from './router.js';
 import { registerJobs } from './jobs/time-is-money.js';
