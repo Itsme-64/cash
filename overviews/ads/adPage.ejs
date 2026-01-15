@@ -13,10 +13,10 @@
 
     <style>
     body {
-        display: flex !important;
-        flex-direction: column !important;
-        min-height: 100vh !important;
-        overflow: hidden !important;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        overflow: hidden;
     }
     </style>
 </head>
@@ -32,25 +32,25 @@
                 <li class="vr mx-3 d-none d-lg-block"></li>
                 <div class="flex-grow-1"></div>
                 <% if (true) { %>
-                    <li class="d-flex gap-2 justify-content-center justify-content-md-end">
+                    <li class="d-flex align-items-center gap-4 justify-content-center justify-content-md-end">
                         <p class="text-muted mb-0 d-none d-lg-block">
                             The content shown below is an advertisement<br>
                             You will be redirected after the countdown
                         </p>
-                        <h1 class="text-muted mb-0">5</h1>
+                        <h1 class="text-muted mb-0" id="countdownText">-</h1>
                     </li>
                 <% } else { %>
-                    <li class="d-flex gap-2 flex-wrap justify-content-center justify-content-md-end">
+                    <li class="d-flex align-items-center gap-3 justify-content-center justify-content-md-end">
                         <p class="text-muted mb-0 d-none d-lg-block">
                             The content shown below is an advertisement <br>
                             After the countdown, press 'Skip' to proceed
                         </p>
-                        <a class="btn btn-success create-new-button" href="<%= url.full %>">Skip in 5s</a>
+                        <a class="btn btn-primary disabled" id="countdownButton" href="<%= url.full %>" disabled>Skip in -</a>
                     </li>
                 <% } %>
                 <div class="flex-grow-1"></div>
                 <li class="d-flex justify-content-start">
-                    <a class="btn btn-success" href="/register">
+                    <a class="btn btn-primary" href="/register">
                         <span class="d-none d-md-inline">
                             Sign Up&nbsp;&nbsp;|&nbsp;&nbsp;
                         </span>
@@ -60,14 +60,14 @@
             </ul>
         </div>
     </nav>
-    <div class="ad-container" style="background-color: tomato;"> <!-- add a perfectly fitting body -->
+    <div class="ad-container" style="background-color: tomato;">
         <!-- insert advertisements here -->
-        <li class="nav-item nav-settings d-none d-lg-block">
-            <a class="scroll-top" id="footerButton" style="bottom: 60px !important">
-                <i class="mdi mdi-arrow-up"></i>
-            </a>
-        </li>
-    </div> <!-- make a clickable dropdown button to view footer --> 
+    </div>
+    <li class="nav-item nav-settings d-none d-lg-block">
+        <a class="scroll-top" id="footerButton" style="bottom: 60px !important">
+            <i class="mdi mdi-arrow-up"></i>
+        </a>
+    </li>
     <footer class="footer" id="footer">
         <div class="d-sm-flex justify-content-center justify-content-sm-between">
             <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © <span id="year"></span> 
@@ -82,23 +82,7 @@
     </footer>
     <script src="vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/main.js"></script>
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const footerButton = document.getElementById("footerButton");
-        const footer = document.getElementById("footer");
-        const arrow = footerButton.querySelector("i");
-
-        footerButton.onclick = function(e) {
-            footer.classList.toggle("show");
-
-            if (footer.classList.contains("show")) {
-                arrow.style.transform = "rotate(180deg)";
-            } else {
-                arrow.style.transform = "rotate(0deg)";
-            }
-        };
-    });
-    </script>
+    <script src="assets/js/adPage.js"></script>
 </body>
 
 </html>
