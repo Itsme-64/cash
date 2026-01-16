@@ -12,6 +12,17 @@
   <link rel="shortcut icon" href="assets/images/favicon.png" />
 
     <style>
+        .tooltip {
+            font-size: 0.95rem !important;
+            z-index: 9999 !important;
+        }
+
+        .tooltip-inner {
+            max-width: 280px !important;
+            padding: 0.6rem 0.9rem !important;
+            line-height: 1.4 !important;
+        }
+
         body {
             display: flex;
             flex-direction: column;
@@ -21,13 +32,22 @@
     </style>
 </head>
 
-<body data-redirect-instantly="<%= url.redirectInstantly %>" data-duration="<%= url.duration %>" data-url-full="<%= url.full %>">
+<body data-redirect-instantly="<%= url.redirectInstantly %>" 
+      data-duration="<%= url.duration %>"
+      data-url-full="<%= url.full %>"
+      data-url-short="<%= url.short %>"> <!-- Increase duration to 10 seconds -->
+    <div id="pause-overlay"></div>
     <nav class="navbar p-0 fixed-top d-flex flex-row">
         <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
             <ul class="navbar-nav d-flex flex-row flex-wrap align-items-center gap-4 w-100">
                 <li class="d-flex align-items-center gap-3">
-                    <img class="index-logo-img" src="/assets/images/logo-full.svg" alt="logo" style="max-width: 15rem;"/>
-                    <p class="mb-0 mb-0 d-none d-xl-block">The new #1 ad-link <br> shortening service</p>
+                    <a href="/"> 
+                        <img class="index-logo-img" src="/assets/images/logo-full.svg" alt="logo" style="max-width: 15rem;"/> 
+                    </a>
+                    <p class="mb-0 mb-0 d-none d-xl-block">
+                        The new #1 ad-link <br> 
+                        shortening service
+                    </p>
                 </li>
                 <li class="vr mx-3 d-none d-lg-block"></li>
                 <div class="flex-grow-1"></div>
@@ -42,10 +62,16 @@
                 <% } else { %>
                     <li class="d-flex align-items-center gap-3 justify-content-center justify-content-md-end">
                         <p class="text-muted mb-0 d-none d-lg-block">
+                            <i class="text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" id="tooltip-redirect"
+                                title="Choose between setting immediate redirects or 'Skip' button options">
+                            </i>
                             The content shown below is an advertisement <br>
                             After the countdown, press 'Skip' to proceed
                         </p>
                         <a class="btn btn-primary disabled" id="countdownButton" href="<%= url.full %>" disabled>Skip in -</a>
+                        <i class="text-muted" data-bs-toggle="tooltip" data-bs-placement="top" id="tooltip-duration"
+                            title="Set custom waiting times between 5 and 15 seconds">
+                        </i>
                     </li>
                 <% } %>
                 <div class="flex-grow-1"></div>
@@ -53,6 +79,9 @@
                     <a class="btn btn-primary" href="/register">
                         <span class="d-none d-md-inline">
                             Sign Up&nbsp;&nbsp;|&nbsp;&nbsp;
+                            <i class="text-muted z-1001" data-bs-toggle="tooltip" data-bs-placement="bottom" id="tooltip-register"
+                                title="What are you waiting for? Sign up now to start earning today!">
+                            </i>
                         </span>
                         Start Earning Today
                     </a>

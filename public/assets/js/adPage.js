@@ -1,22 +1,27 @@
 const redirectInstantly = document.body.dataset.redirectInstantly === "true";
 const duration = Number(document.body.dataset.duration);
+const example = document.body.dataset.urlShort === "example";
 
 let seconds = duration / 1000;
 let countDownElement;
+let paused = false;
 
 redirectInstantly ? countDownElement = document.getElementById('countdownText')
-                    : countDownElement = document.getElementById("countdownButton");
+                  : countDownElement = document.getElementById("countdownButton");
 
 const updateCountdown = setInterval(() => {
-    if (redirectInstantly) {
-        countDownElement.textContent = seconds;
-    } else {
-        countDownElement.textContent = `Skip in ${seconds}`;
+    if (!paused) {
+        if (redirectInstantly) {
+            countDownElement.textContent = seconds;
+        } else {
+            countDownElement.textContent = `Skip in ${seconds}`;
+        }
+
+        if (seconds <= 0) redirect();
+        --seconds;
+
+        if (example) handleExample(seconds);
     }
-
-    if (seconds <= 0) redirect();
-
-    --seconds;
 }, 1000);
 
 function redirect() {
@@ -47,3 +52,66 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     };
 });
+
+
+const durationTooltip = document.getElementById("tooltip-duration");
+const redirectTooltip = document.getElementById("tooltip-redirect");
+const registerTooltip = document.getElementById("tooltip-register");
+const pauseOverlay = document.getElementById('pause-overlay');
+
+const tooltips = [durationTooltip, redirectTooltip, registerTooltip].filter(Boolean);
+const tooltipMap = new Map();
+
+let pauseTimeout;
+
+tooltips.forEach(el => {
+    const tooltip = new bootstrap.Tooltip(el, {
+        trigger: 'manual'
+    });
+
+    tooltipMap.set(el, tooltip);
+});
+
+pauseOverlay.addEventListener("click", () => {
+    if (!paused) return;
+
+    tooltipMap.forEach((tooltip, toolTip) => {
+        if (tooltip._isShown()) {
+            clearTimeout(pauseTimeout);
+            resumeDefault(toolTip);
+        }
+    });
+});
+
+
+function handleExample(seconds) {
+    switch (seconds) {
+        case 7:
+            pauseDefault(durationTooltip);
+            break;
+        case 4:
+            pauseDefault(redirectTooltip);
+            break;
+        case 1:
+            pauseDefault(registerTooltip);
+            break;
+        default:
+            return;
+    }
+}
+
+function resumeDefault(toolTip) {
+    tooltipMap.get(toolTip).hide();
+    pauseOverlay.classList.remove('active')
+    paused = false;
+}
+
+function pauseDefault(toolTip) {
+    paused = true;
+    pauseOverlay.classList.add('active')
+    tooltipMap.get(toolTip).show();
+
+    pauseTimeout = setTimeout(() => {
+        resumeDefault(toolTip);
+    }, 4500)
+}
