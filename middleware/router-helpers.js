@@ -28,11 +28,11 @@ export async function getReferralData(user) {
 }
 
 export async function getPayoutsEnabledData(user) {
-    const payments = await Payout.find({ user: user._id })
+    const payouts = await Payout.find({ user: user._id })
     const userInfoThis = await UserInfo.findOne({ user: user._id })
     const payoutMethod = await PayoutMethod.findOne({ user })
 
-    const paymentsEnabled =
+    const payoutsEnabled =
         payoutMethod &&
         user.verified &&
         userInfoThis.name &&
@@ -43,7 +43,7 @@ export async function getPayoutsEnabledData(user) {
         userInfoThis.address.country &&
         user.balance >= 10;
 
-    return { payments, paymentsEnabled, payoutMethod }
+    return { payouts, payoutsEnabled, payoutMethod }
 }
 
 export function getTicketValidation(user, ticket) {

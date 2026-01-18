@@ -8,7 +8,7 @@ const payoutSchema = new mongoose.Schema({
         required: true,
         immutable: true
     },
-    paymentID: {
+    payoutID: {
         type: String,
         required: true,
         default: shortId.generate(),

@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Your Account | Ads.cash</title>
+  <title>Your Account | 159.cash</title>
   <link rel="stylesheet" href="vendor/@mdi/font/css/materialdesignicons.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="shortcut icon" href="assets/images/favicon.png" />
@@ -137,7 +137,7 @@
             <h6 class="text-muted font-weight-normal" style="position: absolute; right: 0; margin-right: 3rem;">
               Navigation:<br>
               <a href="#account" style="display: inline-block; margin-top: 0.2rem;">account</a><br>
-              <a href="#payment" style="display: inline-block; margin-top: 0.2rem;">payment</a><br>
+              <a href="#payout" style="display: inline-block; margin-top: 0.2rem;">payout</a><br>
               <a href="#updatePassword" style="display: inline-block; margin-top: 0.2rem;">password</a><br>
               <a href="#autoPayoutsHref" style="display: inline-block; margin-top: 0.2rem;">auto payouts</a><br>
               <a href="#premium" style="display: inline-block; margin-top: 0.2rem;">premium</a>
@@ -147,8 +147,8 @@
             <div class="col-md-6 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title" id="payment">Payment Information</h4>
-                  <form class="forms-sample" action="/updatePaymentInformation" method="post">
+                  <h4 class="card-title" id="payout">Payout Information</h4>
+                  <form class="forms-sample" action="/updatePayoutInformation" method="post">
                     <div class="form-group">
                       <label for="payoutMethod">Payout method</label>
                       <select class="form-select" id="payoutMethod" name="payoutMethod" required>
@@ -169,7 +169,7 @@
                       <button type="submit" class="btn btn-primary me-2">Update information</button>
                       <button type="reset" class="btn btn-dark" style="margin-left: 0.15rem">Clear</button>
                       <p class="text-danger mb-0" style="margin-left: 1rem">
-                        <% if (typeof errors != 'undefined' && form == 'updatePaymentInformation') { %>
+                        <% if (typeof errors != 'undefined' && form == 'updatePayoutInformation') { %>
                           <%= errors[0].msg %>
                         <% } %>
                       </p>
@@ -223,7 +223,7 @@
                   <form class="forms-sample" action="/updateAutomaticPayouts" method="post">
                     <div class="form-check form-check-flat form-check-primary">
                       <label class="form-check-label" for="autoPayouts">
-                        <input type="checkbox" class="form-check-input" id="autoPayouts" name="autoPayouts" value="true"> Enable automatic payment requests </label>
+                        <input type="checkbox" class="form-check-input" id="autoPayouts" name="autoPayouts" value="true"> Enable automatic payout requests </label>
                     </div>
                     <div class="d-flex align-items-center">
                       <button type="submit" class="btn btn-primary me-2" style="margin-top: 0.75rem;">Update selection</button>
@@ -249,15 +249,15 @@
                   <li class="text-muted">Create unlimited links without advertisements</li>
                   <li class="text-muted">Priority payout processing</li>
                   <li class="text-muted">Priority support</li>
-                  <li class="text-muted">No payment information required: simply use you ads.cash account balance
+                  <li class="text-muted">No payment information required: simply use you 159.cash account balance
                   </li>
                 </ul>
                 <form class="forms-sample" action="" method="post">
                   <div class="form-group" style="margin-bottom: 1.5rem;">
-                    <label for="paymentMethod">Payment method</label>
+                    <label for="payment">Payment method</label>
                     <select class="form-select" id="paymentMethod" name="paymentMethod" required>
                       <option value="none">Choose method</option>
-                      <option value="balance">Use ads.cash balance</option>
+                      <option value="balance">Use 159.cash balance</option>
                       <option value="PayPal">PayPal</option>
                     </select>
                   </div>

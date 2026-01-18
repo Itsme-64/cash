@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Payments | Ads.cash</title>
+  <title>Payouts | 159.cash</title>
   <link rel="stylesheet" href="vendor/@mdi/font/css/materialdesignicons.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="shortcut icon" href="assets/images/favicon.png" />
@@ -12,17 +12,17 @@
 
 <body>
   <div class="container-scroller">
-  <%- include('ledger/sidebar', { currentPage: 'payments' }) %>
+  <%- include('ledger/sidebar', { currentPage: 'payouts' }) %>
   <%- include('ledger/sidebarMini') %>
     <div class="container-fluid page-body-wrapper">
       <div class="main-panel-noheader">
         <div class="content-wrapper">
           <div class="page-header">
-            <h3 class="page-title"> Payments </h3>
+            <h3 class="page-title"> Payouts </h3>
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="./operator">Cash</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Payments</li>
+                <li class="breadcrumb-item active" aria-current="page">Payouts</li>
               </ol>
             </nav>
           </div>
@@ -30,7 +30,7 @@
             <div class="col-md-6 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title" id="payment">Account Balance</h4>
+                  <h4 class="card-title" id="payout">Account Balance</h4>
                   <div class="form-group row">
                     <label for="exampleInputUsername2" class="col-sm-3 col-form-label">USD</label>
                     <div class="col-sm-9">
@@ -38,11 +38,11 @@
                         readonly>
                     </div>
                   </div>
-                  <p class="card-description"> Payment details:
+                  <p class="card-description"> Payout details:
                     <br><b>You </b>are responsible for assuring your
-                    <a href="./you#payment">payment information</a> is set correctly<br>
+                    <a href="./you#payout">payout information</a> is set correctly<br>
                     <% if (!user.verified) { %>
-                      <p class="text-danger">You must verify your account to request payments</p>
+                      <p class="text-danger">You must verify your account to request payouts</p>
                     <% } else if (!payoutMethod) { %>
                       <p class="text-danger">You must have added a Payout Method to request payouts</p>
                     <% } else if (!user.name || !user.address.line1 || !user.address.city || !user.address.zip || !user.address.country) { %>
@@ -66,20 +66,20 @@
                     <% } else { %>
                       <code>Off</code>
                     <% } %>
-                    <a href="./you#autoPayment"> Manage</a><br>
-                    <a href="./you#payment">Edit your payment information.</a>
+                    <a href="./you#autoPayout"> Manage</a><br>
+                    <a href="./you#payout">Edit your payout information.</a>
                   </p>
-                  <form class="forms-sample" action="/payment" method="post" autocomplete="off">
+                  <form class="forms-sample" action="/payout" method="post" autocomplete="off">
                     <div class="form-group row">
                       <label for="amount" class="col-sm-3 col-form-label">Amount (USD)</label>
                       <div class="col-sm-9">
                         <input type="number" class="form-control text-success" id="amount" name="amount" min="10" max="1000" 
-                          placeholder="10.00" value="<%= paymentData.amount || '' %> required">
+                          placeholder="10.00" value="<%= payoutData.amount || '' %> required">
                       </div>
                     </div>
                     <div class="d-flex align-items-center">
                       <button type="submit" class="btn btn-primary me-2"
-                        <% if (!paymentsEnabled) { %>
+                        <% if (!payoutsEnabled) { %>
                           disabled
                         <% } %>
                       >Request</button>
@@ -94,7 +94,7 @@
               </div>
             </div>
           </div>
-          <%- include('ledger/userPayments') %>
+          <%- include('ledger/userPayouts') %>
         </div>
         <%- include('ledger/footer') %>
       </div>

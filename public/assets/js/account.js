@@ -29,12 +29,12 @@ const payoutSelect = document.getElementById('payoutMethod');
 const paypalGroup = document.getElementById('paypalFormGroup');
 const btcGroup = document.getElementById('btcFormGroup');
 
-function updatePaymentInputs() {
+function updatePayoutInputs() {
   const value = payoutSelect.value;
   paypalGroup.style.display = value === 'PayPal' ? 'block' : 'none';
   btcGroup.style.display = value === 'Bitcoin' ? 'block' : 'none';
 }
 
-payoutSelect.addEventListener('change', updatePaymentInputs);
+payoutSelect.addEventListener('change', updatePayoutInputs);
 
-updatePaymentInputs();
+updatePayoutInputs();

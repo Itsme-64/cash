@@ -12,22 +12,22 @@
                             <th>Status</th>
                         </tr>
                     </thead>
-                    <% if (Array.isArray(payments) && payments.length > 0) { %>
-                        <% payments.slice().reverse().forEach(payment => { %>
+                    <% if (Array.isArray(payouts) && payouts.length > 0) { %>
+                        <% payouts.slice().reverse().forEach(payout => { %>
                             <tbody>
                                 <tr>
-                                    <td><%= new Date(payment.createdAt).toLocaleDateString("en-US", {
+                                    <td><%= new Date(payout.createdAt).toLocaleDateString("en-US", {
                                             month: "long",
                                             day: "numeric",
                                             year: "numeric"
                                         }) %>
                                     </td>
-                                    <td>USD <%= payment.amount %></td>
-                                    <td># <%= payment.paymentID %></td>
+                                    <td>USD <%= payout.amount %></td>
+                                    <td># <%= payout.payoutID %></td>
                                     <td>
-                                        <% if (payment.status == 'pending') { %>
+                                        <% if (payout.status == 'pending') { %>
                                             <label class="badge badge-warning">Pending</label>
-                                        <% } else if (payment.status == 'completed') { %>
+                                        <% } else if (payout.status == 'completed') { %>
                                             <label class="badge badge-success">Completed</label>
                                         <% } else { %>
                                             <label class="badge badge-danger">Rejected</label>

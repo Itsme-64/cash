@@ -16,7 +16,7 @@ import { processTicketFiles } from './middleware/ticket-files-config.js';
 import { checkAuthenticated, checkNotAuthenticated } from './middleware/auth.js';
 import { getPayoutsEnabledData, getReferralData, getTicketValidation, getLinkData, monthlyMonetization, getPayoutMethod } from './middleware/router-helpers.js';
 import { newLinkValidation, 
-         paymentValidation, 
+         payoutValidation, 
          ticketValidation, 
          ticketMessageValidation, 
          loginValidation, 
@@ -70,12 +70,12 @@ router.get('/operator', checkAuthenticated, async (req, res) => {
     }
 });
 
-router.get('/payment', checkAuthenticated, async (req, res) => {
+router.get('/payout', checkAuthenticated, async (req, res) => {
     try {
         const user = req.user
         const data = await getPayoutsEnabledData(user)
 
-        res.render('payments', { ...data, paymentData: {} })
+        res.render('payouts', { ...data, payoutData: {} })
     } catch (err) {
         console.error(err)
         res.status(500).send('Server error')
@@ -227,14 +227,14 @@ router.post('/:link/status', checkAuthenticated, async (req, res) => {
     }
 })
 
-router.post('/payment', checkAuthenticated, paymentValidation, async (req, res) => {
+router.post('/payout', checkAuthenticated, payoutValidation, async (req, res) => {
     
     const user = req.user;
 
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
         const payoutsEnabledData = await getPayoutsEnabledData(user)
-        return res.render('payments', { ...payoutsEnabledData, errors: errors.array(), data: req.body })
+        return res.render('payouts', { ...payoutsEnabledData, errors: errors.array(), data: req.body })
     }
     
     try {
@@ -246,7 +246,7 @@ router.post('/payment', checkAuthenticated, paymentValidation, async (req, res) 
             payoutMethod: payoutMethod
         })
 
-        res.redirect('/payment')
+        res.redirect('/payout')
     } catch (err) {
         console.error(err)
         res.status(500).send('Server error')
@@ -544,7 +544,7 @@ router.use((req, res) => {
 // });
 
 // router.use((req, res) => {
-//     const message = "A payment is required to proceed";
+//     const message = "A payout is required to proceed";
 //     res.status(402).render('user/error', { number: 402, redirect: "previous", message })
 // });
 

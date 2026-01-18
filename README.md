@@ -1,3 +1,3 @@
 # New best link shortener
 
-If all goes well: https://www.ads.cash/
+If all goes well: ~~https://ads.cash/~~ https://159.cash/

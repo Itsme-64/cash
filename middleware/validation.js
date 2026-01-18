@@ -36,17 +36,17 @@ export const newLinkValidation = [
     body('redirectInstantly').toBoolean().optional({ checkFalsy: true})
 ];
 
-export const paymentValidation = [
+export const payoutValidation = [
     body('amount')
         .custom(async (value, { req }) => {
             const user = req.user;
             if (!user || !user.verified || !user.name || !user.address.line1 || !user.address.city || !user.address.zip || !user.address.country || user.balance < 10) {
-                throw new Error('You do not meet all requirements to request payment');
+                throw new Error('You do not meet all requirements to request payout');
             }
             return true
         })
-        .notEmpty().withMessage('Payment amount must be a number between 10 and 1000')
-        .isInt({ min: 10, max: 1000 }).withMessage('Payment amount must be a number between 10 and 1000')
+        .notEmpty().withMessage('Payout amount must be a number between 10 and 1000')
+        .isInt({ min: 10, max: 1000 }).withMessage('Payout amount must be a number between 10 and 1000')
 ];
 
 export const ticketValidation = [
