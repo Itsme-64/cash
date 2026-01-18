@@ -8,11 +8,6 @@ const linkSchema = new mongoose.Schema({
         required: true,
         immutable: true
     },
-    full: {
-        type: String,
-        required: true,
-        immutable: true
-    },
     short: {
         type: String,
         required: true,
@@ -20,11 +15,10 @@ const linkSchema = new mongoose.Schema({
         unique: true,
         immutable: true
     },
-    clicks: {
-        type: Number,
+    full: {
+        type: String,
         required: true,
-        default: 0,
-        min: 0
+        immutable: true
     },
     monetization: {
         type: Boolean,
@@ -49,14 +43,6 @@ const linkSchema = new mongoose.Schema({
         required: true,
         default: false
     },
-    earnings: {
-        type: Number,
-        required: false,
-        default: 0,
-        min: 0
-    }
 }, { timestamps: true });
-
-
 
 export default mongoose.model('Link', linkSchema);

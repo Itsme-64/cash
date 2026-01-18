@@ -1,4 +1,4 @@
-import Payment from '../models/payments.js';
+import Payout from '../models/payouts.js';
 
 export async function automaticPayouts() {
     return; // TODO

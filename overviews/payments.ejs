@@ -43,6 +43,8 @@
                     <a href="./you#payment">payment information</a> is set correctly<br>
                     <% if (!user.verified) { %>
                       <p class="text-danger">You must verify your account to request payments</p>
+                    <% } else if (!payoutMethod) { %>
+                      <p class="text-danger">You must have added a Payout Method to request payouts</p>
                     <% } else if (!user.name || !user.address.line1 || !user.address.city || !user.address.zip || !user.address.country) { %>
                       <p class="text-danger">Account information is incomplete</p>
                     <% } else if (user.balance < 10) { %>

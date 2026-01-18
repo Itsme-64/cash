@@ -37,6 +37,7 @@ mongoose.connect(URI)
 
 app.set('view engine', 'ejs');
 app.set('views', 'overviews');
+app.set('trust proxy', true);
 
 app.use('/assets', express.static(path.join(__dirname, 'public', 'assets')));
 app.use('/vendor', express.static(path.join(__dirname, 'node_modules')));

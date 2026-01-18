@@ -1,10 +1,14 @@
 import User from '../models/users.js';
 import Link from '../models/links.js';
-import Payment from '../models/payments.js';
+import Payout from '../models/payouts.js';
+import UserInfo from '../models/users-info.js';
+import ClickEvent from '../models/click-event.js';
+import PayoutMethod from '../models/payout-method.js';
+import { link } from 'fs';
+import clickEvent from '../models/click-event.js';
 
 export async function getReferralData(user) {
-    const referralAccounts = await User.find({ _id: { $in: user.referrals } });
-
+    const referralAccounts = await User.find({ referrer: user.PID });
     const referralAmount = referralAccounts.length;
 
     const totalReferralClicks = referralAccounts.reduce((sum, account) => sum + (account.clicks || 0), 0);
@@ -23,20 +27,23 @@ export async function getReferralData(user) {
     return { referralAccounts, referralAmount, totalReferralClicks, totalReferralEarnings, referralDifference };
 }
 
-export async function getPaymentData(user) {
-    const payments = await Payment.find({ user: user._id })
+export async function getPayoutsEnabledData(user) {
+    const payments = await Payout.find({ user: user._id })
+    const userInfoThis = await UserInfo.findOne({ user: user._id })
+    const payoutMethod = await PayoutMethod.findOne({ user })
 
     const paymentsEnabled =
+        payoutMethod &&
         user.verified &&
-        user.name &&
-        user.address &&
-        user.address.line1 &&
-        user.address.city &&
-        user.address.zip &&
-        user.address.country &&
+        userInfoThis.name &&
+        userInfoThis.address &&
+        userInfoThis.address.line1 &&
+        userInfoThis.address.city &&
+        userInfoThis.address.zip &&
+        userInfoThis.address.country &&
         user.balance >= 10;
 
-    return { payments, paymentsEnabled }
+    return { payments, paymentsEnabled, payoutMethod }
 }
 
 export function getTicketValidation(user, ticket) {
@@ -59,7 +66,13 @@ export async function getLinkData(req) {
         .skip(skip)
         .limit(limit);
 
-    const totalPages = Math.ceil(totalLinks / limit);
+    const totalPages = Math.ceil(totalLinks / limit);  
+
+    await Promise.all(
+        links.map(async (link) => {
+            link.clicks = await ClickEvent.countDocuments({ link: link._id, valid: true });
+        })
+    );
 
     if (req.xhr) {
         return res.render('ledger/userLinks', { links }, (err, html) => {
@@ -87,4 +100,12 @@ export async function monthlyMonetization(req) {
     }
 
     return { maxLinksReached: count >= 5, count }
+}
+
+export async function getPayoutMethod(req) {
+    const user = req.user;
+
+    return await PayoutMethod
+        .findOne({ user })
+        .sort({ createdAt: -1 }) || 'none';
 }

@@ -160,7 +160,7 @@ export const updateAccountValidation = [
             }),
 ];
 
-export const updatePaymentInformationValidation = [
+export const updatePayoutInformationValidation = [
     body('payoutMethod')
         .custom((payoutMethod) => {
             if (payoutMethod != "PayPal" && payoutMethod != "Bitcoin") {

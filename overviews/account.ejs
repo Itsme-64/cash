@@ -30,7 +30,7 @@
             <div class="card">
               <div class="card-body">
                 <h4 class="card-title" id="account">Account information</h4>
-                <p class="card-description">Most information is required for payment processing</p>
+                <p class="card-description">Most information is required for payout processing</p>
                 <form class="forms-sample" action="/updateAccountInformation" method="post" enctype="multipart/form-data">
                   <div class="form-check form-check-flat form-check-primary">
                     <label class="form-check-label">
@@ -41,37 +41,37 @@
                       <label for="name" class="col-sm-3 col-form-label">Full Name: *</label>
                       <div class="col-sm-9">
                         <input disabled type="text" class="form-control" id="name" name="name" autocomplete="name" 
-                          <% if (user.name) { %> value="<%= user.name %>" <% } %>>
+                          <% if (userInfo.name) { %> value="<%= userInfo.name %>" <% } %>>
                       </div>
                     </div>
                     <div class="form-group row">
                       <label for="line1" class="col-sm-3 col-form-label">Address: (line 1) *</label>
                       <div class="col-sm-9">
-                        <input disabled type="text" class="form-control" id="line1" name="line1" autocomplete="address-line1" value="<%= user.address.line1 %>">
+                        <input disabled type="text" class="form-control" id="line1" name="line1" autocomplete="address-line1" value="<%= userInfo.address.line1 %>">
                       </div>
                     </div>
                     <div class="form-group row">
                       <label for="line2" class="col-sm-3 col-form-label">Address: (line 2)</label>
                       <div class="col-sm-9">
-                        <input disabled type="text" class="form-control" id="line2" name="line2" autocomplete="address-line2" value="<%= user.address.line2 %>">
+                        <input disabled type="text" class="form-control" id="line2" name="line2" autocomplete="address-line2" value="<%= userInfo.address.line2 %>">
                       </div>
                     </div>
                     <div class="form-group row">
                       <label for="city" class="col-sm-3 col-form-label">City: *</label>
                       <div class="col-sm-9">
-                        <input disabled type="text" class="form-control" id="city" name="city" value="<%= user.address.city %>">
+                        <input disabled type="text" class="form-control" id="city" name="city" value="<%= userInfo.address.city %>">
                       </div>
                     </div>
                     <div class="form-group row">
                       <label for="zip" class="col-sm-3 col-form-label">Zip Code: *</label>
                       <div class="col-sm-9">
-                        <input disabled type="text" class="form-control" id="zip" name="zip" autocomplete="postal-code" value="<%= user.address.zip %>">
+                        <input disabled type="text" class="form-control" id="zip" name="zip" autocomplete="postal-code" value="<%= userInfo.address.zip %>">
                       </div>
                     </div>
                     <div class="form-group row">
                       <label for="country" class="col-sm-3 col-form-label">Country: *</label>
                       <div class="col-sm-9">
-                        <select disabled class="form-select" id="country" name="country" autocomplete="country" value="<%= user.address.country %>">
+                        <select disabled class="form-select" id="country" name="country" autocomplete="country" value="<%= userInfo.address.country %>">
                           <%- include('ledger/assets/countries') %>
                         </select>
                       </div>
@@ -79,7 +79,7 @@
                     <div class="form-group row">
                       <label for="tel" class="col-sm-3 col-form-label">Phone number:</label>
                       <div class="col-sm-9">
-                        <input disabled type="tel" class="form-control" id="tel" name="tel" autocomplete="tel" value="<%= user.tel %>">
+                        <input disabled type="tel" class="form-control" id="tel" name="tel" autocomplete="tel" value="<%= userInfo.tel %>">
                       </div>
                     </div>
                     <div class="form-group row">
@@ -139,7 +139,7 @@
               <a href="#account" style="display: inline-block; margin-top: 0.2rem;">account</a><br>
               <a href="#payment" style="display: inline-block; margin-top: 0.2rem;">payment</a><br>
               <a href="#updatePassword" style="display: inline-block; margin-top: 0.2rem;">password</a><br>
-              <a href="#autoPayoutsHref" style="display: inline-block; margin-top: 0.2rem;">auto payment</a><br>
+              <a href="#autoPayoutsHref" style="display: inline-block; margin-top: 0.2rem;">auto payouts</a><br>
               <a href="#premium" style="display: inline-block; margin-top: 0.2rem;">premium</a>
             </h6>
           </div>
@@ -152,18 +152,18 @@
                     <div class="form-group">
                       <label for="payoutMethod">Payout method</label>
                       <select class="form-select" id="payoutMethod" name="payoutMethod" required>
-                        <option value="none" <% if (!user.payoutMethod) { %> selected <% } %>>Choose method</option>
-                        <option value="PayPal" <% if (user.payoutMethod == "PayPal") { %> selected <% } %>>PayPal</option>
-                        <option value="Bitcoin" <% if (user.payoutMethod == "Bitcoin") { %> selected <% } %>>Bitcoin</option>
+                        <option value="none" <% if (payoutMethod == 'none') { %> selected <% } %>>Choose method</option>
+                        <option value="paypal" <% if (payoutMethod.type == "paypal") { %> selected <% } %>>PayPal</option>
+                        <option value="btc" <% if (payoutMethod.type == "btc") { %> selected <% } %>>Bitcoin</option>
                       </select>
                     </div>
                     <div id="paypalFormGroup" class="form-group">
                       <label for="paypalEmail">PayPal email address</label>
-                      <input type="email" class="form-control" id="paypalEmail" name="paypalEmail" placeholder="Email" value="<%= user.paypalEmail %>">
+                      <input type="email" class="form-control" id="paypalEmail" name="paypalEmail" placeholder="Email" value="<%= payoutMethod.details.email %>">
                     </div>
                     <div id="btcFormGroup" class="form-group">
                       <label for="btcAddress">Bitcoin address</label>
-                      <input type="text" class="form-control" id="btcAddress" name="btcAddress" placeholder="Address" value="<%= user.btcAddress %>">
+                      <input type="text" class="form-control" id="btcAddress" name="btcAddress" placeholder="Address" value="<%= payoutMethod.details.btcAddress %>">
                     </div>
                     <div class="d-flex align-items-center">
                       <button type="submit" class="btn btn-primary me-2">Update information</button>
@@ -256,21 +256,9 @@
                   <div class="form-group" style="margin-bottom: 1.5rem;">
                     <label for="paymentMethod">Payment method</label>
                     <select class="form-select" id="paymentMethod" name="paymentMethod" required>
-                      <option value="none"
-                        <% if (!user.paymentMethod) { %>
-                          selected default
-                        <% } %>
-                      >Choose method</option>
-                      <option value="balance"
-                        <% if (user.paymentMethod == "balance") { %>
-                          selected
-                        <% } %>
-                      >Use ads.cash balance</option>
-                      <option value="PayPal"
-                        <% if (user.paymentMethod == "PayPal") { %>
-                          selected
-                        <% } %>
-                      >PayPal</option>
+                      <option value="none">Choose method</option>
+                      <option value="balance">Use ads.cash balance</option>
+                      <option value="PayPal">PayPal</option>
                     </select>
                   </div>
                   <div class="form-check form-check-flat form-check-primary">

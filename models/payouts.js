@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import shortId from 'shortid';
 
-const paymentSchema = new mongoose.Schema({
+const payoutSchema = new mongoose.Schema({
     user: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User',
@@ -19,8 +19,8 @@ const paymentSchema = new mongoose.Schema({
         type: Number,
         required: true,
         immutable: true,
-        min: 10,
-        max: 1000
+        min: 1000,
+        max: 100000
     },
     status: {
         type: String,
@@ -29,18 +29,11 @@ const paymentSchema = new mongoose.Schema({
         default: 'pending'
     },
     payoutMethod: {
-        type: String,
-        enum: ['PayPal', 'none'],
-        default: 'none',
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'PayoutMethod',
         required: true,
         immutable: true
-    },
-    paypalEmail: {
-        type: String,
-        required: false,
-        immutable: true
-    },
-    completionDate: Date
+    }
 }, { timestamps: true });
 
-export default mongoose.model('Payment', paymentSchema);
+export default mongoose.model('Payout', payoutSchema);

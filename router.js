@@ -4,14 +4,17 @@ import passport from 'passport';
 import fileUpload from 'express-fileupload';
 import Link from './models/links.js';
 import User from './models/users.js';
-import Payment from './models/payments.js';
+import Payout from './models/payouts.js';
 import Ticket from './models/tickets.js';
+import UserInfo from './models/users-info.js';
+import ClickEvent from './models/click-event.js';
+import PayoutMethod from './models/payout-method.js';
 import { validationResult } from 'express-validator';
 import { processUserImage } from './middleware/image-config.js';
 import { shortIdValidation } from './middleware/shortId-config.js';
 import { processTicketFiles } from './middleware/ticket-files-config.js';
 import { checkAuthenticated, checkNotAuthenticated } from './middleware/auth.js';
-import { getPaymentData, getReferralData, getTicketValidation, getLinkData, monthlyMonetization } from './middleware/router-helpers.js';
+import { getPayoutsEnabledData, getReferralData, getTicketValidation, getLinkData, monthlyMonetization, getPayoutMethod } from './middleware/router-helpers.js';
 import { newLinkValidation, 
          paymentValidation, 
          ticketValidation, 
@@ -20,12 +23,12 @@ import { newLinkValidation,
          registerValidation, 
          sendEmailValidation, 
          updateAccountValidation, 
-         updatePaymentInformationValidation, 
+         updatePayoutInformationValidation, 
          updatePasswordValidation } from './middleware/validation.js';
 
 const router = express.Router();
 
-//Pages
+// Get Pages
 router.get('/', checkNotAuthenticated, (req, res) => {
     res.render('index')
 });
@@ -70,7 +73,7 @@ router.get('/operator', checkAuthenticated, async (req, res) => {
 router.get('/payment', checkAuthenticated, async (req, res) => {
     try {
         const user = req.user
-        const data = await getPaymentData(user)
+        const data = await getPayoutsEnabledData(user)
 
         res.render('payments', { ...data, paymentData: {} })
     } catch (err) {
@@ -107,8 +110,12 @@ router.get('/ticket', async (req, res) => {
     }
 });
 
-router.get('/you', checkAuthenticated, (req, res) => {
-    res.render('account', { data: {}, form: 'none' })
+router.get('/you', checkAuthenticated, async (req, res) => {
+    const user = req.user;
+    const userInfo = await UserInfo.findOne({ user: user._id })
+    const payoutMethod = getPayoutMethod(req)
+
+    res.render('account', { data: {}, form: 'none', userInfo, payoutMethod })
 });
 
 //Validation
@@ -175,32 +182,24 @@ router.post('/new', checkAuthenticated, newLinkValidation, async (req, res) => {
         if (req.body.bulkToggle) {
             const bulkLinks = req.body.bulkLinks;
 
-            const createdLinks = [];
             for (const fullLink of bulkLinks) {
-                const link = await shortIdValidation({
+                await shortIdValidation({
                     user: user._id,
                     full: fullLink,
                     monetization: req.body.monetization,
                     duration: req.body.monetizationDuration,
-                    redirectInstantly : req.body.redirectInstantly
+                    redirectInstantly: req.body.redirectInstantly
                 });
-
-                createdLinks.push(link);
             }
-
-            user.links.push(...createdLinks.map(l => l._id));
         } else {
-            const link = await Link.create({
+            await Link.create({
                 user: user._id,
                 full: req.body.singleLink,
                 monetization: req.body.monetization,
-                duration: req.body.monetizationDuration
+                duration: req.body.monetizationDuration,
+                redirectInstantly: req.body.redirectInstantly
             })
-
-            user.links.push(link._id);
         }
-
-        await user.save();
 
         res.redirect('/new')
     } catch (err) {
@@ -211,7 +210,7 @@ router.post('/new', checkAuthenticated, newLinkValidation, async (req, res) => {
 
 router.post('/:link/status', checkAuthenticated, async (req, res) => {
     try {
-        const user = await User.findById(req.user._id)
+        const user = req.user
         const shortLink = await Link.findOne({ short: req.params.link })
         const source = req.query.source
 
@@ -231,23 +230,21 @@ router.post('/:link/status', checkAuthenticated, async (req, res) => {
 router.post('/payment', checkAuthenticated, paymentValidation, async (req, res) => {
     
     const user = req.user;
-    const paymentData = await getPaymentData(user)
 
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-        return res.render('payments', { ...paymentData, errors: errors.array(), data: req.body })
+        const payoutsEnabledData = await getPayoutsEnabledData(user)
+        return res.render('payments', { ...payoutsEnabledData, errors: errors.array(), data: req.body })
     }
     
     try {
-        const payment = await Payment.create({
+        const payoutMethod = getPayoutMethod(req)
+
+        await Payout.create({
             user: user._id,
             amount: req.body.amount,
-            payoutMethod: user.payoutMethod,
-            paypalEmail: user.paypalEmail
+            payoutMethod: payoutMethod
         })
-
-        user.paymentHistory.push(payment._id);
-        await user.save();
 
         res.redirect('/payment')
     } catch (err) {
@@ -263,7 +260,7 @@ router.post('/ticket', checkAuthenticated, ticketValidation, fileUpload(), async
 
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-        return res.render('payments', { tickets, errors: errors.array(), data: req.body })
+        return res.render('tickets', { tickets, errors: errors.array(), data: req.body })
     }
 
     try {
@@ -340,6 +337,10 @@ router.post('/register', checkNotAuthenticated, registerValidation, async (req, 
             username: req.body.username,
             email: req.body.email,
             password: hashedPassword,
+        })
+
+        await UserInfo.create({
+            user: newUser._id,
             name: req.body.name,
             address: {
                 line1: req.body.line1,
@@ -347,16 +348,8 @@ router.post('/register', checkNotAuthenticated, registerValidation, async (req, 
                 city: req.body.city,
                 zip: req.body.zip,
                 country: req.body.country
-            },
-            referrer: req.body.ref
+            }
         })
-
-        const ref = req.body.ref
-        if (ref) {
-            const referrer = await User.findOne({ PID: ref })
-            referrer.referrals.push(newUser._id)
-            referrer.save()
-        }
 
         res.redirect('/login')
     } catch {
@@ -364,7 +357,7 @@ router.post('/register', checkNotAuthenticated, registerValidation, async (req, 
     }
 });
 
-router.post('/sendEmail', checkNotAuthenticated, sendEmailValidation, async (req, res) => { //email sending logic (this is ticketUnauth submit)
+router.post('/sendEmail', checkNotAuthenticated, sendEmailValidation, async (req, res) => {
     const {name, email, subject, message} = req.body
 });
 
@@ -377,23 +370,25 @@ router.post('/updateAccountInformation', updateAccountValidation, fileUpload(), 
         return res.render('account', { errors: errors.array(), data: req.body, form: 'updateAccountInformation' })
     }
 
+    const userInfoThis = await UserInfo.findOne({ user: user._id })
+
     try {
-        user.name = req.body.name
-        user.address = {
-        line1: req.body.line1,
-        city: req.body.city,
-        zip: req.body.zip,
-        country: req.body.country
+        userInfoThis.name = req.body.name
+        userInfoThis.address = {
+            line1: req.body.line1,
+            city: req.body.city,
+            zip: req.body.zip,
+            country: req.body.country
         },
-        user.tel = req.body.tel
+        userInfoThis.tel = req.body.tel
 
         if (req.files) {
             const userIcon = req.files.userIcon
             await processUserImage(userIcon, user.PID)
-            user.hasProfile = true
+            userInfoThis.hasProfile = true
         }
 
-        await user.save()
+        await userInfoThis.save()
 
     res.redirect('/you')
     } catch (err) {
@@ -402,21 +397,24 @@ router.post('/updateAccountInformation', updateAccountValidation, fileUpload(), 
     }
 });
 
-router.post('/updatePaymentInformation', checkAuthenticated, updatePaymentInformationValidation, async (req, res) => {
+router.post('/updatePayoutInformation', checkAuthenticated, updatePayoutInformationValidation, async (req, res) => {
     
     const user = req.user
 
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-        return res.render('account', { errors: errors.array(), data: req.body, form: 'updatePaymentInformation' })
+        return res.render('account', { errors: errors.array(), data: req.body, form: 'updatePayoutInformation' })
     }
     
     try {
-        user.payoutMethod = req.body.payoutMethod
-        user.paypalEmail = req.body.paypalEmail || null
-        user.btcAddress = req.body.btcAddress || null
-
-        await user.save()
+        await PayoutMethod.create({
+            user: user._id,
+            type: req.body.payoutMethod,
+            details:
+                req.body.payoutMethod === "paypal"
+                ? { email: req.body.paypalEmail }
+                : { btcAddress: req.body.btcAddress }
+        })
 
         res.redirect('/you')
     } catch (err) {
@@ -425,7 +423,7 @@ router.post('/updatePaymentInformation', checkAuthenticated, updatePaymentInform
     }
 });
 
-router.post('/updatePassword', checkAuthenticated, updatePasswordValidation, async (req, res) => { //email the user here
+router.post('/updatePassword', checkAuthenticated, updatePasswordValidation, async (req, res) => {
     
     const user = req.user
 
@@ -501,8 +499,12 @@ router.get('/:link', async (req, res) => {
             return res.status(404).render('error/404')
         }
 
-        url.clicks++
-        url.save()
+        ClickEvent.create({
+            link: url._id,
+            ip: req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for']?.split(',')[0] || req.ip || 'not available',
+            country: req.headers['cf-ipcountry'] || 'not available',
+            userAgent: req.headers['user-agent']
+        }).catch(console.error);
 
         url.monetization ? res.render('ads/adPage', { url }) : res.redirect(url.full)
     } catch (err) {
@@ -511,7 +513,7 @@ router.get('/:link', async (req, res) => {
     }
 });
 
-//Delete
+// Delete
 router.delete('/logout', checkAuthenticated, async (req, res, next) => {
     try {
         await new Promise((resolve, reject) => {
