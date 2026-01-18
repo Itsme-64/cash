@@ -487,7 +487,7 @@ router.get('/tickets/:link', checkAuthenticated, async (req, res) => {
 
 // Ads
 router.get('/example', (req, res) => {
-    const url = { full: '/', short: 'example', redirectInstantly: false, duration: 5000 }
+    const url = { full: '/', short: 'example', redirectInstantly: false, duration: 10000 }
     
     res.render('ads/adPage', { url })
 });

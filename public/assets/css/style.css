@@ -17603,6 +17603,10 @@ textarea.is-invalid.tt-hint, .select2-container--default .select2-selection--sin
   z-index: 3 !important;
 }
 
+.z-1001 {
+  z-index: 1001 !important;
+}
+
 @media (min-width: 576px) {
   .float-sm-start {
     float: left !important;
@@ -25271,4 +25275,19 @@ html {
 #footerButton i {
     transition: transform 0.3s ease-in-out;
     display: inline-block;
+}
+
+#pause-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55); /* darkness */
+    z-index: 9997; /* below tooltip (9999), above everything else */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease-in-out;
+}
+
+#pause-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
 }
