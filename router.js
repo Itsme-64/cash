@@ -351,6 +351,10 @@ router.post('/register', checkNotAuthenticated, registerValidation, async (req, 
             }
         })
 
+        await PayoutMethod.create({
+            user: newUser._id
+        })
+
         res.redirect('/login')
     } catch {
         res.redirect('/register')
@@ -407,14 +411,25 @@ router.post('/updatePayoutInformation', checkAuthenticated, updatePayoutInformat
     }
     
     try {
-        await PayoutMethod.create({
-            user: user._id,
-            type: req.body.payoutMethod,
-            details:
-                req.body.payoutMethod === "paypal"
-                ? { email: req.body.paypalEmail }
-                : { btcAddress: req.body.btcAddress }
-        })
+        const userPayoutMethod = PayoutMethod.findOne({ user: user._id })
+
+        if (userPayoutMethod.details !== 'undefined') {
+            await PayoutMethod.create({
+                user: user._id,
+                type: req.body.payoutMethod,
+                details:
+                    req.body.payoutMethod === "paypal"
+                    ? { email: req.body.paypalEmail }
+                    : { btcAddress: req.body.btcAddress }
+            })
+        } else {
+            userPayoutMethod.type = req.body.payoutMethod
+            req.body.payoutMethod === "paypal"
+                    ? userPayoutMethod.details.email = req.body.paypalEmail
+                    : userPayoutMethod.details.email = req.body.btcAddress
+
+            await userPayoutMethod.save()
+        }
 
         res.redirect('/you')
     } catch (err) {

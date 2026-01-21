@@ -10,8 +10,6 @@ const payoutMethodSchema = new mongoose.Schema({
     type: {
         type: String,
         enum: ["paypal", "btc"],
-        immutable: true,
-        required: true,
     },
     details: {
         email: {

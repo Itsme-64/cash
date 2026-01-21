@@ -40,37 +40,41 @@
                       <label for="name" class="col-sm-3 col-form-label">Full Name: *</label>
                       <div class="col-sm-9">
                         <input disabled type="text" class="form-control" id="name" name="name" autocomplete="name" 
-                          <% if (userInfo.name) { %> value="<%= userInfo.name %>" <% } %>>
+                          value="<%= userInfo.name ?? "" %>">
                       </div>
                     </div>
                     <div class="form-group row">
                       <label for="line1" class="col-sm-3 col-form-label">Address: (line 1) *</label>
                       <div class="col-sm-9">
-                        <input disabled type="text" class="form-control" id="line1" name="line1" autocomplete="address-line1" value="<%= userInfo.address.line1 %>">
+                        <input disabled type="text" class="form-control" id="line1" name="line1" autocomplete="address-line1" 
+                          value="<%= userInfo.address.line1 ?? "" %>">
                       </div>
                     </div>
                     <div class="form-group row">
                       <label for="line2" class="col-sm-3 col-form-label">Address: (line 2)</label>
                       <div class="col-sm-9">
-                        <input disabled type="text" class="form-control" id="line2" name="line2" autocomplete="address-line2" value="<%= userInfo.address.line2 %>">
+                        <input disabled type="text" class="form-control" id="line2" name="line2" autocomplete="address-line2" 
+                          value="<%= userInfo.address.line2 ?? "" %>">
                       </div>
                     </div>
                     <div class="form-group row">
                       <label for="city" class="col-sm-3 col-form-label">City: *</label>
                       <div class="col-sm-9">
-                        <input disabled type="text" class="form-control" id="city" name="city" value="<%= userInfo.address.city %>">
+                        <input disabled type="text" class="form-control" id="city" name="city" value="<%= userInfo.address.city ?? "" %>">
                       </div>
                     </div>
                     <div class="form-group row">
                       <label for="zip" class="col-sm-3 col-form-label">Zip Code: *</label>
                       <div class="col-sm-9">
-                        <input disabled type="text" class="form-control" id="zip" name="zip" autocomplete="postal-code" value="<%= userInfo.address.zip %>">
+                        <input disabled type="text" class="form-control" id="zip" name="zip" autocomplete="postal-code" 
+                          value="<%= userInfo.address.zip ?? "" %>">
                       </div>
                     </div>
                     <div class="form-group row">
                       <label for="country" class="col-sm-3 col-form-label">Country: *</label>
                       <div class="col-sm-9">
-                        <select disabled class="form-select" id="country" name="country" autocomplete="country" value="<%= userInfo.address.country %>">
+                        <select disabled class="form-select" id="country" name="country" autocomplete="country" 
+                          value="<%= userInfo.address.country ?? "" %>">
                           <%- include('ledger/assets/countries') %>
                         </select>
                       </div>
@@ -78,7 +82,7 @@
                     <div class="form-group row">
                       <label for="tel" class="col-sm-3 col-form-label">Phone number:</label>
                       <div class="col-sm-9">
-                        <input disabled type="tel" class="form-control" id="tel" name="tel" autocomplete="tel" value="<%= userInfo.tel %>">
+                        <input disabled type="tel" class="form-control" id="tel" name="tel" autocomplete="tel" value="<%= userInfo.tel ?? "" %>">
                       </div>
                     </div>
                     <div class="form-group row">
@@ -88,8 +92,7 @@
                           <input type="text" class="form-control file-upload-info" id="file-name-display" disabled
                             placeholder="Only png & jpg/jpeg files">
                           <input disabled type="file" id="userIcon" name="userIcon" class="d-none" accept=".jpg,.png,.jpeg,.webp">
-                          <button disabled type="button" class="btn btn-primary ms-2"
-                            id="upload-btn">Upload</button>
+                          <button disabled type="button" class="btn btn-primary ms-2" id="upload-btn">Upload</button>
                         </div>
                       </div>
                     </div>
@@ -158,11 +161,13 @@
                     </div>
                     <div id="paypalFormGroup" class="form-group">
                       <label for="paypalEmail">PayPal email address</label>
-                      <input type="email" class="form-control" id="paypalEmail" name="paypalEmail" placeholder="Email" value="<%= payoutMethod.details.email %>">
+                      <input type="email" class="form-control" id="paypalEmail" name="paypalEmail" placeholder="Email" 
+                        value="<%= payoutMethod.details.email ?? "" %>">
                     </div>
                     <div id="btcFormGroup" class="form-group">
                       <label for="btcAddress">Bitcoin address</label>
-                      <input type="text" class="form-control" id="btcAddress" name="btcAddress" placeholder="Address" value="<%= payoutMethod.details.btcAddress %>">
+                      <input type="text" class="form-control" id="btcAddress" name="btcAddress" placeholder="Address" 
+                        value="<%= payoutMethod.details.btcAddress ?? "" %>">
                     </div>
                     <div class="d-flex align-items-center">
                       <button type="submit" class="btn btn-primary me-2">Update information</button>
