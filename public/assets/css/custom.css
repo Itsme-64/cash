@@ -1,0 +1,76 @@
+/* Custom 159.cash */
+.scroll-top {
+  position: fixed;
+  color: #6c7293;
+  font-size: 1.25rem;
+  bottom: 30px;
+  right: 40px
+}
+.scroll-top:hover {
+  color: #ffffff;
+  -webkit-transition-duration: 0.45s;
+  -moz-transition-duration: 0.45s;
+  -o-transition-duration: 0.45s;
+  transition-duration: 0.45s;
+  transition-property: color;
+  -webkit-transition-property: color;
+}
+
+#notification {
+    padding-left: 8px;
+}
+
+.hidden-label {
+  line-height: 0.5rem;
+}
+
+.index-logo-img {
+  width: 100%;
+}
+
+.full-text-button {
+  font-size: 1.5rem;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  white-space: normal;
+  font-weight: bold;
+}
+
+.splash-text {
+  background-color: #000000;
+  text-align: center;
+  border: 4px solid var(--bs-card-bg);
+}
+
+.feature-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.feature-container blockquote {
+  margin: 0;
+  white-space: nowrap;
+  padding: 0.7rem 1.25rem;
+  background-color: var(--bs-card-bg);
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.authLogoImage {
+  top: 1.5rem; 
+  right: 1.25rem; 
+  width: 2.125rem; 
+  height: 2.125rem;
+}
+
+.fixedHeightScrollable {
+  max-height: 500px !important;
+  overflow-y: auto !important;
+}

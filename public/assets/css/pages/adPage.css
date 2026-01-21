@@ -1,0 +1,45 @@
+/* Ad Page */
+.ad-container {
+    flex: 1 1 auto !important;
+    display: flex !important; 
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+}
+
+#footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    transform: translateY(100%);
+    transition: transform 0.3s ease-in-out;
+    background-color: #222;
+    color: #fff;
+    padding: 1rem 2rem;
+    z-index: 1000;
+}
+
+#footer.show {
+    transform: translateY(0);
+}
+
+#footerButton i {
+    transition: transform 0.3s ease-in-out;
+    display: inline-block;
+}
+
+#pause-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 9997; /* below tooltip (9999), above everything else */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease-in-out;
+}
+
+#pause-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}

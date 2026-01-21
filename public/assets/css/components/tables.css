@@ -1,0 +1,59 @@
+/* Tables */
+.table {
+  margin-bottom: 0;
+  color: #6c7293;
+}
+.table thead th {
+  border-top: 0;
+  border-bottom-width: 1px;
+  font-weight: 500;
+  color: #6c7293;
+}
+.table thead th i {
+  margin-left: 0.325rem;
+}
+.table th,
+.table td {
+  vertical-align: middle;
+  font-size: 0.875rem;
+  line-height: 1;
+  white-space: nowrap;
+  padding: 0.9375rem;
+}
+.table th img,
+.table td img {
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+}
+.table th .badge,
+.table td .badge {
+  margin-bottom: 0;
+}
+.table.table-borderless {
+  border: none;
+}
+.table.table-borderless tr,
+.table.table-borderless td,
+.table.table-borderless th {
+  border: none;
+}
+.table .table-dark {
+  background: #212529;
+}
+
+.table > :not(:last-child) > :last-child > *, .jsgrid .jsgrid-table > :not(:last-child) > :last-child > * {
+  border-bottom-color: #2c2e33;
+}
+
+.table > :not(:first-child), .jsgrid .jsgrid-table > :not(:first-child) {
+  border-top: none;
+}
+
+.table-hover tr:hover, .table-hover td {
+  color: #ffffff;
+}
+
+.table-striped tr:nth-child(odd) td {
+  color: #aab2bd;
+}

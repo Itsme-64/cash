@@ -1,0 +1,9 @@
+/* Custom Scrollbar */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #6c7293 #191c24;
+}
+
+.scrollableCard {
+  margin-right: 0.4vw;
+}

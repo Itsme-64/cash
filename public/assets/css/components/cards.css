@@ -1,0 +1,136 @@
+/* Cards */
+.card {
+  border-radius: 0.25rem;
+}
+.card .card-body {
+  padding: 1.75rem 1.5625rem;
+}
+.card .card-body + .card-body {
+  padding-top: 1rem;
+}
+.card .card-title {
+  color: #ffffff;
+  margin-bottom: 1.125rem;
+  text-transform: capitalize;
+}
+.card .card-subtitle {
+  font-weight: normal;
+  margin-top: 0.625rem;
+  margin-bottom: 0.625rem;
+}
+.card .card-description {
+  color: #bfbfbf;
+  font-weight: 300;
+}
+.card.card-outline-success {
+  border: 1px solid #00d25b;
+}
+.card.card-outline-primary {
+  border: 1px solid #0090e7;
+}
+.card.card-outline-warning {
+  border: 1px solid #ffab00;
+}
+.card.card-outline-danger {
+  border: 1px solid #fc424a;
+}
+.card.card-rounded {
+  border-radius: 5px;
+}
+.card.card-faded {
+  background: #b5b0b2;
+  border-color: #b5b0b2;
+}
+.card.card-circle-progress {
+  color: #ffffff;
+  text-align: center;
+}
+.card.card-img-holder {
+  position: relative;
+}
+.card.card-img-holder .card-img-absolute {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+}
+.card.corona-gradient-card {
+  background-image: linear-gradient(to left, #d41459, #911a6c);
+  border-radius: 6px;
+}
+.card.corona-gradient-card .gradient-corona-img {
+  height: 85px;
+}
+@media (max-width: 576px) {
+  .card.corona-gradient-card .gradient-corona-img {
+    height: auto;
+    min-height: 50px;
+    max-height: 85px;
+  }
+}
+@media (max-width: 576px) {
+  .card.corona-gradient-card h4, .card.corona-gradient-card .h4 {
+    font-size: 0.75rem;
+  }
+}
+
+@media (min-width: 576px) {
+  .card-columns {
+    column-count: 3;
+    column-gap: 1.25rem;
+    orphans: 1;
+    widows: 1;
+  }
+  .card-columns .card {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 0.75rem;
+  }
+}
+.card-inverse-primary {
+  background: rgba(0, 144, 231, 0.2);
+  border: 1px solid theme-color-level(primary, 1);
+  color: theme-color-level(primary, 3);
+}
+
+.card-inverse-secondary {
+  background: rgba(228, 234, 236, 0.2);
+  border: 1px solid theme-color-level(secondary, 1);
+  color: theme-color-level(secondary, 3);
+}
+
+.card-inverse-success {
+  background: rgba(0, 210, 91, 0.2);
+  border: 1px solid theme-color-level(success, 1);
+  color: theme-color-level(success, 3);
+}
+
+.card-inverse-info {
+  background: rgba(143, 95, 232, 0.2);
+  border: 1px solid theme-color-level(info, 1);
+  color: theme-color-level(info, 3);
+}
+
+.card-inverse-warning {
+  background: rgba(255, 171, 0, 0.2);
+  border: 1px solid theme-color-level(warning, 1);
+  color: theme-color-level(warning, 3);
+}
+
+.card-inverse-danger {
+  background: rgba(252, 66, 74, 0.2);
+  border: 1px solid theme-color-level(danger, 1);
+  color: theme-color-level(danger, 3);
+}
+
+.card-inverse-light {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid theme-color-level(light, 1);
+  color: theme-color-level(light, 3);
+}
+
+.card-inverse-dark {
+  background: rgba(13, 13, 13, 0.2);
+  border: 1px solid theme-color-level(dark, 1);
+  color: theme-color-level(dark, 3);
+}

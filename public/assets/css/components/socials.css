@@ -1,0 +1,308 @@
+/*social buttons*/
+.btn-twitter {
+  background: #2caae1;
+  color: #ffffff;
+}
+.btn-twitter:hover, .btn-twitter:focus {
+  background: #1b8dbf;
+  color: #ffffff;
+}
+.btn-twitter.btn-social-icon-text {
+  padding: 0 1.5rem 0 0;
+  background: #59bce7;
+}
+.btn-twitter.btn-social-icon-text i {
+  background: #2caae1;
+  padding: 0.75rem;
+  display: inline-block;
+  margin-right: 1.5rem;
+}
+
+.btn-outline-twitter {
+  border: 1px solid #2caae1;
+  color: #2caae1;
+}
+.btn-outline-twitter:hover {
+  background: #2caae1;
+  color: #ffffff;
+}
+
+.btn-facebook {
+  background: #3b579d;
+  color: #ffffff;
+}
+.btn-facebook:hover, .btn-facebook:focus {
+  background: #2d4278;
+  color: #ffffff;
+}
+.btn-facebook.btn-social-icon-text {
+  padding: 0 1.5rem 0 0;
+  background: #4e6ebd;
+}
+.btn-facebook.btn-social-icon-text i {
+  background: #3b579d;
+  padding: 0.75rem;
+  display: inline-block;
+  margin-right: 1.5rem;
+}
+
+.btn-outline-facebook {
+  border: 1px solid #3b579d;
+  color: #3b579d;
+}
+.btn-outline-facebook:hover {
+  background: #3b579d;
+  color: #ffffff;
+}
+
+.btn-google {
+  background: #dc4a38;
+  color: #ffffff;
+}
+.btn-google:hover, .btn-google:focus {
+  background: #bf3322;
+  color: #ffffff;
+}
+.btn-google.btn-social-icon-text {
+  padding: 0 1.5rem 0 0;
+  background: #e47163;
+}
+.btn-google.btn-social-icon-text i {
+  background: #dc4a38;
+  padding: 0.75rem;
+  display: inline-block;
+  margin-right: 1.5rem;
+}
+
+.btn-outline-google {
+  border: 1px solid #dc4a38;
+  color: #dc4a38;
+}
+.btn-outline-google:hover {
+  background: #dc4a38;
+  color: #ffffff;
+}
+
+.btn-discord {
+  background: #5865F2;
+  color: #ffffff;
+}
+.btn-discord:hover, .btn-discord:focus {
+  background: #4A50CD;
+  color: #ffffff;
+}
+.btn-discord.btn-social-icon-text {
+  padding: 0 1.5rem 0 0;
+  background: #4A50CD;
+}
+.btn-discord.btn-social-icon-text i {
+  background: #5865F2;
+  padding: 0.75rem;
+  display: inline-block;
+  margin-right: 1.5rem;
+}
+
+.btn-outline-discord {
+  border: 1px solid #5865F2;
+  color: #5865F2;
+}
+.btn-outline-discord:hover {
+  background: #5865F2;
+  color: #ffffff;
+}
+
+.btn-linkedin {
+  background: #0177b5;
+  color: #ffffff;
+}
+.btn-linkedin:hover, .btn-linkedin:focus {
+  background: #015682;
+  color: #ffffff;
+}
+.btn-linkedin.btn-social-icon-text {
+  padding: 0 1.5rem 0 0;
+  background: #0198e8;
+}
+.btn-linkedin.btn-social-icon-text i {
+  background: #0177b5;
+  padding: 0.75rem;
+  display: inline-block;
+  margin-right: 1.5rem;
+}
+
+.btn-outline-linkedin {
+  border: 1px solid #0177b5;
+  color: #0177b5;
+}
+.btn-outline-linkedin:hover {
+  background: #0177b5;
+  color: #ffffff;
+}
+
+.btn-pinterest {
+  background: #cc2127;
+  color: #ffffff;
+}
+.btn-pinterest:hover, .btn-pinterest:focus {
+  background: #a01a1f;
+  color: #ffffff;
+}
+.btn-pinterest.btn-social-icon-text {
+  padding: 0 1.5rem 0 0;
+  background: #e04046;
+}
+.btn-pinterest.btn-social-icon-text i {
+  background: #cc2127;
+  padding: 0.75rem;
+  display: inline-block;
+  margin-right: 1.5rem;
+}
+
+.btn-outline-pinterest {
+  border: 1px solid #cc2127;
+  color: #cc2127;
+}
+.btn-outline-pinterest:hover {
+  background: #cc2127;
+  color: #ffffff;
+}
+
+.btn-youtube {
+  background: #e52d27;
+  color: #ffffff;
+}
+.btn-youtube:hover, .btn-youtube:focus {
+  background: #c21d17;
+  color: #ffffff;
+}
+.btn-youtube.btn-social-icon-text {
+  padding: 0 1.5rem 0 0;
+  background: #ea5955;
+}
+.btn-youtube.btn-social-icon-text i {
+  background: #e52d27;
+  padding: 0.75rem;
+  display: inline-block;
+  margin-right: 1.5rem;
+}
+
+.btn-outline-youtube {
+  border: 1px solid #e52d27;
+  color: #e52d27;
+}
+.btn-outline-youtube:hover {
+  background: #e52d27;
+  color: #ffffff;
+}
+
+.btn-github {
+  background: #333333;
+  color: #ffffff;
+}
+.btn-github:hover, .btn-github:focus {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+.btn-github.btn-social-icon-text {
+  padding: 0 1.5rem 0 0;
+  background: #4d4d4d;
+}
+.btn-github.btn-social-icon-text i {
+  background: #333333;
+  padding: 0.75rem;
+  display: inline-block;
+  margin-right: 1.5rem;
+}
+
+.btn-outline-github {
+  border: 1px solid #333333;
+  color: #333333;
+}
+.btn-outline-github:hover {
+  background: #333333;
+  color: #ffffff;
+}
+
+.btn-behance {
+  background: #1769ff;
+  color: #ffffff;
+}
+.btn-behance:hover, .btn-behance:focus {
+  background: #0050e3;
+  color: #ffffff;
+}
+.btn-behance.btn-social-icon-text {
+  padding: 0 1.5rem 0 0;
+  background: #4a8aff;
+}
+.btn-behance.btn-social-icon-text i {
+  background: #1769ff;
+  padding: 0.75rem;
+  display: inline-block;
+  margin-right: 1.5rem;
+}
+
+.btn-outline-behance {
+  border: 1px solid #1769ff;
+  color: #1769ff;
+}
+.btn-outline-behance:hover {
+  background: #1769ff;
+  color: #ffffff;
+}
+
+.btn-dribbble {
+  background: #ea4c89;
+  color: #ffffff;
+}
+.btn-dribbble:hover, .btn-dribbble:focus {
+  background: #e51e6b;
+  color: #ffffff;
+}
+.btn-dribbble.btn-social-icon-text {
+  padding: 0 1.5rem 0 0;
+  background: #ef7aa7;
+}
+.btn-dribbble.btn-social-icon-text i {
+  background: #ea4c89;
+  padding: 0.75rem;
+  display: inline-block;
+  margin-right: 1.5rem;
+}
+
+.btn-outline-dribbble {
+  border: 1px solid #ea4c89;
+  color: #ea4c89;
+}
+.btn-outline-dribbble:hover {
+  background: #ea4c89;
+  color: #ffffff;
+}
+
+.btn-reddit {
+  background: #ff4500;
+  color: #ffffff;
+}
+.btn-reddit:hover, .btn-reddit:focus {
+  background: #cc3700;
+  color: #ffffff;
+}
+.btn-reddit.btn-social-icon-text {
+  padding: 0 1.5rem 0 0;
+  background: #ff6a33;
+}
+.btn-reddit.btn-social-icon-text i {
+  background: #ff4500;
+  padding: 0.75rem;
+  display: inline-block;
+  margin-right: 1.5rem;
+}
+
+.btn-outline-reddit {
+  border: 1px solid #ff4500;
+  color: #ff4500;
+}
+.btn-outline-reddit:hover {
+  background: #ff4500;
+  color: #ffffff;
+}
