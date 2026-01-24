@@ -4,6 +4,7 @@ import path from 'path';
 import passport from 'passport';
 import flash from 'express-flash';
 import methodOverride from 'method-override';
+import cookieParser from 'cookie-parser';
 import pages from './router.js';
 import { registerJobs } from './jobs/time-is-money.js';
 import initializePassport from './middleware/passport-config.js';
@@ -44,9 +45,10 @@ app.use('/vendor', express.static(path.join(__dirname, 'node_modules')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(flash());
-app.use(passport.initialize())
-app.use(passport.session())
-app.use(methodOverride('_method'))
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(methodOverride('_method'));
+app.use(cookieParser());
 
 app.use((req, res, next) => {
   res.locals.user = req.user || null;

@@ -35,6 +35,20 @@ const router = express.Router();
 
 // Get Pages
 router.get('/', checkNotAuthenticated, (req, res) => {
+    const ref = req.query.ref
+
+    if (ref && !req.cookies.referral) {
+        res.cookie('referral', {
+            referrer: ref,
+            clickedAt: Date.now()
+        }, {
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            httpOnly: false,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax'
+        });
+    }
+
     res.render('index')
 });
 
@@ -351,6 +365,12 @@ router.post('/register', checkNotAuthenticated, registerValidation, async (req, 
     }
     
     try {
+        const referrer = req.cookies.referral
+        let valid = false
+
+        if (referrer) valid = Date.now() - referrer.clickedAt <= (7 * 24 * 60 * 60 * 1000) // week
+        if (!valid) referrer = ""
+
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
         const newUser = await User.create({
             username: req.body.username,
@@ -367,7 +387,8 @@ router.post('/register', checkNotAuthenticated, registerValidation, async (req, 
                 city: req.body.city,
                 zip: req.body.zip,
                 country: req.body.country
-            }
+            },
+            referrer: referrer
         })
 
         await PayoutMethod.create({

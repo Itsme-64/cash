@@ -6,16 +6,18 @@
                 <table class="table">
                     <thead>
                         <tr>
+                            <th>Month</th>
                             <th>Amount</th>
                             <th>Total Clicks</th>
                             <th>Total Earnings</th>
-                            <th>1 Month Difference</th>
+                            <th>Difference</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <% if (Array.isArray(user.referrals) && user.referrals.length > 0) { %>
+                            <% if (Array.isArray(referralAccounts) && referralAmount > 0) { %>
                                 <% user.referrals.forEach(referral => { %>
+                                    <td><!-- Display the month of the situation here --></td>
                                     <td><%= referralAmount %></td>
                                     <td><%= totalReferralClicks %></td>
                                     <td>USD <%= totalReferralEarnings %></td>
@@ -30,6 +32,8 @@
                                     ><%= referralDifference %></td>
                                 <% }); %>
                             <% } else { %>
+                                <% const currentFormattedDate = new Date().toLocaleDateString(undefined, { month: 'long', year: 'numeric' }); %>
+                                <td><%= currentFormattedDate %></td>
                                 <td>0</td>
                                 <td>0</td>
                                 <td>USD 0.00</td>
