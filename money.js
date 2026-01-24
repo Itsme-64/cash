@@ -6,6 +6,7 @@ import flash from 'express-flash';
 import methodOverride from 'method-override';
 import cookieParser from 'cookie-parser';
 import pages from './router.js';
+import adminPages from './admin.router.js'
 import { registerJobs } from './jobs/time-is-money.js';
 import initializePassport from './middleware/passport-config.js';
 import setupSession from './middleware/session.js';
@@ -41,7 +42,6 @@ app.set('views', 'overviews');
 app.set('trust proxy', true);
 
 app.use('/assets', express.static(path.join(__dirname, 'public', 'assets')));
-app.use('/vendor', express.static(path.join(__dirname, 'node_modules')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(flash());
@@ -56,6 +56,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/', pages);
+app.use('/admin/', adminPages);
 
 app.listen(PORT, () => console.log(`Server Running on port ${PORT}`));
 

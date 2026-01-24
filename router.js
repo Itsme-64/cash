@@ -593,8 +593,6 @@ router.delete('/logout', checkAuthenticated, async (req, res, next) => {
     }
 });
 
-export default router;
-
 // Errors
 router.use((err, req, res, next) => {
     const status = err.status || 500
@@ -665,6 +663,8 @@ router.use((req, res) => {
     const message = "The page you're looking for was not found."
     res.status(404).render('user/error', { number: 404, redirect: 'previous', message })
 });
+
+export default router;
 
 // router.use((req, res) => {
 //     const message = "Method not allowed!";
