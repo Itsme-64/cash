@@ -4,7 +4,6 @@ import Payout from '../models/payouts.js';
 import UserInfo from '../models/users-info.js';
 import ClickEvent from '../models/click-event.js';
 import PayoutMethod from '../models/payout-method.js';
-import { link } from 'fs';
 import clickEvent from '../models/click-event.js';
 
 export async function getReferralData(user) {
@@ -48,10 +47,14 @@ export async function getPayoutsEnabledData(user) {
 
 export function getTicketValidation(user, ticket) {
     if (ticket === null) {
-        return res.status(404).render('error/404')
+        const err = new Error()
+        err.status = 404
+        return next(err)
     }
-    if (!user.tickets.includes(ticket._id.toString())) {
-        return res.status(403).render('error/403')
+    if (ticket.user !== user._id) {
+        const err = new Error()
+        err.status = 403
+        return next(err)
     }
 }
 

@@ -14,7 +14,12 @@ import { processUserImage } from './middleware/image-config.js';
 import { shortIdValidation } from './middleware/shortId-config.js';
 import { processTicketFiles } from './middleware/ticket-files-config.js';
 import { checkAuthenticated, checkNotAuthenticated } from './middleware/auth.js';
-import { getPayoutsEnabledData, getReferralData, getTicketValidation, getLinkData, monthlyMonetization, getPayoutMethod } from './middleware/router-helpers.js';
+import { getPayoutsEnabledData,
+         getReferralData,
+         getTicketValidation,
+         getLinkData,
+         monthlyMonetization,
+         getPayoutMethod } from './middleware/router-helpers.js';
 import { newLinkValidation, 
          payoutValidation, 
          ticketValidation, 
@@ -34,11 +39,19 @@ router.get('/', checkNotAuthenticated, (req, res) => {
 });
 
 router.get('/advertise', checkAuthenticated, (req, res) => {
-    res.render('advertise')
+    const err = new Error()
+    err.status = 501
+    return next(err)
+
+    //res.render('advertise')
 });
 
 router.get('/analytics', checkAuthenticated, (req, res) => {
-    res.render('analytics')
+    const err = new Error()
+    err.status = 501
+    return next(err)
+
+    //res.render('analytics')
 });
 
 router.get('/faq', (req, res) => {
@@ -47,63 +60,63 @@ router.get('/faq', (req, res) => {
     res.render('frequentlyAskedQuestions', { isAuthenticatedFAQ })
 });
 
-router.get('/new', checkAuthenticated, async (req, res) => {
+router.get('/new', checkAuthenticated, async (req, res, next) => {
     try {
         const linkData = await getLinkData(req)
         const monetizationData = await monthlyMonetization(req)
         
         res.render('createNewLink', { ...linkData, ...monetizationData, data: {} })
     } catch (err) {
-        console.error(err)
-        res.status(500).send('Server error')
+        err.status = 500
+        next(err)
     }
 });
 
-router.get('/operator', checkAuthenticated, async (req, res) => {
+router.get('/operator', checkAuthenticated, async (req, res, next) => {
     try {
         const linkData = await getLinkData(req)
 
         res.render('dashboard', { ...linkData })
     } catch (err) {
-        console.error(err)
-        res.status(500).send('Server error')
+        err.status = 500
+        next(err)
     }
 });
 
-router.get('/payout', checkAuthenticated, async (req, res) => {
+router.get('/payout', checkAuthenticated, async (req, res, next) => {
     try {
         const user = req.user
         const data = await getPayoutsEnabledData(user)
 
         res.render('payouts', { ...data, payoutData: {} })
     } catch (err) {
-        console.error(err)
-        res.status(500).send('Server error')
+        err.status = 500
+        next(err)
     }
 });
 
-router.get('/referral', checkAuthenticated, async (req, res) => {
+router.get('/referral', checkAuthenticated, async (req, res, next) => {
     try {
         const user = req.user
         const referralData = await getReferralData(user)
 
         res.render('referrals', { ...referralData })
     } catch (err) {
-        console.error(err)
-        res.status(500).send('Server error')
+        err.status = 500
+        next(err)
     }
 });
 
-router.get('/ticket', async (req, res) => {
+router.get('/ticket', async (req, res, next) => {
     if (req.isAuthenticated()) {
         try {
             const user = req.user;
             const tickets = await Ticket.find({ user: user._id })
 
-        res.render('tickets', { tickets, data: {} })
+            res.render('tickets', { tickets, data: {} })
         } catch (err) {
-            console.error(err)
-            res.status(500).send('Server error')
+            err.status = 500
+            next(err)
         }
     } else {
         res.render('ticketsUnauth')
@@ -168,7 +181,7 @@ router.get('/discord', (req, res) => {
 });
 
 // Post
-router.post('/new', checkAuthenticated, newLinkValidation, async (req, res) => {
+router.post('/new', checkAuthenticated, newLinkValidation, async (req, res, next) => {
 
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
@@ -203,31 +216,40 @@ router.post('/new', checkAuthenticated, newLinkValidation, async (req, res) => {
 
         res.redirect('/new')
     } catch (err) {
-        console.error(err)
-        res.status(500).send('Server error')
+        err.status = 500
+        next(err)
     }
 });
 
-router.post('/:link/status', checkAuthenticated, async (req, res) => {
+router.post('/:link/status', checkAuthenticated, async (req, res, next) => {
     try {
         const user = req.user
         const shortLink = await Link.findOne({ short: req.params.link })
-        const source = req.query.source
 
-        if (shortLink && user.links.includes(shortLink._id)) {
-            shortLink.status = !shortLink.status
+        if (shortLink === null) {
+            const err = new Error()
+            err.status = 404
+            return next(err)
+        }
+        if (shortLink.user !== user._id) {
+            const err = new Error()
+            err.status = 403
+            return next(err)
         }
 
+        const source = req.query.source
+
+        shortLink.status = !shortLink.status
         await shortLink.save()
 
         return source === 'operator' ? res.redirect('/operator') : res.redirect('/new')
     } catch (err) {
-        console.error(err)
-        res.status(500).send('Server error')
+        err.status = 500
+        next(err)
     }
 })
 
-router.post('/payout', checkAuthenticated, payoutValidation, async (req, res) => {
+router.post('/payout', checkAuthenticated, payoutValidation, async (req, res, next) => {
     
     const user = req.user;
 
@@ -248,12 +270,12 @@ router.post('/payout', checkAuthenticated, payoutValidation, async (req, res) =>
 
         res.redirect('/payout')
     } catch (err) {
-        console.error(err)
-        res.status(500).send('Server error')
+        err.status = 500
+        next(err)
     }
 });
 
-router.post('/ticket', checkAuthenticated, ticketValidation, fileUpload(), async (req, res) => {
+router.post('/ticket', checkAuthenticated, ticketValidation, fileUpload(), async (req, res, next) => {
 
     const user = req.user;
     const tickets = await Ticket.find({ user: user._id })
@@ -276,21 +298,18 @@ router.post('/ticket', checkAuthenticated, ticketValidation, fileUpload(), async
             await ticket.save()
         }
 
-        user.tickets.push(ticket._id)
-        await user.save()
-
-
         res.redirect('/ticket')
     } catch (err) {
-        console.error(err)
-        res.status(500).send('Server error')
+        err.status = 500
+        next(err)
     }
 });
 
-router.post('/tickets/:link', checkAuthenticated, ticketMessageValidation, async (req, res) => {
+router.post('/tickets/:link', checkAuthenticated, ticketMessageValidation, async (req, res, next) => {
     
-    const ticket = await Ticket.findOne({ shortID: req.params.link })
     const user = await User.findById(req.user._id)
+    const ticket = await Ticket.findOne({ shortID: req.params.link })
+    
     getTicketValidation(user, ticket)
 
     const errors = validationResult(req)
@@ -307,8 +326,8 @@ router.post('/tickets/:link', checkAuthenticated, ticketMessageValidation, async
 
         res.redirect(`/tickets/${ticket.shortID}`)
     } catch (err) {
-        console.error(err)
-        res.status(500).send('Server error')
+        err.status = 500
+        next(err)
     }
 });
 
@@ -362,10 +381,14 @@ router.post('/register', checkNotAuthenticated, registerValidation, async (req, 
 });
 
 router.post('/sendEmail', checkNotAuthenticated, sendEmailValidation, async (req, res) => {
-    const {name, email, subject, message} = req.body
+    const err = new Error()
+    err.status = 501
+    return next(err)
+
+    //const {name, email, subject, message} = req.body
 });
 
-router.post('/updateAccountInformation', updateAccountValidation, fileUpload(), async (req, res) => {
+router.post('/updateAccountInformation', updateAccountValidation, fileUpload(), async (req, res, next) => {
   
     const user = req.user
 
@@ -396,12 +419,12 @@ router.post('/updateAccountInformation', updateAccountValidation, fileUpload(), 
 
     res.redirect('/you')
     } catch (err) {
-        console.error(err)
-        res.status(500).send('Server error')
+        err.status = 500
+        next(err)
     }
 });
 
-router.post('/updatePayoutInformation', checkAuthenticated, updatePayoutInformationValidation, async (req, res) => {
+router.post('/updatePayoutInformation', checkAuthenticated, updatePayoutInformationValidation, async (req, res, next) => {
     
     const user = req.user
 
@@ -433,12 +456,12 @@ router.post('/updatePayoutInformation', checkAuthenticated, updatePayoutInformat
 
         res.redirect('/you')
     } catch (err) {
-        console.error(err)
-        res.status(500).send('Server error')  
+        err.status = 500
+        next(err)
     }
 });
 
-router.post('/updatePassword', checkAuthenticated, updatePasswordValidation, async (req, res) => {
+router.post('/updatePassword', checkAuthenticated, updatePasswordValidation, async (req, res, next) => {
     
     const user = req.user
 
@@ -460,12 +483,12 @@ router.post('/updatePassword', checkAuthenticated, updatePasswordValidation, asy
 
         res.redirect('/you')
     } catch (err) {
-        console.error(err)
-        res.status(500).send('Server error')  
+        err.status = 500
+        next(err)
     }
 });
 
-router.post('/updateAutomaticPayouts', checkAuthenticated, async (req, res) => {
+router.post('/updateAutomaticPayouts', checkAuthenticated, async (req, res, next) => {
     
     const user = req.user
 
@@ -481,22 +504,23 @@ router.post('/updateAutomaticPayouts', checkAuthenticated, async (req, res) => {
 
         res.redirect('/you')
     } catch (err) {
-        console.error(err)
-        res.status(500).send('Server error')  
+        err.status = 500
+        next(err)
     }
 });
 
 // Tickets
-router.get('/tickets/:link', checkAuthenticated, async (req, res) => {
+router.get('/tickets/:link', checkAuthenticated, async (req, res, next) => {
     try {
-        const ticket = await Ticket.findOne({ shortID: req.params.link })
         const user = await User.findById(req.user._id)
+        const ticket = await Ticket.findOne({ shortID: req.params.link })
+
         getTicketValidation(user, ticket)
 
         res.render('ticket', { ticket, data: {} })
     } catch (err) {
-        console.error(err)
-        res.status(500).send('Server error')  
+        err.status = 500
+        next(err)
     }
 });
 
@@ -507,11 +531,19 @@ router.get('/example', (req, res) => {
     res.render('ads/adPage', { url })
 });
 
-router.get('/:link', async (req, res) => {
+router.get('/:link', async (req, res, next) => {
     try {
         const url = await Link.findOne({ short: req.params.link })
-        if (url === null || !url.status) {
-            return res.status(404).render('error/404')
+
+        if (url === null) {
+            const err = new Error()
+            err.status = 404
+            return next(err)
+        }
+        if (!url.status) {
+            const err = new Error()
+            err.status = 403
+            return next(err)
         }
 
         ClickEvent.create({
@@ -523,8 +555,8 @@ router.get('/:link', async (req, res) => {
 
         url.monetization ? res.render('ads/adPage', { url }) : res.redirect(url.full)
     } catch (err) {
-        console.error(err)
-        res.status(500).send('Server error')  
+        err.status = 500
+        next(err)
     }
 });
 
@@ -532,9 +564,9 @@ router.get('/:link', async (req, res) => {
 router.delete('/logout', checkAuthenticated, async (req, res, next) => {
     try {
         await new Promise((resolve, reject) => {
-            req.logout(err => (err ? reject(err) : resolve()));
+            req.logout(err => (err ? reject(err) : resolve()))
         });
-        res.redirect('/login');
+        res.redirect('/login')
     } catch (err) {
         next(err);
     }
@@ -543,35 +575,75 @@ router.delete('/logout', checkAuthenticated, async (req, res, next) => {
 export default router;
 
 // Errors
-router.use((req, res) => {
-    const message = "The page you're looking for was not found."
-    res.status(404).render('user/error', { number: 404, redirect: "previous", message })
+router.use((err, req, res, next) => {
+    const status = err.status || 500
+    const errData = {};
+
+    switch(status) {
+        case 400: {
+            errData.message = 'Your browser sent a request this server could not understand'
+            errData.redirect = 'previous'
+            break;
+        } 
+        case 401: {
+            errData.message = 'Authentication required!'
+            errData.redirect = 'previous'
+            break;
+        }
+        case 402: {
+            errData.message = 'A payment is required to proceed'
+            errData.redirect = 'previous'
+            break;
+        }
+        case 403: {
+            errData.message = 'You do not have permission to access this page'
+            errData.redirect = 'previous'
+            break;
+        }
+        case 404: {
+            errData.message = "The page you're looking for was not found"
+            errData.redirect = 'previous'
+            break;
+        }
+        case 413: {
+            errData.message = 'File too large!'
+            errData.redirect = 'previous'
+            break;
+        }
+        case 418: { 
+            errData.message = "I'm a teapot!"
+            errData.redirect = 'previous'
+            break;
+        }
+        case 500: { 
+            errData.message = 'Internal server error!'
+            errData.redirect = 'home'
+            break;
+        }
+        case 501: { 
+            errData.message = 'Feature not implemented!'
+            errData.redirect = 'previous'
+            break;
+        }
+        case 502: { 
+            errData.message = 'Bad gateway!'
+            errData.redirect = 'home'
+            break;
+        }
+        case 504: { 
+            errData.message = 'Gateway timeout!'
+            errData.redirect = 'home'
+            break;
+        }
+    }
+
+    res.status(status).render('user/error', { number: status, redirect: errData.redirect, message: errData.message });
 });
 
-// router.use((req, res) => {
-//     const message = "Your browser sent a request this server could not understand"
-//     res.status(400).render('user/error', { number: 400, redirect: "previous", message })
-// });
-
-// router.use((req, res) => {
-//     const message = "Authentication required!";
-//     res.status(401).render('user/error', { number: 401, redirect: "home", message })
-// });
-
-// router.use((req, res) => {
-//     const message = "A payout is required to proceed";
-//     res.status(402).render('user/error', { number: 402, redirect: "previous", message })
-// });
-
-// router.use((req, res) => {
-//     const message = "You do not have permission to access this page"
-//     res.status(403).render('user/error', { number: 403, redirect: "previous", message })
-// });
-
-// router.use((req, res) => {
-//     const message = "The page you're looking for was not found."
-//     res.status(404).render('user/error', { number: 404, redirect: "previous", message })
-// });
+router.use((req, res) => {
+    const message = "The page you're looking for was not found."
+    res.status(404).render('user/error', { number: 404, redirect: 'previous', message })
+});
 
 // router.use((req, res) => {
 //     const message = "Method not allowed!";
@@ -599,11 +671,6 @@ router.use((req, res) => {
 // });
 
 // router.use((req, res) => {
-//     const message = "File too large!";
-//     res.status(413).render('user/error', { number: 413, redirect: "previous", message })
-// });
-
-// router.use((req, res) => {
 //     const message = "URL too long!";
 //     res.status(414).render('user/error', { number: 414, redirect: "previous", message })
 // });
@@ -611,11 +678,6 @@ router.use((req, res) => {
 // router.use((req, res) => {
 //     const message = "Unsupported file type!";
 //     res.status(415).render('user/error', { number: 415, redirect: "previous", message })
-// });
-
-// router.use((req, res) => {
-//     const message = "I'm a teapot!";
-//     res.status(418).render('user/error', { number: 418, redirect: "previous", message })
 // });
 
 // router.use((req, res) => {
@@ -628,29 +690,9 @@ router.use((req, res) => {
 //     res.status(429).render('user/error', { number: 429, redirect: "home", message })
 // });
 
-// router.use((req, res,) => {
-//     const message = "Internal server error!";
-//     res.status(500).render('user/error', { number: 500, redirect: "home", message })
-// });
-
-// router.use((req, res) => {
-//     const message = "Feature not implemented!";
-//     res.status(501).render('user/error', { number: 501, redirect: "home", message })
-// });
-
-// router.use((req, res) => {
-//     const message = "Bad gateway!";
-//     res.status(502).render('user/error', { number: 502, redirect: "home", message })
-// });
-
 // router.use((req, res) => {
 //     const message = "Service unavailable!";
 //     res.status(503).render('user/error', { number: 503, redirect: "home", message })
-// });
-
-// router.use((req, res) => {
-//     const message = "Gateway timeout!";
-//     res.status(504).render('user/error', { number: 504, redirect: "home", message })
 // });
 
 // router.use((req, res) => {
