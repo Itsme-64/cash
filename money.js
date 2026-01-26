@@ -10,6 +10,7 @@ import adminPages from './admin.router.js'
 import { registerJobs } from './jobs/time-is-money.js';
 import initializePassport from './middleware/passport-config.js';
 import setupSession from './middleware/session.js';
+import { errorHandler, notFound } from './middleware/error.js';
 import User from './models/users.js';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
@@ -55,8 +56,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/', pages);
 app.use('/admin/', adminPages);
+app.use('/', pages);
+app.use(errorHandler);
+app.use(notFound);
 
 app.listen(PORT, () => console.log(`Server Running on port ${PORT}`));
 
