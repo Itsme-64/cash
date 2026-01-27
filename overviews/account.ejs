@@ -5,8 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Your Account | 159.cash</title>
-  <%- include('../public/assets/css/css.ejs', { cssFiles: [ 'forms' ] }) %>
-  <link rel="shortcut icon" href="assets/images/favicon.png" />
+  <%- include('ledger/assets/css.ejs', { cssFiles: [ 'forms' ] }) %>
+  <link rel="shortcut icon" href="/src/images/favicon.png" />
 </head>
 
 <body>
@@ -287,14 +287,14 @@
       </div>
     </div>
   </div>
-  <script src="vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/js/main.js"></script>
-  <script src="assets/js/account.js"></script>
+  <script src="/public/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/src/js/main.js"></script>
+  <script src="/src/js/account.js"></script>
   <script>
     const fileInput = document.getElementById('userIcon');
   </script>
-  <script src="assets/js/fileUpload.js"></script>
-  <script src="assets/js/liveValidate.js"></script>
+  <script src="/src/js/fileUpload.js"></script>
+  <script src="/src/js/liveValidate.js"></script>
 </body>
 
 </html>

@@ -7,8 +7,8 @@
   <meta name="description"
     content="159.Cash is a free and user-friendly tool that allows users to monetize and shorten their url links, with tools such as tracking, analytics, and direct support." />
   <title>159.cash</title>
-  <%- include('../public/assets/css/css.ejs', { cssFiles: [ 'buttons' ] }) %>
-  <link rel="shortcut icon" href="/assets/images/favicon.png" />
+  <%- include('ledger/assets/css.ejs', { cssFiles: [ 'buttons' ] }) %>
+  <link rel="shortcut icon" href="/src/images/favicon.png" />
 </head>
 
 <body>
@@ -31,7 +31,7 @@
                 <div class="card">
                   <div class="card-body">
                     <h4 class="card-title">The #1 ad-link shortening service</h4>
-                    <img class="index-logo-img" src="./assets/images/logo-full.svg" alt="logo" />
+                    <img class="index-logo-img" src="/src/images/logo-full.svg" alt="logo" />
                   </div>
                 </div>
               </div>
@@ -125,7 +125,7 @@
                         </p>
                       </blockquote>
                       <div class="d-flex justify-content-center">
-                        <img class="index-logo-img h-80 w-80" src="./assets/images/index/hero.webp"
+                        <img class="index-logo-img h-80 w-80" src="/src/images/index/hero.webp"
                           alt="159.cash rich man logo mascot caricature landing page image" />
                       </div>
                     </div>
@@ -139,8 +139,8 @@
         </div>
     </div>
   </div>
-  <script src="vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/js/main.js"></script>
+  <script src="/public/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/src/js/main.js"></script>
 </body>
 
 </html>

@@ -1,7 +1,7 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <div class="sidebar-brand-wrapper align-items-center justify-content-center fixed-top">
-        <a class="sidebar-brand brand-logo" href="/operator"><img src="assets/images/logo.svg" alt="logo" /></a>
-        <a class="sidebar-brand brand-logo-mini" href="/operator"><img src="assets/images/logo-mini.svg"
+        <a class="sidebar-brand brand-logo" href="/operator"><img src="/src/images/logo.svg" alt="logo" /></a>
+        <a class="sidebar-brand brand-logo-mini" href="/operator"><img src="/src/images/logo-mini.svg"
                 alt="logo" /></a>
     </div>
     <ul class="nav">
@@ -11,9 +11,9 @@
                     <div class="count-indicator">
                         <img class="img-xs rounded-circle" 
                             <% if (false) { %>
-                                src="assets/images/profile/user/<%= user.PID %>.jpg"
+                                src="/files/user/<%= user.PID %>.jpg"
                             <% } else { %>
-                                src="assets/images/profile/default.png"
+                                src="/src/images/profile/default.png"
                             <% } %>
                             alt="user profile picture">
                         <span class="count bg-success"></span>

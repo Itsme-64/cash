@@ -6,10 +6,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>New Link | 159.cash</title>
-  <!-- css here -->
-  <link rel="stylesheet" href="vendor/@mdi/font/css/materialdesignicons.min.css">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="shortcut icon" href="assets/images/favicon.png" />
+  <%- include('ledger/assets/css.ejs', { cssFiles: [ 'forms' ] }) %>
+  <link rel="shortcut icon" href="/src/images/favicon.png" />
 </head>
 
 <body>
@@ -102,10 +100,9 @@
       </div>
     </div>
   </div>
-  <script src="vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  
-  <script src="assets/js/createNewLink.js"></script>
-  <script src="assets/js/main.js"></script>
+  <script src="/public/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/src/js/createNewLink.js"></script>
+  <script src="/src/js/main.js"></script>
 </body>
 
 </html>

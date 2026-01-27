@@ -7,8 +7,8 @@
   <meta name="description"
     content="159.cash advertisement page" />
   <title>159.cash</title>
-  <%- include('../public/assets/css/css.ejs', { cssFiles: [], page: 'adPage' }) %>
-  <link rel="shortcut icon" href="assets/images/favicon.png" />
+  <%- include('../ledger/assets/css.ejs', { cssFiles: [], page: 'adPage' }) %>
+  <link rel="shortcut icon" href="/src/images/favicon.png" />
 
     <style>
         .tooltip {
@@ -41,7 +41,7 @@
             <ul class="navbar-nav d-flex flex-row flex-wrap align-items-center gap-4 w-100">
                 <li class="d-flex align-items-center gap-3">
                     <a href="/"> 
-                        <img class="index-logo-img" src="/assets/images/logo-full.svg" alt="logo" style="max-width: 15rem;"/> 
+                        <img class="index-logo-img" src="/src/images/logo-full.svg" alt="logo" style="max-width: 15rem;"/> 
                     </a>
                     <p class="mb-0 mb-0 d-none d-xl-block">
                         The new #1 ad-link <br> 
@@ -108,9 +108,9 @@
             </span>
         </div>
     </footer>
-    <script src="vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/main.js"></script>
-    <script src="assets/js/adPage.js"></script>
+    <script src="/public/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/src/js/main.js"></script>
+    <script src="/src/js/adPage.js"></script>
 </body>
 
 </html>
