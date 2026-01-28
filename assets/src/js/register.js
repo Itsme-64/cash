@@ -17,10 +17,11 @@ usernameInput.addEventListener("input", () => {
         const data = await res.json();
 
         feedback.textContent = data.message;
-        feedback.classList.add(data.available ? "text-success" : "text-danger");
+        feedback.classList.toggle("text-success", data.available);
+        feedback.classList.toggle("text-danger", !data.available);
     } catch (err) {
-        feedback.textContent = "Error checking username";
-        feedback.style.color = "red";
+        feedback.textContent = "Error checking username availability";
+        feedback.style.color = "yellow";
     }
     }, 300);
 });

@@ -52,7 +52,7 @@ router.get('/', checkNotAuthenticated, (req, res) => {
     res.render('index')
 });
 
-router.get('/advertise', checkAuthenticated, (req, res) => {
+router.get('/advertise', checkAuthenticated, (req, res, next) => {
     const err = new Error()
     err.status = 501
     return next(err)
@@ -60,7 +60,7 @@ router.get('/advertise', checkAuthenticated, (req, res) => {
     //res.render('advertise')
 });
 
-router.get('/analytics', checkAuthenticated, (req, res) => {
+router.get('/analytics', checkAuthenticated, (req, res, next) => {
     const err = new Error()
     err.status = 501
     return next(err)
@@ -138,14 +138,19 @@ router.get('/ticket', async (req, res, next) => {
 });
 
 router.get('/you', checkAuthenticated, async (req, res) => {
-    const user = req.user;
-    const userInfo = await UserInfo.findOne({ user: user._id })
-    const payoutMethod = getPayoutMethod(req)
+    try {
+        const user = req.user;
+        const userInfo = await UserInfo.findOne({ user: user._id })
+        const payoutMethod = await getPayoutMethod(req)
 
-    res.render('account', { data: {}, form: 'none', userInfo, payoutMethod })
+        res.render('account', { data: {}, form: 'none', userInfo, payoutMethod })
+    } catch(err) {
+        err.status = 500
+        next(err)
+    }
 });
 
-//Validation
+// Validation
 router.get("/checkUsername", checkNotAuthenticated, async (req, res) => {
     const { username } = req.query;
     if (!username) {
@@ -161,7 +166,7 @@ router.get("/checkUsername", checkNotAuthenticated, async (req, res) => {
     }
 });
 
-//User
+// User
 router.get('/login', checkNotAuthenticated, (req, res) => {
     res.render('user/login', { errorMessages: req.flash('error') })
 });
@@ -181,7 +186,7 @@ router.get('/privacy', (req, res) => {
 router.get('/reportAdvertisement', async (req, res) => {
     const url = await Link.findOne({ short: req.query.link })
     let redirect = ''
-    url ? redirect = `destination:${url.full}`  : redirect = 'previous'
+    url ? redirect = `destination:${url.full}` : redirect = 'previous'
 
     const message = "Thank you for your report, it has been submitted and will be handled shortly. "
                   + "We appreciate your efforts to help make 159.cash a better place!"
@@ -274,7 +279,7 @@ router.post('/payout', checkAuthenticated, payoutValidation, async (req, res, ne
     }
     
     try {
-        const payoutMethod = getPayoutMethod(req)
+        const payoutMethod = await getPayoutMethod(req)
 
         await Payout.create({
             user: user._id,
@@ -365,17 +370,19 @@ router.post('/register', checkNotAuthenticated, registerValidation, async (req, 
     }
     
     try {
-        const referrer = req.cookies.referral
-        let valid = false
+        const referralCookie = req.cookies.referral
+        let referrer = null
 
-        if (referrer) valid = Date.now() - referrer.clickedAt <= (7 * 24 * 60 * 60 * 1000) // week
-        if (!valid) referrer = ""
+        if (referralCookie && Date.now() - referralCookie.clickedAt <= 7 * 24 * 60 * 60 * 1000) {
+            referrer = referralCookie.referrer
+        }
 
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
         const newUser = await User.create({
             username: req.body.username,
             email: req.body.email,
             password: hashedPassword,
+            referrer: referrer
         })
 
         await UserInfo.create({
@@ -387,8 +394,7 @@ router.post('/register', checkNotAuthenticated, registerValidation, async (req, 
                 city: req.body.city,
                 zip: req.body.zip,
                 country: req.body.country
-            },
-            referrer: referrer
+            }
         })
 
         await PayoutMethod.create({
@@ -397,6 +403,7 @@ router.post('/register', checkNotAuthenticated, registerValidation, async (req, 
 
         res.redirect('/login')
     } catch {
+        console.error(err)
         res.redirect('/register')
     }
 });

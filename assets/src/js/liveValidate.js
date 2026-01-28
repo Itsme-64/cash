@@ -10,11 +10,11 @@ inputs.forEach((input, i) => {
         counter.textContent = length - minLength;
 
         if (length < minLength) {
-        counter.classList.remove('text-success');
-        counter.classList.add('text-danger');
+            counter.classList.remove('text-success');
+            counter.classList.add('text-danger');
         } else {
-        counter.classList.remove('text-danger');
-        counter.classList.add('text-success');
+            counter.classList.remove('text-danger');
+            counter.classList.add('text-success');
         }
     });
 });
