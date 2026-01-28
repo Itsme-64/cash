@@ -12,7 +12,13 @@ adminRouter.get('/', (req, res) => {
 });
 
 adminRouter.post('/createRevenuePeriod', (req, res, next) => {
+    try {
 
+    } catch (err) {
+        console.err(err)
+        err.status = 500
+        next(err)
+    }
 });
 
 export default adminRouter;

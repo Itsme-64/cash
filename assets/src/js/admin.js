@@ -35,6 +35,8 @@ const createDateEl = (date, isDisabled, isToday) => {
     if (!isDisabled) {
         span.classList.toggle('today', isToday);
         span.setAttribute('data-date', formatDate(date))
+    } else if (date.getDate() > 2 && date.getDate() < 30) {
+        span.textContent = "";
     }
 
     span.addEventListener('click', handleDateClick);
