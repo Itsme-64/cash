@@ -33,6 +33,11 @@ import { newLinkValidation,
 
 const router = express.Router();
 
+// == TEMP == \\
+router.get('/adm/', (req, res) => {
+    res.render('admin/admin')
+});
+
 // Get Pages
 router.get('/', checkNotAuthenticated, (req, res) => {
     const ref = req.query.ref

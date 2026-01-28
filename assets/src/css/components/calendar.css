@@ -1,0 +1,106 @@
+.calendar {
+    padding: 1rem;
+    user-select: none;
+    text-align: center;
+    font-size: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.5rem;
+    padding-inline: 1rem; 
+    width: 820px;
+    background-color: #22262E;
+    border-radius: 12px;
+    margin-bottom: 8px;
+}
+
+.side {
+    width: 220px;
+}
+.left-side {
+    margin-left: 20px;
+}
+.right-side {
+    margin-right: 20px;
+}
+
+.calendar .controls {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%; 
+}
+.calendar .controls .next {
+    margin-left: auto
+}
+.calendar .controls .prev {
+    margin-right: auto
+}
+.calendar .controls .btn-center {
+    background-color: transparent !important;
+    border: none;
+}
+.calendar .controls .label {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.calendar strong.label {
+    grid-column: 2;
+    text-transform: uppercase;
+}
+
+.days, .dates {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-top: .5rem;
+    width: 220px;
+    color: #bbbbbb
+}
+
+.days {
+    font-weight: 500;
+}
+
+.dates span {
+    aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 4px;
+}
+.dates span:hover {
+    background-color: #ffffff30;
+}
+.dates span.disabled {
+    color: #6c7293;
+    pointer-events: none;
+}
+.dates span.today {
+    background-color: #ffab00;
+    color: #fff;
+}
+.dates span.range-start.range-end {
+    border-radius: 4px;
+}
+.dates span.range-start {
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    background-color: #8f5fe8;
+    color: #fff
+}
+.dates span.range-end {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    background-color: #8f5fe8;
+    color: #fff
+}
+.dates span.in-range {
+    border-radius: 0;
+    background-color: #8f5fe830;
+    color: #dadada
+}
+.dates span.today.in-range {
+    background-color: #8f5fe880;
+}

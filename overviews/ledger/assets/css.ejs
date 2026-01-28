@@ -33,9 +33,13 @@
     <link rel="stylesheet" href="/src/css/components/tooltips.css">
 <% } %>
 
-<% if (typeof page !== 'undefined') { %>
-    <link rel="stylesheet" href="/src/css/pages/<%= page %>.css">
+<% if (cssFiles.includes('calendar')) { %>
+    <link rel="stylesheet" href="/src/css/components/calendar.css">
 <% } %>
 
-<!-- <link rel="stylesheet" href="/src/css/keyframes.css"> -->
-<!-- <link rel="stylesheet" href="/src/css/mixins.css"> -->
+<% if (typeof page !== 'undefined') { %>
+    <link rel="stylesheet" href="/src/css/pages/<%= page %>.css">
+<% } else if (cssFiles.includes('temp')) { %>
+    <!-- <link rel="stylesheet" href="/src/css/keyframes.css"> -->
+    <!-- <link rel="stylesheet" href="/src/css/mixins.css"> -->
+<% } %>

@@ -11,4 +11,8 @@ adminRouter.get('/', (req, res) => {
     res.render('admin/admin')
 });
 
+adminRouter.post('/createRevenuePeriod', (req, res, next) => {
+
+});
+
 export default adminRouter;

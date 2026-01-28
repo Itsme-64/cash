@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Admin</title>
+  <%- include('../ledger/assets/css.ejs', { cssFiles: [ 'forms', 'calendar' ] }) %>
+  <link rel="shortcut icon" href="/src/images/favicon.png" />
+
+  <style>
+            body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+  </style>
+</head>
+
+<body>
+    <div class="container-fluid page-body-wrapper">
+      <div class="main-panel-noheader">
+        <div class="content-wrapper">
+          <div class="page-header">
+            <h3 class="page-title"> Admin Panel </h3>
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/operator">159.cash</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Admin Panel</li>
+              </ol>
+            </nav>
+          </div>
+          <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Create a new Revenue Period</h4>
+                  <form action="/createRevenuePeriod" class="forms-sample" autocomplete="off" method="POST">
+
+
+<div class="calendar">
+    
+    <div class="left-side side">
+        <div class="controls">
+            <button class="prev btn btn-info" type="button" id="prevButton"><i class="mdi mdi-chevron-left"></i></button>
+            <strong class="label">Month YYYY</strong>
+        </div>
+        <div class="days">
+            <span>M</span>
+            <span>T</span>
+            <span>W</span>
+            <span>T</span>
+            <span>F</span>
+            <span>S</span>
+            <span>S</span>
+        </div>
+        <div class="dates">
+            <span class="disabled">1</span>
+            <span>2</span>
+            <span>3</span>
+            <span>4</span>
+            <span>5</span>
+            <span>6</span>
+            <span>7</span>
+            <span>8</span>
+            <span>9</span>
+            <span>10</span>
+            <span class="today">11</span>
+            <span>12</span>
+            <span>13</span>
+            <span>14</span>
+            <span>15</span>
+            <span>16</span>
+            <span>17</span>
+            <span>18</span>
+            <span>19</span>
+            <span>20</span>
+            <span>21</span>
+            <span>22</span>
+            <span>23</span>
+            <span>24</span>
+            <span>25</span>
+            <span>26</span>
+            <span>27</span>
+            <span>28</span>
+            <span>29</span>
+            <span>30</span>
+            <span class="disabled">31</span>
+        </div>
+    </div>
+
+        <div class="middle-side side">
+        <div class="controls">
+            <button class="prev btn-center btn btn-info" disabled><i class="mdi mdi-tilde"></i></button>
+            <strong class="label">Month YYYY</strong>
+            <button class="next btn-center btn btn-info" disabled><i class="mdi mdi-tilde"></i></button>
+        </div>
+        <div class="days">
+            <span>M</span>
+            <span>T</span>
+            <span>W</span>
+            <span>T</span>
+            <span>F</span>
+            <span>S</span>
+            <span>S</span>
+        </div>
+        <div class="dates">
+            <span>1</span>
+            <span>2</span>
+            <span>3</span>
+            <span>4</span>
+            <span>5</span>
+            <span>6</span>
+            <span>7</span>
+            <span>8</span>
+            <span>9</span>
+            <span>10</span>
+            <span>11</span>
+            <span>12</span>
+            <span>13</span>
+            <span>14</span>
+            <span>15</span>
+            <span>16</span>
+            <span>17</span>
+            <span>18</span>
+            <span>19</span>
+            <span>20</span>
+            <span>21</span>
+            <span>22</span>
+            <span>23</span>
+            <span>24</span>
+            <span>25</span>
+            <span>26</span>
+            <span>27</span>
+            <span>28</span>
+            <span>29</span>
+            <span>30</span>
+            <span>31</span>
+        </div>
+    </div>
+
+    <div class="right-side side">
+        <div class="controls">
+            <strong class="label">Month YYYY</strong>
+            <button class="next btn btn-info" type="button" id="nextButton"><i class="mdi mdi-chevron-right"></i></button>
+        </div>
+        <div class="days">
+            <span>M</span>
+            <span>T</span>
+            <span>W</span>
+            <span>T</span>
+            <span>F</span>
+            <span>S</span>
+            <span>S</span>
+        </div>
+        <div class="dates">
+            <span class="disabled">1</span>
+            <span>2</span>
+            <span>3</span>
+            <span>4</span>
+            <span>5</span>
+            <span>6</span>
+            <span class="range-start">7</span>
+            <span class="in-range">8</span>
+            <span class="in-range">9</span>
+            <span class="in-range">10</span>
+            <span class="in-range">11</span>
+            <span class="range-end">12</span>
+            <span>13</span>
+            <span>14</span>
+            <span>15</span>
+            <span>16</span>
+            <span>17</span>
+            <span>18</span>
+            <span>19</span>
+            <span>20</span>
+            <span>21</span>
+            <span>22</span>
+            <span>23</span>
+            <span>24</span>
+            <span>25</span>
+            <span>26</span>
+            <span>27</span>
+            <span>28</span>
+            <span>29</span>
+            <span>30</span>
+            <span class="disabled">31</span>
+        </div>
+    </div>
+
+</div>
+
+                    <div class="form-group hidden-label row">
+                        <div class="col">
+                            <label for="amount"></label>
+                            <input type="text" class="form-control" id="amount" name="amount" placeholder="Amount">
+                        </div>
+                        <div class="col">
+                            <label for="dateSelection"></label>
+                            <input type="text" class="form-control" id="dateSelection" name="dateSelection" 
+                                placeholder="MM/DD/YYYY - MM/DD/YYYY" readonly>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <button type="submit" class="btn btn-primary me-2">Send Earnings</button>
+                      <button type="reset" class="btn btn-dark" style="margin-left: 0.15rem">Clear</button>
+                      <p class="text-warning mb-0" style="margin-left: 1rem" id="monetization-warning"></p>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <%- include('../ledger/footer') %>
+      </div>
+    </div>
+    <script src="/public/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/src/js/admin.js"></script>
+    <script src="/src/js/main.js"></script>
+</body>
+
+</html>
