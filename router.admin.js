@@ -14,7 +14,7 @@ adminRouter.get('/', async (req, res, next) => {
     try {
         const doneDates = await getDoneDates(req)
 
-        res.render('admin/admin')
+        res.render('admin/admin', { doneDates })
     } catch (err) {
         err.status = 500
         next(err)

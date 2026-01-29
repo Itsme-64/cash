@@ -1,3 +1,5 @@
+import { isArray } from "chart.js/helpers";
+
 const datePicker = document.querySelector('.calendar');
 const rangeInput = document.getElementById('dateSelection');
 const calendarContainer = datePicker.querySelector('.calendar');
@@ -8,6 +10,8 @@ const rightCalendar = datePicker.querySelector('.right-side');
 const prevButton = document.getElementById('prevButton');
 const nextButton = document.getElementById('nextButton');
 const selectionElement = document.getElementById('dateSelection');
+
+const doneDates = document.body.dataset.doneDates;
 
 let start = null;
 let end = null;
@@ -84,6 +88,15 @@ const applyHighlighting = () => {
             if (date > start && date < end) {
                 dateElement.classList.add('in-range');
             }
+        }
+    }
+
+    if (isArray(doneDates) && doneDates.length > 0) {
+        for (const dateElement of dateElements) {
+            const date = new Date(dateElement.dataset.date);
+            date.setHours(0, 0, 0, 0);
+
+            if (doneDates.includes(date)) dateElement.classList.add('done');
         }
     }
 }
