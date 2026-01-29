@@ -43,6 +43,21 @@ const linkSchema = new mongoose.Schema({
         required: true,
         default: false
     },
-}, { timestamps: true });
+    earned: {
+        type: Number,
+        default: 0
+    }
+}, { timestamps: true,
+     toJSON: { virtuals: true },
+     toObject: { virtuals: true } });
+
+linkSchema.virtual('weight').get(() => {
+    if (this.monetization == false) return 0;
+
+    let weight = 1000 * Math.pow((this.duration / 10000), 0.25);
+    if (!this.redirectInstantly) weight = weight * 1.25;
+
+    return Math.round(weight);
+})
 
 export default mongoose.model('Link', linkSchema);
