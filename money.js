@@ -6,7 +6,7 @@ import flash from 'express-flash';
 import methodOverride from 'method-override';
 import cookieParser from 'cookie-parser';
 import pages from './router.js';
-import adminPages from './admin.router.js'
+import adminPages from './router.admin.js';
 import { registerJobs } from './jobs/time-is-money.js';
 import initializePassport from './middleware/passport-config.js';
 import setupSession from './middleware/session.js';

@@ -34,7 +34,7 @@ import { newLinkValidation,
 const router = express.Router();
 
 // == TEMP == \\
-router.get('/adm/', (req, res) => {
+router.get('/adm', (req, res) => {
     res.render('admin/admin')
 });
 
