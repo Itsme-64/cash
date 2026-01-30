@@ -36,12 +36,6 @@ const userSchema = new mongoose.Schema({
         required: true,
         default: true
     },
-    balancePending: {
-        type: Number,
-        required: false,
-        default: 0,
-        min: 0
-    },
     balance: {
         type: Number,
         required: false,

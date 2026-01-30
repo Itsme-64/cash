@@ -15,11 +15,14 @@ const revenuePeriodSchema = new mongoose.Schema({
         type: Date,
         required: true,
         immutable: true
-    }, // Below is all calculated during apply-revenue-period and only used for analytics
-    adminAmount: {
+    }, // Below is all calculated during *apply-revenue-period* and only used for analytics
+    paidAmount: {
         type: Number
     },
     referralAmount: {
+        type: Number
+    },
+    adminAmount: {
         type: Number
     },
     weightAmount: {
