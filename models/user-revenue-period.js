@@ -7,7 +7,7 @@ const userRevenuePeriodSchema = new mongoose.Schema({
         required: true,
         immutable: true
     },
-    revenuePeriod: {
+    period: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'RevenuePeriod',
         required: true,
@@ -19,12 +19,10 @@ const userRevenuePeriodSchema = new mongoose.Schema({
         required: true,
         immutable: true
     },
-    referrerIncome: {
-        type: Number,
-        default: 0,
-        required: true,
-        immutable: true
-    }
-})
+});
+
+userRevenuePeriodSchema.virtual('referrerIncome').get(() => {
+    Math.round(this.userIncome * 0.10)   
+});
 
 export default mongoose.model('UserRevenuePeriod', userRevenuePeriodSchema);

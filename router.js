@@ -119,7 +119,7 @@ router.get('/referral', checkAuthenticated, async (req, res, next) => {
         const user = req.user
         const referralData = await getReferralData(user)
 
-        res.render('referrals', { ...referralData })
+        res.render('referrals', { referralData })
     } catch (err) {
         err.status = 500
         next(err)

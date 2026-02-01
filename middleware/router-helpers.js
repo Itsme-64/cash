@@ -4,26 +4,37 @@ import Payout from '../models/payouts.js';
 import UserInfo from '../models/users-info.js';
 import ClickEvent from '../models/click-event.js';
 import PayoutMethod from '../models/payout-method.js';
-import clickEvent from '../models/click-event.js';
+import RevenuePeriod from '../models/revenue-period.js';
+import UserRevenuePeriod from '../models/user-revenue-period.js';
 
 export async function getReferralData(user) {
-    const referralAccounts = await User.find({ referrer: user.PID });
-    const referralAmount = referralAccounts.length;
+    const referredAccounts = (await User.find({ referrer: user.PID })).map(u => u._id);
+    const referralData = [];
 
-    const totalReferralClicks = referralAccounts.reduce((sum, account) => sum + (account.clicks || 0), 0);
+    if (referredAccounts.length === 0) return [];
 
-    let totalReferralEarnings = referralAccounts.reduce((sum, account) => sum + (account.earnings || 0), 0);
-    totalReferralEarnings = (totalReferralEarnings / 10).toFixed(2);
+    let periodReferralAmount = 0;
+    const periods = await RevenuePeriod.find().sort({ fromDate: 1 });
 
-    let referralDifference = 0;
-    for (const referralAccountId of referralAccounts) {
-        const referralAccount = await User.findById(referralAccountId);
-        if (referralAccount && referralAccount.createdAt.getTime() + 2629800000 >= Date.now()) {
-            referralDifference++;
-        }
+    for (const period of periods) {
+        const periodReferredAccounts = await UserRevenuePeriod.find({ user: { $in: referredAccounts }, period: period._id });
+
+        if (!periodReferredAccounts) continue;
+
+        const periodData = {
+            fromDate: period.fromDate,
+            toDate: period.toDate,
+            amount: periodReferredAccounts.length,
+            difference: (periodReferredAccounts.length - periodReferralAmount),
+            income: periodReferredAccounts.reduce((sum, p) => sum + (p.referrerIncome || 0), 0)
+        };
+
+        referralData.push(periodData);
+
+        periodReferralAmount = periodReferredAccounts.length;
     }
 
-    return { referralAccounts, referralAmount, totalReferralClicks, totalReferralEarnings, referralDifference };
+    return referralData;
 }
 
 export async function getPayoutsEnabledData(user) {

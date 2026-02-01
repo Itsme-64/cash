@@ -16,7 +16,8 @@ export async function applyRevenuePeriod(periodID) {
         if (!period) throw new Error('Invalid revenue period');
         if (period.applied) throw new Error('Already applied');
 
-        const amount = period.payableAmount * 100 // All calculations in cents
+        // All calculations in cents
+        const amount = period.payableAmount * 100
 
         let paidAmount = 0;
         let referrerAmount = 0;
@@ -31,15 +32,13 @@ export async function applyRevenuePeriod(periodID) {
             paidAmount += userIncome;
             await user.save({ session });
 
-            let referrerIncome = 0;
+            let referrerIncome = Math.round(userIncome * 0.10);
 
             if (user.referrer) {
                 const referrer = await User.findOne({ PID: user.referrer }).session(session);
                 if (referrer) {
-                    referrerIncome = Math.round(userIncome * 0.10);
-
-                    referrerAmount += referrerIncome;
-                    referrer.balance += referrerIncome;
+                    referrer.balance += referrerIncome
+                    referrerAmount += referrerIncome
                     await referrer.save({ session });
                 }
             }
@@ -48,7 +47,6 @@ export async function applyRevenuePeriod(periodID) {
                 user: user._id,
                 period: period._id,
                 userIncome: userIncome,
-                referrerIncome: referrerIncome
             }], { session });
         }
 
@@ -96,6 +94,18 @@ async function calculateUserIncome(session, user, weightValue, fromDate, toDate)
     }
 
     return userIncome;
+}
+
+async function calculateReferrerIncome(session, user, userIncome) {
+    const referrer = await User.findOne({ PID: user.referrer }).session(session);
+
+    if (referrer) {
+        const referrerIncome = Math.round(userIncome * 0.10);
+        referrer.balance += referrerIncome;
+        await referrer.save({ session });
+
+        return referrerIncome;
+    }
 }
 
 async function calculateLinkTotalWeight(session, link, fromDate, toDate) {
