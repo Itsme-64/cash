@@ -15,6 +15,11 @@ const revenuePeriodSchema = new mongoose.Schema({
         type: Date,
         required: true,
         immutable: true
+    },
+    applied: {
+        type: Boolean,
+        default: false,
+        required: true
     }, // Below is all calculated during *apply-revenue-period* and only used for analytics
     paidAmount: {
         type: Number
@@ -32,7 +37,7 @@ const revenuePeriodSchema = new mongoose.Schema({
      toJSON: { virtuals: true },
      toObject: { virtuals: true } });
 
-linkSchema.virtual('payableAmount').get(() => {
+revenuePeriodSchema.virtual('payableAmount').get(() => {
     return Math.round(this.amount * 0.80);
 });
 
