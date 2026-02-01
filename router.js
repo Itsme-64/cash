@@ -273,6 +273,27 @@ router.post('/:link/status', checkAuthenticated, async (req, res, next) => {
     }
 })
 
+router.post('/:clickId/validate', async (req, res, next) => {
+    try {
+        const click = await ClickEvent.findById(req.params.clickId)
+        if (!click) return res.sendStatus(404)
+
+        const link = await Link.findById(click.link)
+        if (!link) return res.sendStatus(404)
+
+        const elapsed = Date.now() - new Date(click.createdAt).getTime()
+        if ((elapsed < link.duration * 1000) - 1000) return res.sendStatus(403)
+
+        click.valid = true
+        await click.save()
+
+        return res.sendStatus(200)
+    } catch (err) {
+        err.status = 500
+        next(err)
+    }
+})
+
 router.post('/payout', checkAuthenticated, payoutValidation, async (req, res, next) => {
     
     const user = req.user;
@@ -561,7 +582,7 @@ router.get('/tickets/:link', checkAuthenticated, async (req, res, next) => {
 router.get('/example', (req, res) => {
     const url = { full: '/', short: 'example', redirectInstantly: false, duration: 10000 }
     
-    res.render('ads/adPage', { url })
+    res.render('ads/adPage', { url, clickId: 0 });
 });
 
 router.get('/:link', async (req, res, next) => {
@@ -584,9 +605,9 @@ router.get('/:link', async (req, res, next) => {
             ip: req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for']?.split(',')[0] || req.ip || 'not available',
             country: req.headers['cf-ipcountry'] || 'not available',
             userAgent: req.headers['user-agent']
-        }).catch(console.error);
+        }).catch(console.error);    
 
-        url.monetization ? res.render('ads/adPage', { url }) : res.redirect(url.full)
+        url.monetization ? res.render('ads/adPage', { url, clickId: click._id }) : res.redirect(url.full)
     } catch (err) {
         err.status = 500
         next(err)

@@ -27,6 +27,13 @@ const updateCountdown = setInterval(() => {
 function redirect() {
     clearInterval(updateCountdown);
 
+    if (!example) {
+        fetch(`/${document.body.dataset.clickId}/validate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        }).catch(() => {});
+    }
+
     if (redirectInstantly) {
         countDownElement.textContent = 0;
         window.location.href = document.body.dataset.urlFull;
