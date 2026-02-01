@@ -96,18 +96,6 @@ async function calculateUserIncome(session, user, weightValue, fromDate, toDate)
     return userIncome;
 }
 
-async function calculateReferrerIncome(session, user, userIncome) {
-    const referrer = await User.findOne({ PID: user.referrer }).session(session);
-
-    if (referrer) {
-        const referrerIncome = Math.round(userIncome * 0.10);
-        referrer.balance += referrerIncome;
-        await referrer.save({ session });
-
-        return referrerIncome;
-    }
-}
-
 async function calculateLinkTotalWeight(session, link, fromDate, toDate) {
     const clickEvents = await ClickEvent.find({ link: link._id, createdAt: { $gte: fromDate, $lte: toDate }, valid: true }).session(session);
     const baseWeight = link.weight;

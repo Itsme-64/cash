@@ -1,9 +1,9 @@
 import express from 'express';
 import RevenuePeriod from './models/revenue-period.js';
 import { getDoneDates } from './middleware/router-helpers.admin.js';
-import { applyRevenuePeriod } from './middleware/apply-revenue-period.js';
-import { createRevenuePeriodValidation } from './middleware/validation.admin.js';
 import { checkAuthenticated, requireAdmin } from './middleware/auth.js';
+import { createRevenuePeriodValidation } from './middleware/validation.admin.js';
+import { applyRevenuePeriod } from './services/apply-revenue-period.js';
 
 const adminRouter = express.Router();
 
@@ -35,7 +35,7 @@ adminRouter.post('/createRevenuePeriod', createRevenuePeriodValidation, async (r
 
         await applyRevenuePeriod(period._id)
 
-        res.redirect('/adm')
+        res.redirect('/')
     } catch (err) {
         console.err(err)
         err.status = 500

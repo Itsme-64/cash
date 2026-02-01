@@ -42,7 +42,7 @@ const linkSchema = new mongoose.Schema({
         type: Boolean,
         required: true,
         default: false
-    },
+    }, // Below is only used for user display analytics
     earned: {
         type: Number,
         default: 0
