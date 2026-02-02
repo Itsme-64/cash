@@ -58,13 +58,6 @@ function toggleMonetizationOptions() {
 monetizationCheckbox.addEventListener('change', toggleMonetizationOptions);
 toggleMonetizationOptions();
 
-
-var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-    return new bootstrap.Tooltip(tooltipTriggerEl)
-});
-
-
 const warningTextElement = document.getElementById('monetization-warning');
 
 const radioButtonOne = document.getElementById('option1');
@@ -79,6 +72,27 @@ monetizationElements.forEach(element => {
             warningTextElement.textContent = "The current settings are not optimal for your income!";
         } else {
             warningTextElement.textContent = '';
+        }
+    });
+});
+
+
+document.querySelectorAll('.copy-button').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+        const text = e.currentTarget.dataset.copy;
+
+        try {
+            await navigator.clipboard.writeText(text);
+
+            btn.classList.add('copied');
+            btn.classList.replace('mdi-content-copy', 'mdi-check');
+
+            setTimeout(() => {
+                btn.classList.replace('mdi-check', 'mdi-content-copy');
+                btn.classList.remove('copied');
+            }, 1800);
+        } catch (err) {
+            console.error('Failed to copy:', err);
         }
     });
 });

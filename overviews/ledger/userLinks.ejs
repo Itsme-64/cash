@@ -28,7 +28,12 @@
                                     </div>
                                     <div class="preview-item-content d-sm-flex flex-grow"> 
                                         <div class="flex-grow">
-                                            <h6 class="preview-subject">https://159.cash/<%= link.short %></h6>
+                                            <h6 class="preview-subject">
+                                                <% if (source == "new") { %>
+                                                    <i data-copy="https://159.cash/<%= link.short %>" class="mdi mdi-content-copy text-muted copy-button"></i>
+                                                <% } %>
+                                                https://159.cash/<%= link.short %>
+                                            </h6>
                                             <p class="text-muted mb-0" style="max-width: 30vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                                 <a class="text-muted" href="<%= link.full %>"><%= link.full %></a>
                                             </p>

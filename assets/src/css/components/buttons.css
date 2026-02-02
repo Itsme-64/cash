@@ -414,3 +414,14 @@
   background: #0d0d0d;
   border-color: #0d0d0d;
 }
+
+/* copy button */
+.copy-button {
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease !important;
+}
+
+.copy-button.copied {
+  transform: scale(1.2) rotateY(180deg);
+  opacity: 0.8;
+}
