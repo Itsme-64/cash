@@ -21,7 +21,8 @@ import { getPayoutsEnabledData,
          getTicketValidation,
          getLinkData,
          monthlyMonetization,
-         getPayoutMethod } from './middleware/router-helpers.js';
+         getPayoutMethod,
+         getDashboardData } from './middleware/router-helpers.js';
 import { newLinkValidation, 
          payoutValidation, 
          ticketValidation, 
@@ -96,6 +97,7 @@ router.get('/new', checkAuthenticated, async (req, res, next) => {
 router.get('/operator', checkAuthenticated, async (req, res, next) => {
     try {
         const linkData = await getLinkData(req, 'operator')
+        const dashboardData = await getDashboardData(req.user._id)
 
         res.render('dashboard', { ...linkData })
     } catch (err) {

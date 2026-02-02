@@ -114,7 +114,6 @@ export async function getLinkData(req, page) {
 
         const toDate = period?.toDate || null;
 
-        // Chat I am struggling
         if (toDate) {
             const pendingAgg = await LinkStatsDaily.aggregate([
                 { $match: { link: { $in: linkIds }, date: { $gt: toDate } } },
@@ -166,4 +165,10 @@ export async function getPayoutMethod(req) {
     return await PayoutMethod
         .findOne({ user })
         .sort({ createdAt: -1 }) || 'none';
+}
+
+export async function getDashboardData(userId) { // Return: clicks today, clicks past 14 days, revenue today 
+    // Top cards 
+
+    // Left chart
 }
