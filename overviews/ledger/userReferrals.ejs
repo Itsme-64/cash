@@ -34,7 +34,7 @@
                                         <% if (period.income > 0) { %>
                                             class="text-success"
                                         <% } %>
-                                        >USD <%= period.income %>
+                                        >USD <%= (period.income / 10000).toFixed(4) %>
                                     </td>
                                 </tr>
                             <% }); %>

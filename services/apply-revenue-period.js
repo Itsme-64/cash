@@ -16,17 +16,18 @@ export async function applyRevenuePeriod(periodID) {
         if (!period) throw new Error('Invalid revenue period');
         if (period.applied) throw new Error('Already applied');
 
-        // All calculations in cents
-        const amount = period.payableAmount * 100
+        // All calculations in hundredths of cents
+        const amount = period.payableAmount * 10000;
 
         let paidAmount = 0;
         let referrerAmount = 0;
 
+        // Weight value scaled 100 x
         const weightValue = await calculateWeightValue(session, amount, period.fromDate, period.toDate);
         const users = await User.find().session(session);
 
         for (const user of users) {
-            const userIncome = await calculateUserIncome(session, user, weightValue, period.fromDate, period.toDate)
+            const userIncome = await calculateUserIncome(session, user, weightValue, period.fromDate, period.toDate);
 
             user.balance += userIncome;
             paidAmount += userIncome;
@@ -37,8 +38,8 @@ export async function applyRevenuePeriod(periodID) {
             if (user.referrer) {
                 const referrer = await User.findOne({ PID: user.referrer }).session(session);
                 if (referrer) {
-                    referrer.balance += referrerIncome
-                    referrerAmount += referrerIncome
+                    referrer.balance += referrerIncome;
+                    referrerAmount += referrerIncome;
                     await referrer.save({ session });
                 }
             }
@@ -52,8 +53,8 @@ export async function applyRevenuePeriod(periodID) {
 
         period.paidAmount = paidAmount;
         period.referralAmount = referrerAmount;
-        period.adminAmount = period.amount - (paidAmount + referrerAmount);
-        period.weightAmount = weightValue;
+        period.adminAmount = (period.amount * 10000) - (paidAmount + referrerAmount);
+        period.weightAmount = (weightValue / 100);
 
         period.applied = true;
 
@@ -77,7 +78,7 @@ async function calculateWeightValue(session, amount, fromDate, toDate) {
     const totalWeight = weights.reduce((a, b) => a + b, 0);
 
     if (totalWeight === 0) return 0;
-    return Math.round(amount / totalWeight);
+    return Math.round((amount * 1000) / totalWeight);
 }
 
 async function calculateUserIncome(session, user, weightValue, fromDate, toDate) {
@@ -86,7 +87,7 @@ async function calculateUserIncome(session, user, weightValue, fromDate, toDate)
 
     for (const link of links) {
         const linkWeight = await calculateLinkTotalWeight(session, link, fromDate, toDate);
-        const linkIncome = Math.round(weightValue * linkWeight);
+        const linkIncome = Math.round((weightValue / 100) * linkWeight); // Normalize the weight value
 
         userIncome += linkIncome;
         link.earned += linkIncome;
@@ -99,10 +100,10 @@ async function calculateUserIncome(session, user, weightValue, fromDate, toDate)
 async function calculateLinkTotalWeight(session, link, fromDate, toDate) {
     const clickEvents = await ClickEvent.find({ link: link._id, createdAt: { $gte: fromDate, $lte: toDate }, valid: true }).session(session);
     const baseWeight = link.weight;
+    if (baseWeight == 0) return 0;
     let linkWeight = 0;
 
-    const ips = [] 
-    clickEvents.forEach(clickEvent => { ips.push(clickEvent.ip) });
+    const ips = clickEvents.map(c => c.ip);
     const ipRatio = new Set(ips).size / (ips.length + 1);
 
     clickEvents.forEach(clickEvent => {
@@ -112,7 +113,7 @@ async function calculateLinkTotalWeight(session, link, fromDate, toDate) {
     return Math.round(linkWeight);
 }
 
-function calculateCountryMultiplier(country) {
+export function calculateCountryMultiplier(country) {
     country = country.toLowerCase();
 
     const multipliers = {

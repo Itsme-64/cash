@@ -9,6 +9,7 @@ import Ticket from './models/tickets.js';
 import UserInfo from './models/users-info.js';
 import ClickEvent from './models/click-event.js';
 import PayoutMethod from './models/payout-method.js';
+import LinkStatsDaily from './models/link-stats-daily.js';
 import { validationResult } from 'express-validator';
 import { processUserImage } from './middleware/image-config.js';
 import { shortIdValidation } from './middleware/shortId-config.js';
@@ -286,6 +287,22 @@ router.post('/:clickId/validate', async (req, res, next) => {
 
         click.valid = true
         await click.save()
+
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+
+        const linkStats = await LinkStatsDaily.findOne({ link: link._id, date: today })
+
+        if (linkStats) {
+            linkStats.clicks += 1
+            await linkStats.save()
+        } else {
+            await LinkStatsDaily.create({
+                link: link._id,
+                date: today,
+                clicks: 1
+            })
+        }
 
         return res.sendStatus(200)
     } catch (err) {
