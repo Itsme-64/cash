@@ -3,7 +3,7 @@
         <div class="card-body">
             <div class="d-flex flex-row justify-content-between">
                 <h4 class="card-title mb-1">Shortened Links</h4>
-                <p class="text-muted mb-1">data | <%= currentPage * 16 - 16 %> to <%= currentPage === totalPages ? totalPages % 16 : currentPage * 16 %></p>
+                <p class="text-muted mb-1"><%= currentPage * 16 - 16 %> to <%= currentPage === totalPages ? totalPages % 16 : currentPage * 16 %></p>
             </div>
             <div class="row">
                 <div class="col-12">
@@ -15,11 +15,11 @@
                                         <form action="/<%= link.short %>/status?source=<%= source %>" method="POST">
                                             <button type="submit" class="btn btn-link p-0 border-0 bg-transparent">
                                                 <% if (link.status) { %>
-                                                    <div class="preview-icon bg-primary" title="deactivate link">
+                                                    <div class="preview-icon bg-primary" data-bs-toggle="tooltip" data-bs-placement="right" title="deactivate link">
                                                         <i class="mdi mdi-link-variant text-light"></i>
                                                     </div>
                                                 <% } else { %>
-                                                    <div class="preview-icon bg-danger" title="reactivate link">
+                                                    <div class="preview-icon bg-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="reactivate link">
                                                         <i class="mdi mdi-link-variant-off text-light"></i>
                                                     </div>
                                                 <% } %>
@@ -34,13 +34,26 @@
                                             </p>
                                         </div>
                                         <div class="mr-auto text-sm-right pt-2 pt-sm-0">
-                                            <p><%= link.clicks %> clicks &nbsp;|&nbsp; $<%= link.earnings || '0' %></p> <!-- fix -->
+                                            <p>
+                                                <span><%= link.clicks %> clicks</span>
+                                                <% if (source == "new") { %>
+                                                    <span>&nbsp;|&nbsp;</span> 
+                                                    <span
+                                                        class="text-warning" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" 
+                                                        title="Total earnings from this link" 
+                                                        data-bs-title="    
+                                                            <div class='text-start'>
+                                                                <strong>Earned </strong><span class='text-success'>+$<%= link.earned ?? '0' %></span><br>
+                                                                <strong>Pending </strong><span class='text-warning'>≈$<%= link.pending ?? '0' %></span><br>
+                                                                <small class='text-muted'>All time</small>
+                                                            </div>
+                                                        ">
+                                                        $<%= link.earned + link.pending || '0' %>
+                                                    </span>
+                                                <% } %>
+                                            </p>
                                             <p class="text-muted mb-0">
-                                                <%= new Date(link.createdAt).toLocaleDateString("en-US", {
-                                                    month: "long",
-                                                    day: "numeric",
-                                                    year: "numeric"
-                                                }) %>
+                                                <%= new Date(link.createdAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) %>
                                             </p>
                                         </div>
                                     </div>

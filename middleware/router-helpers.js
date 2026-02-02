@@ -2,9 +2,10 @@ import User from '../models/users.js';
 import Link from '../models/links.js';
 import Payout from '../models/payouts.js';
 import UserInfo from '../models/users-info.js';
-import ClickEvent from '../models/click-event.js';
 import PayoutMethod from '../models/payout-method.js';
 import RevenuePeriod from '../models/revenue-period.js';
+import LinkStatsDaily from '../models/link-stats-daily.js';
+import LinkStatsMonthly from '../models/link-stats-monthly.js';
 import UserRevenuePeriod from '../models/user-revenue-period.js';
 
 export async function getReferralData(user) {
@@ -69,24 +70,67 @@ export function getTicketValidation(user, ticket) {
     }
 }
 
-export async function getLinkData(req) {
+export async function getLinkData(req, page) {
+    // Pagination
     const currentPage = parseInt(req.query.page) || 1;
     const limit = 16;
     const skip = (currentPage - 1) * limit;
 
     const totalLinks = await Link.countDocuments({ user: req.user._id });
+    const totalPages = Math.ceil(totalLinks / limit);  
+
+    // Link Data
     const links = await Link.find({ user: req.user._id })
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit);
 
-    const totalPages = Math.ceil(totalLinks / limit);  
+    const linkIds = links.map(l => l._id);
 
-    await Promise.all(
-        links.map(async (link) => {
-            link.clicks = await ClickEvent.countDocuments({ link: link._id, valid: true });
-        })
-    );
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+
+    const dailyAgg = await LinkStatsDaily.aggregate([
+        { $match: { link: { $in: linkIds }, date: { $gte: startOfMonth } } },
+        { $group: { _id: "$link", clicks: { $sum: "$clicks" } } }
+    ]);
+
+    const monthlyAgg = await LinkStatsMonthly.aggregate([
+        { $match: { link: { $in: linkIds } } },
+        { $group: { _id: "$link", clicks: { $sum: "$clicks" } } }
+    ]);
+
+    const dailyMap = Object.fromEntries(dailyAgg.map(d => [String(d._id), d.clicks]));
+    const monthlyMap = Object.fromEntries(monthlyAgg.map(m => [String(m._id), m.clicks]));
+
+    let pendingMap = {};
+
+    if (page == 'new') {
+        const period = await RevenuePeriod
+            .findOne({ applied: true })
+            .sort({ toDate: -1 })
+            .select('toDate');
+
+        const toDate = period?.toDate || null;
+
+        // Chat I am struggling
+        if (toDate) {
+            const pendingAgg = await LinkStatsDaily.aggregate([
+                { $match: { link: { $in: linkIds }, date: { $gt: toDate } } },
+                { $group: { _id: "$link", pending: { $sum: { $multiply: [ { $divide: [{ $ifNull: ["$clickWeight", 0] }, 85] }, { $ifNull: ["$clicks", 0] } ] } } } }
+            ]);
+
+            pendingMap = Object.fromEntries(pendingAgg.map(p => [String(p._id), p.pending]));
+        }
+    }
+
+    for (const link of links) {
+        const id = String(link._id);
+
+        link.clicks = (monthlyMap[id] || 0) + (dailyMap[id] || 0);
+        link.pending = (pendingMap[id] || 0);
+    }
 
     if (req.xhr) {
         return res.render('ledger/userLinks', { links }, (err, html) => {

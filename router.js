@@ -83,7 +83,7 @@ router.get('/faq', (req, res) => {
 
 router.get('/new', checkAuthenticated, async (req, res, next) => {
     try {
-        const linkData = await getLinkData(req)
+        const linkData = await getLinkData(req, 'new')
         const monetizationData = await monthlyMonetization(req)
         
         res.render('createNewLink', { ...linkData, ...monetizationData, data: {} })
@@ -95,7 +95,7 @@ router.get('/new', checkAuthenticated, async (req, res, next) => {
 
 router.get('/operator', checkAuthenticated, async (req, res, next) => {
     try {
-        const linkData = await getLinkData(req)
+        const linkData = await getLinkData(req, 'operator')
 
         res.render('dashboard', { ...linkData })
     } catch (err) {
@@ -211,7 +211,7 @@ router.post('/new', checkAuthenticated, newLinkValidation, async (req, res, next
 
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-        const linkData = await getLinkData(req)
+        const linkData = await getLinkData(req, 'new')
         return res.render('createNewLink', { ...linkData, errors: errors.array(), data: req.body })
     }
 
@@ -257,7 +257,7 @@ router.post('/:link/status', checkAuthenticated, async (req, res, next) => {
             err.status = 404
             return next(err)
         }
-        if (shortLink.user !== user._id) {
+        if (String(shortLink.user) != user._id) {
             const err = new Error()
             err.status = 403
             return next(err)
