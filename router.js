@@ -1,6 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import passport from 'passport';
+import geoip from 'geoip-lite'
 import fileUpload from 'express-fileupload';
 import Link from './models/links.js';
 import User from './models/users.js';
@@ -617,10 +618,12 @@ router.get('/:link', async (req, res, next) => {
             return next(err)
         }
 
-        ClickEvent.create({
+        const ip = req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for']?.split(',')[0] || req.ip || 'not available'
+
+        await ClickEvent.create({
             link: url._id,
-            ip: req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for']?.split(',')[0] || req.ip || 'not available',
-            country: req.headers['cf-ipcountry'] || 'not available',
+            ip: ip,
+            country: req.headers['cf-ipcountry'] || geoip.lookup(ip).country || 'not available',
             userAgent: req.headers['user-agent']
         }).catch(console.error);    
 
