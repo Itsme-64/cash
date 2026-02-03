@@ -117,7 +117,10 @@ export async function getLinkData(req, page) {
         if (toDate) {
             const pendingAgg = await LinkStatsDaily.aggregate([
                 { $match: { link: { $in: linkIds }, date: { $gt: toDate } } },
-                { $group: { _id: "$link", pending: { $sum: { $multiply: [ { $divide: [{ $ifNull: ["$clickWeight", 0] }, 85] }, { $ifNull: ["$clicks", 0] } ] } } } }
+                { $group: { 
+                    _id: "$link", 
+                    pending: { $sum: { $multiply: [ { $divide: [{ $ifNull: ["$clickWeight", 0] }, 85] }, { $ifNull: ["$clicks", 0] } ] } } 
+                } }
             ]);
 
             pendingMap = Object.fromEntries(pendingAgg.map(p => [String(p._id), p.pending]));
@@ -167,8 +170,67 @@ export async function getPayoutMethod(req) {
         .sort({ createdAt: -1 }) || 'none';
 }
 
-export async function getDashboardData(userId) { // Return: clicks today, clicks past 14 days, revenue today 
+export async function getDashboardData(userId) {
+    const links = await Link.find({ user: userId });
+    const linkIds = links.map(l => l._id);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1)
+
+    const twoWeeks = new Date(today);
+    twoWeeks.setDate(twoWeeks.getDate() - 14);
+
+    const fourWeeks = new Date(today);
+    fourWeeks.setDate(fourWeeks.getDate() - 28);
+    
     // Top cards 
+    const todayAgg = await LinkStatsDaily.aggregate([
+        { $match: { link: { $in: linkIds }, date: today } },
+        { $group: { 
+            _id: null, 
+            clicksToday: { $sum: { $ifNull: ["$clicks", 0] } },
+            pendingToday: { $sum: { $multiply: [ { $divide: [{ $ifNull: ["$clickWeight", 0] }, 85] }, { $ifNull: ["$clicks", 0] } ] } }
+        } }
+    ]);
+
+    const yesterdayAgg = await LinkStatsDaily.aggregate([
+        { $match: { link: { $in: linkIds }, date: yesterday } },
+        { $group: { 
+            _id: null, 
+            clicksYesterday: { $sum: { $ifNull: ["$clicks", 0] } },
+            pendingYesterday: { $sum: { $multiply: [ { $divide: [{ $ifNull: ["$clickWeight", 0] }, 85] }, { $ifNull: ["$clicks", 0] } ] } }
+        } }
+    ]);
+
+    const clicksToday = todayAgg[0]?.clicksToday || 0;
+    const pendingToday = todayAgg[0]?.pendingToday || 0;
+
+    const clicksTodayChange = percentChange(yesterdayAgg[0]?.clicksYesterday || 0, clicksToday);
+    const pendingTodayChange = percentChange(yesterdayAgg[0]?.pendingYesterday || 0, pendingToday);
+
+    const twoWeeksAgg = await LinkStatsDaily.aggregate([
+        { $match: { link: { $in: linkIds }, date: { $gte: twoWeeks, $lt: today } } },
+        { $group: { _id: null, clicksTwoWeeks: { $sum: { $ifNull: ["$clicks", 0] } } } }
+    ]);
+
+    const fourWeeksAgg = await LinkStatsDaily.aggregate([
+        { $match: { link: { $in: linkIds }, date: { $gte: fourWeeks, $lt: twoWeeks } } },
+        { $group: { _id: null, clicksFourWeeks: { $sum: { $ifNull: ["$clicks", 0] } } } }
+    ]);
+
+    const clicksTwoWeeks = twoWeeksAgg[0]?.clicksTwoWeeks || 0;
+    const clicksTwoWeeksChange = percentChange(fourWeeksAgg[0]?.clicksFourWeeks || 0, clicksTwoWeeks)
 
     // Left chart
+
+
+    return { clicksToday, clicksTodayChange, pendingToday, pendingTodayChange, clicksTwoWeeks, clicksTwoWeeksChange };
+
+    function percentChange(oldValue, newValue) {
+        if (oldValue === 0) return 0;
+        return Number(((newValue - oldValue) / oldValue) * 100).toPrecision(2);
+    }
 }

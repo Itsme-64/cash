@@ -24,13 +24,22 @@
                   <div class="row">
                     <div class="col-9">
                       <div class="d-flex align-items-center align-self-start">
-                        <h3 class="mb-0">$12.34</h3>
-                        <p class="text-success ms-2 mb-0 font-weight-medium">+3.5%</p>
+                        <h3 class="mb-0"><%= clicksToday %></h3>
+                        <p class="ms-2 mb-0 font-weight-medium
+                          <% let clicksIconBox = ""; let clicksIcon = "" %>
+                          <% if (clicksTodayChange > 0) { clicksIconBox = "success"; clicksIcon = "arrow-top-right" %> text-success 
+                          <% } else if (clicksTodayChange < 0) { clicksIconBox = "danger"; clicksIcon = "arrow-bottom-left" %> text-danger
+                          <% } else { clicksIconBox = "warning"; clicksIcon = "tilde" %> text-warning 
+                          <% } %>">
+                          <% if (clicksTodayChange >= 0) { %>+
+                          <% } %>
+                          <%= clicksTodayChange %>%
+                        </p>
                       </div>
                     </div>
                     <div class="col-3">
-                      <div class="icon icon-box-success ">
-                        <span class="mdi mdi-arrow-top-right icon-item"></span>
+                      <div class="icon icon-box-<%= clicksIconBox %>">
+                        <span class="mdi mdi-<%= clicksIcon %> icon-item"></span>
                       </div>
                     </div>
                   </div>
@@ -44,17 +53,26 @@
                   <div class="row">
                     <div class="col-9">
                       <div class="d-flex align-items-center align-self-start">
-                        <h3 class="mb-0">$17.34</h3>
-                        <p class="text-success ms-2 mb-0 font-weight-medium">+11%</p>
+                        <h3 class="mb-0"><%= clicksTwoWeeks %></h3>
+                        <p class="ms-2 mb-0 font-weight-medium 
+                          <% let twoWeeksIconBox = ""; let twoWeeksIcon = "" %>
+                          <% if (clicksTwoWeeksChange > 0) { twoWeeksIconBox = "success"; twoWeeksIcon = "arrow-top-right" %> text-success 
+                          <% } else if (clicksTwoWeeksChange < 0) { twoWeeksIconBox = "danger"; twoWeeksIcon = "arrow-bottom-left" %> text-danger
+                          <% } else { twoWeeksIconBox = "warning"; twoWeeksIcon = "tilde" %> text-warning 
+                          <% } %>">
+                          <% if (clicksTwoWeeksChange >= 0) { %>+
+                          <% } %>
+                          <%= clicksTwoWeeksChange %>%
+                        </p>
                       </div>
                     </div>
                     <div class="col-3">
-                      <div class="icon icon-box-success">
-                        <span class="mdi mdi-arrow-top-right icon-item"></span>
+                      <div class="icon icon-box-<%= twoWeeksIconBox %>">
+                        <span class="mdi mdi-<%= twoWeeksIcon %> icon-item"></span>
                       </div>
                     </div>
                   </div>
-                  <h6 class="text-muted font-weight-normal">Clicks (past 28 days)</h6>
+                  <h6 class="text-muted font-weight-normal">Clicks (past 14 days)</h6>
                 </div>
               </div>
             </div>
@@ -64,13 +82,22 @@
                   <div class="row">
                     <div class="col-9">
                       <div class="d-flex align-items-center align-self-start">
-                        <h3 class="mb-0">$12.34</h3>
-                        <p class="text-danger ms-2 mb-0 font-weight-medium">-2.4%</p>
+                        <h3 class="mb-0">$<%= (pendingToday / 10000).toFixed(4) %></h3>
+                        <p class="ms-2 mb-0 font-weight-medium 
+                          <% let pendingIconBox = ""; let pendingIcon = "" %>
+                          <% if (pendingTodayChange > 0) { pendingIconBox = "success"; pendingIcon = "arrow-top-right" %> text-success
+                          <% } else if (pendingTodayChange < 0) { pendingIconBox = "danger"; pendingIcon = "arrow-bottom-left" %> text-danger
+                          <% } else { pendingIconBox = "warning"; pendingIcon = "tilde" %> text-warning 
+                          <% } %>">
+                          <% if (pendingTodayChange >= 0) { %>+
+                          <% } %>
+                          <%= pendingTodayChange %>%
+                        </p>
                       </div>
                     </div>
                     <div class="col-3">
-                      <div class="icon icon-box-danger">
-                        <span class="mdi mdi-arrow-bottom-left icon-item"></span>
+                      <div class="icon icon-box-<%= pendingIconBox %>">
+                        <span class="mdi mdi-<%= pendingIcon %> icon-item"></span>
                       </div>
                     </div>
                   </div>

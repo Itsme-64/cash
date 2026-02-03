@@ -99,7 +99,7 @@ router.get('/operator', checkAuthenticated, async (req, res, next) => {
         const linkData = await getLinkData(req, 'operator')
         const dashboardData = await getDashboardData(req.user._id)
 
-        res.render('dashboard', { ...linkData })
+        res.render('dashboard', { ...linkData, ...dashboardData })
     } catch (err) {
         err.status = 500
         next(err)
