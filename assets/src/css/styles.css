@@ -510,13 +510,6 @@ code {
   text-align: center;
 }
 
-.daoughnutchart-wrapper {
-  height: 200px;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-}
-
 /* Footer */
 .footer {
   background: #000000;
@@ -817,26 +810,6 @@ code {
 }
 .rounded-legend.legend-vertical ul li {
   margin-top: 1rem;
-}
-
-.daoughnutchart-wrapper {
-  height: 200px;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-}
-
-.doughnut-wrapper {
-  width: 210px;
-}
-
-.doughnutjs-wrapper {
-  height: 240px !important;
-}
-@media (max-width: 991px) {
-  .doughnutjs-wrapper {
-    height: auto !important;
-  }
 }
 
 /* I found this */

@@ -1,6 +1,7 @@
 import User from '../models/users.js';
 import Link from '../models/links.js';
 import Payout from '../models/payouts.js';
+import Ticket from '../models/tickets.js';
 import UserInfo from '../models/users-info.js';
 import PayoutMethod from '../models/payout-method.js';
 import RevenuePeriod from '../models/revenue-period.js';
@@ -252,11 +253,21 @@ export async function getDashboardData(user) {
         ppUserIncome = incomeAgg?.userIncome || 0;
     }
 
-    // Most recent payout request
+    // General Info Card
+    const mostRecentPayoutRequest = await Payout
+        .findOne({ user: user._id })
+        .sort({ createdAt: -1 })
+        .select('payoutId status createdAt');
+
+    const mostRecentTicket = await Ticket
+        .findOne({ user: user._id })
+        .sort({ createdAt: -1 })
+        .select('shortID title status');
 
     return { 
         clicksToday, clicksTodayChange, pendingToday, pendingTodayChange, clicksTwoWeeks, clicksTwoWeeksChange,
-        totalPending, ppUserIncome, ppReferralIncome, fromDate
+        totalPending, ppUserIncome, ppReferralIncome, fromDate,
+        mostRecentPayoutRequest, mostRecentTicket
     };
 
     function percentChange(oldValue, newValue, multiplier) {

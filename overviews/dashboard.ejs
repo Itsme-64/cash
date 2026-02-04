@@ -10,136 +10,177 @@
 </head>
 
 <body>
-  <div class="container-scroller">
-  <%- include('ledger/sidebar', { currentPage: 'dashboard' }) %>
-  <%- include('ledger/sidebarMini') %>
-    <div class="container-fluid page-body-wrapper">
-    <%- include('ledger/navbar') %>
-      <div class="main-panel">
-        <div class="content-wrapper">
-          <div class="row">
-            <div class="col-xl-4 col-sm-6 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col-9">
-                      <div class="d-flex align-items-center align-self-start">
-                        <h3 class="mb-0"><%= clicksToday %></h3>
-                        <p class="ms-2 mb-0 font-weight-medium
-                          <% let clicksIconBox = ""; let clicksIcon = "" %>
-                          <% if (clicksTodayChange > 0) { clicksIconBox = "success"; clicksIcon = "arrow-top-right" %> text-success 
-                          <% } else if (clicksTodayChange < 0) { clicksIconBox = "danger"; clicksIcon = "arrow-bottom-left" %> text-danger
-                          <% } else { clicksIconBox = "warning"; clicksIcon = "tilde" %> text-warning 
-                          <% } %>">
-                          <% if (clicksTodayChange >= 0) { %>+
-                          <% } %>
-                          <%= clicksTodayChange %>%
-                        </p>
-                      </div>
+    <div class="container-scroller">
+        <%- include('ledger/sidebar', { currentPage: 'dashboard' }) %>
+        <%- include('ledger/sidebarMini') %>
+        <div class="container-fluid page-body-wrapper">
+            <%- include('ledger/navbar') %>
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="row">
+                        <div class="col-xl-4 col-sm-6 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <div class="d-flex align-items-center align-self-start">
+                                                <h3 class="mb-0"><%= clicksToday %></h3>
+                                                <p class="ms-2 mb-0 font-weight-medium
+                                                    <% let clicksIconBox = ""; let clicksIcon = "" %>
+                                                    <% if (clicksTodayChange > 0) { clicksIconBox = "success"; clicksIcon = "arrow-top-right" %> text-success 
+                                                    <% } else if (clicksTodayChange < 0) { clicksIconBox = "danger"; clicksIcon = "arrow-bottom-left" %> text-danger
+                                                    <% } else { clicksIconBox = "warning"; clicksIcon = "tilde" %> text-warning 
+                                                    <% } %>">
+                                                    <% if (clicksTodayChange >= 0) { %>+
+                                                    <% } %>
+                                                    <%= clicksTodayChange %>%
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="icon icon-box-<%= clicksIconBox %>">
+                                                <span class="mdi mdi-<%= clicksIcon %> icon-item"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h6 class="text-muted font-weight-normal">Clicks (today)</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-sm-6 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <div class="d-flex align-items-center align-self-start">
+                                                <h3 class="mb-0"><%= clicksTwoWeeks %></h3>
+                                                <p class="ms-2 mb-0 font-weight-medium 
+                                                    <% let twoWeeksIconBox = ""; let twoWeeksIcon = "" %>
+                                                    <% if (clicksTwoWeeksChange > 0) { twoWeeksIconBox = "success"; twoWeeksIcon = "arrow-top-right" %> text-success 
+                                                    <% } else if (clicksTwoWeeksChange < 0) { twoWeeksIconBox = "danger"; twoWeeksIcon = "arrow-bottom-left" %> text-danger
+                                                    <% } else { twoWeeksIconBox = "warning"; twoWeeksIcon = "tilde" %> text-warning 
+                                                    <% } %>">
+                                                    <% if (clicksTwoWeeksChange >= 0) { %>+
+                                                    <% } %>
+                                                    <%= clicksTwoWeeksChange %>%
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="icon icon-box-<%= twoWeeksIconBox %>">
+                                                <span class="mdi mdi-<%= twoWeeksIcon %> icon-item"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h6 class="text-muted font-weight-normal">Clicks (past 14 days)</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-sm-6 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <div class="d-flex align-items-center align-self-start">
+                                                <h3 class="mb-0">$<%= (pendingToday / 10000).toFixed(4) %></h3>
+                                                <p class="ms-2 mb-0 font-weight-medium 
+                                                    <% let pendingIconBox = ""; let pendingIcon = "" %>
+                                                    <% if (pendingTodayChange > 0) { pendingIconBox = "success"; pendingIcon = "arrow-top-right" %> text-success
+                                                    <% } else if (pendingTodayChange < 0) { pendingIconBox = "danger"; pendingIcon = "arrow-bottom-left" %> text-danger
+                                                    <% } else { pendingIconBox = "warning"; pendingIcon = "tilde" %> text-warning 
+                                                    <% } %>">
+                                                    <% if (pendingTodayChange >= 0) { %>+
+                                                    <% } %>
+                                                    <%= pendingTodayChange %>%
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="icon icon-box-<%= pendingIconBox %>">
+                                                <span class="mdi mdi-<%= pendingIcon %> icon-item"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h6 class="text-muted font-weight-normal">Approximate Revenue (today)</h6>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-3">
-                      <div class="icon icon-box-<%= clicksIconBox %>">
-                        <span class="mdi mdi-<%= clicksIcon %> icon-item"></span>
-                      </div>
+                    <div class="row">
+                        <div class="col-md-4 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title" style="margin-bottom: 0px;">Income Statistics</h4>
+                                    <small class="text-muted" style="margin-bottom: 18px;">
+                                        Period: <%= fromDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) %> - Today
+                                    </small>
+                                    <div class="position-relative border-bottom">
+                                        <div class="chart-container" style="margin: 20px">
+                                            <div id="periodChart" data-chart="<%- JSON.stringify([ totalPending, ppUserIncome, ppReferralIncome ]) %>"></div>
+                                        </div>
+                                    </div>
+                                    <% if (mostRecentPayoutRequest) { %>
+                                        <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3 border-bottom">
+                                            <div class="d-flex justify-content-between align-items-center w-100">
+                                                <div>
+                                                    <h6 class="mb-1">Payout <%= mostRecentPayoutRequest.payoutID %></h6>
+                                                    <p class="text-muted mb-0">
+                                                        Requested At
+                                                        <%= mostRecentPayoutRequest.createdAt.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) %>
+                                                    </p>
+                                                </div>
+                                                <% if (mostRecentPayoutRequest.status == 'pending') { %>
+                                                    <span class="badge badge-warning">Pending</span>
+                                                <% } else if (mostRecentPayoutRequest.status == 'completed') { %>
+                                                    <span class="badge badge-success">Completed</span>
+                                                <% } else { %>
+                                                    <span class="badge badge-danger">Rejected</span>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                    <% } else { %>
+                                        <div class="bg-gray-dark d-flex justify-content-center align-items-center py-3 px-4 px-md-3 px-xl-4 rounded mt-3 border-bottom">
+                                            <h6 class="mb-0 text-center"> You have no recent payout requests </h6>
+                                        </div>
+                                    <% } %>
+                                    <% if (mostRecentTicket) { %>
+                                        <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
+                                            <div class="d-flex justify-content-between align-items-center w-100">
+                                                <div>
+                                                    <h6 class="mb-1">Ticket <%= mostRecentTicket.shortID %></h6>
+                                                    <p class="text-muted mb-0 text-truncate" style="max-width: 20ch;"><%= mostRecentTicket.title %></p>
+                                                </div>
+                                                <% if (mostRecentTicket.status == 'open') { %>
+                                                    <span class="badge badge-info">Open</span>
+                                                <% } else if (mostRecentTicket.status == 'in progress') { %>
+                                                    <span class="badge badge-warning">In Progress</span>
+                                                <% } else if (mostRecentTicket.status == 'resolved') { %>
+                                                    <span class="badge badge-success">Resolved</span>
+                                                <% } else { %>
+                                                    <span class="badge badge-danger">Closed</span>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                    <% } else { %>
+                                        <div class="bg-gray-dark d-flex justify-content-center align-items-center py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
+                                            <h6 class="mb-0 text-center"> You have no recent tickets </h6>
+                                        </div>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                        <%- include('ledger/userLinks', { width: 8, source: 'operator' }) %>
                     </div>
-                  </div>
-                  <h6 class="text-muted font-weight-normal">Clicks (today)</h6>
+                    <%- include('ledger/infoCards') %>
                 </div>
-              </div>
+                <%- include('ledger/footer') %>
             </div>
-            <div class="col-xl-4 col-sm-6 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col-9">
-                      <div class="d-flex align-items-center align-self-start">
-                        <h3 class="mb-0"><%= clicksTwoWeeks %></h3>
-                        <p class="ms-2 mb-0 font-weight-medium 
-                          <% let twoWeeksIconBox = ""; let twoWeeksIcon = "" %>
-                          <% if (clicksTwoWeeksChange > 0) { twoWeeksIconBox = "success"; twoWeeksIcon = "arrow-top-right" %> text-success 
-                          <% } else if (clicksTwoWeeksChange < 0) { twoWeeksIconBox = "danger"; twoWeeksIcon = "arrow-bottom-left" %> text-danger
-                          <% } else { twoWeeksIconBox = "warning"; twoWeeksIcon = "tilde" %> text-warning 
-                          <% } %>">
-                          <% if (clicksTwoWeeksChange >= 0) { %>+
-                          <% } %>
-                          <%= clicksTwoWeeksChange %>%
-                        </p>
-                      </div>
-                    </div>
-                    <div class="col-3">
-                      <div class="icon icon-box-<%= twoWeeksIconBox %>">
-                        <span class="mdi mdi-<%= twoWeeksIcon %> icon-item"></span>
-                      </div>
-                    </div>
-                  </div>
-                  <h6 class="text-muted font-weight-normal">Clicks (past 14 days)</h6>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-4 col-sm-6 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col-9">
-                      <div class="d-flex align-items-center align-self-start">
-                        <h3 class="mb-0">$<%= (pendingToday / 10000).toFixed(4) %></h3>
-                        <p class="ms-2 mb-0 font-weight-medium 
-                          <% let pendingIconBox = ""; let pendingIcon = "" %>
-                          <% if (pendingTodayChange > 0) { pendingIconBox = "success"; pendingIcon = "arrow-top-right" %> text-success
-                          <% } else if (pendingTodayChange < 0) { pendingIconBox = "danger"; pendingIcon = "arrow-bottom-left" %> text-danger
-                          <% } else { pendingIconBox = "warning"; pendingIcon = "tilde" %> text-warning 
-                          <% } %>">
-                          <% if (pendingTodayChange >= 0) { %>+
-                          <% } %>
-                          <%= pendingTodayChange %>%
-                        </p>
-                      </div>
-                    </div>
-                    <div class="col-3">
-                      <div class="icon icon-box-<%= pendingIconBox %>">
-                        <span class="mdi mdi-<%= pendingIcon %> icon-item"></span>
-                      </div>
-                    </div>
-                  </div>
-                  <h6 class="text-muted font-weight-normal">Approximate Revenue (today)</h6>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title" style="margin-bottom: 0px;">Income Statistics</h4>
-                  <small class="text-muted" style="margin-bottom: 18px;">
-                    Period: <%= fromDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) %> - Today
-                  </small>
-                  <div class="position-relative">
-                    <div class="chart-container" style="margin: 20px">
-                      <div id="periodChart" data-chart="<%- JSON.stringify([ totalPending, ppUserIncome, ppReferralIncome ]) %>"></div>
-                    </div>
-                  </div>
-                  <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
-                    <div class="text-md-center text-xl-left">
-                      <h6 class="mb-1">Display here most recent payout request & status</h6>
-                      <p class="text-muted mb-0">07 Jan 2019, 09:12AM</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <%- include('ledger/userLinks', { width: 8, source: 'operator' }) %>
-          </div>
-          <%- include('ledger/infoCards') %>
         </div>
-        <%- include('ledger/footer') %>
-      </div>
     </div>
-  </div>
-  <script src="/public/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="/public/apexcharts/dist/apexcharts.min.js"></script>
-  <script src="/src/js/dashboard.js"></script>
-  <script src="/src/js/main.js"></script>
+    <script src="/public/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/public/apexcharts/dist/apexcharts.min.js"></script>
+    <script src="/src/js/dashboard.js"></script>
+    <script src="/src/js/main.js"></script>
 </body>
 
 </html>
