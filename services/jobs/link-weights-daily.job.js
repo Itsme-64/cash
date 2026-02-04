@@ -4,44 +4,46 @@ import LinkStatsDaily from '../../models/link-stats-daily.js';
 import { calculateCountryMultiplier } from '../apply-revenue-period.js'
 
 export async function linkWeightsDaily() {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const yesterday = new Date(today);
-    yesterday.setDate(today.getDate() - 1);
+    const yesterdayStart = new Date();
+    yesterdayStart.setHours(0, 0, 0, 0);
+    yesterdayStart.setDate(yesterdayStart.getDate() - 1);
 
-    const linkStats = await LinkStatsDaily.find({ date: yesterday });
+    const yesterdayEnd = new Date(yesterdayStart);
+    yesterdayEnd.setHours(23, 59, 59, 999);
 
-    for (const linkStat of linkStats) {
-        const link = await Link.findById(linkStat.link);
+    const linkStatsAgg = await ClickEvent.aggregate([
+        { $match: { valid: true, createdAt: { $gte: yesterdayStart, $lte: yesterdayEnd } } },
+        { $group: { _id: "$link", totalClicks: { $sum: 1 }, ips: { $addToSet: "$ip" }, countries: { $push: "$country" } } }
+    ]);
 
-        const clickWeight = calculateLinkClickWeight(link, yesterday);
-        linkStat.clickWeight = clickWeight;
-        await linkStat.save();
+    const linkStatsDaily = await LinkStatsDaily.find({ date: yesterdayStart }).lean();
+    const linkMap = Object.fromEntries(linkStatsDaily.map(ls => [String(ls.link), ls]));
+
+    const links = await Link.find({
+        _id: { $in: linkStatsAgg.map(a => a._id) }
+    }).lean();
+
+    for (const link of links) {
+        const agg = linkStatsAgg.find(a => String(a._id) === String(link._id));
+        if (!agg || link.weight === 0) continue;
+
+        const uniqueIps = agg.ips.filter(ip => ip !== "unknown").length;
+        const totalClicks = agg.totalClicks;
+
+        const ipRatio = uniqueIps / (totalClicks + 1);
+        const ipFactor = Math.pow(ipRatio, 0.25);
+
+        let weightedSum = 0;
+        agg.countries.forEach(country => {
+            weightedSum += calculateCountryMultiplier(country);
+        });
+
+        const clickWeight = Math.round(link.weight * ipFactor * weightedSum / totalClicks);
+
+        const stat = linkMap[String(link._id)];
+        if (stat) {
+            stat.clickWeight = clickWeight;
+            await LinkStatsDaily.updateOne({ _id: stat._id }, { $set: { clickWeight } });
+        }
     }
-
-    return;
-}
-
-/**
- * Adapted *calculateLinkTotalWeight* from '../apply-revenue-period.js'
- */
-async function calculateLinkClickWeight(link, yesterday) {
-    const start = new Date(yesterday);
-    const end = new Date(yesterday);
-    end.setHours(23, 59, 59, 999);
-
-    const clickEvents = await ClickEvent.find({ link: link._id, createdAt: { $gte: start, $lte: end }, valid: true });
-    const baseWeight = link.weight;
-    if (baseWeight == 0) return 0;
-    let linkWeight = 0;
-
-    const ips = clickEvents.map(c => c.ip);
-    const ipRatio = new Set(ips).size / (ips.length + 1);
-
-    clickEvents.forEach(clickEvent => {
-        linkWeight += baseWeight * Math.pow(ipRatio, 0.25) * calculateCountryMultiplier(clickEvent.country);
-    });
-
-    if (clickEvents.length == 0) return 0
-    return Math.round(linkWeight / clickEvents.length);
 }

@@ -98,17 +98,26 @@ async function calculateUserIncome(session, user, weightValue, fromDate, toDate)
 }
 
 async function calculateLinkTotalWeight(session, link, fromDate, toDate) {
-    const clickEvents = await ClickEvent.find({ link: link._id, createdAt: { $gte: fromDate, $lte: toDate }, valid: true }).session(session);
     const baseWeight = link.weight;
-    if (baseWeight == 0) return 0;
+    if (baseWeight === 0) return 0;
+    
+    const stats = await ClickEvent.aggregate([
+        { $match: { link: link._id, valid: true, createdAt: { $gte: fromDate, $lte: toDate } } },
+        { $group: { _id: "$country", clicks: { $sum: 1 }, ips: { $addToSet: "$ip" } } }
+    ]).session(session);
+
+    if (stats.length === 0) return 0;
+
+    const totalClicks = stats.reduce((s, c) => s + c.clicks, 0);
+    const uniqueIps = new Set(stats.flatMap(c => c.ips)).size;
+    const ipRatio = uniqueIps / (totalClicks + 1);
+
     let linkWeight = 0;
 
-    const ips = clickEvents.map(c => c.ip);
-    const ipRatio = new Set(ips).size / (ips.length + 1);
-
-    clickEvents.forEach(clickEvent => {
-        linkWeight += baseWeight * Math.pow(ipRatio, 0.25) * calculateCountryMultiplier(clickEvent.country);
-    });
+    for (const row of stats) {
+        const multiplier = calculateCountryMultiplier(row._id);
+        linkWeight += row.clicks * baseWeight * multiplier * Math.pow(ipRatio, 0.25);
+    }
 
     return Math.round(linkWeight);
 }
