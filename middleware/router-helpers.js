@@ -162,8 +162,8 @@ export async function getPayoutMethod(userId) {
         .sort({ createdAt: -1 }) || 'none';
 }
 
-export async function getDashboardData(userId) {
-    const links = await Link.find({ user: userId });
+export async function getDashboardData(user) {
+    const links = await Link.find({ user: user._id });
     const linkIds = links.map(l => l._id);
 
     const today = new Date();
@@ -219,10 +219,45 @@ export async function getDashboardData(userId) {
     const clicksTwoWeeks = twoWeeksAgg[0]?.clicksTwoWeeks || 0;
     const clicksTwoWeeksChange = percentChange(fourWeeksAgg[0]?.clicksFourWeeks || 0, clicksTwoWeeks, 1);
 
-    // Left chart
+    // Left chart 
+    const period = await RevenuePeriod.findOne({ applied: true }).sort({ toDate: -1 })
 
+    const fromDate = period?.fromDate || user.createdAt;
+    const toDate = period?.toDate || new Date(0);
 
-    return { clicksToday, clicksTodayChange, pendingToday, pendingTodayChange, clicksTwoWeeks, clicksTwoWeeksChange };
+    const pendingAgg = await LinkStatsDaily.aggregate([
+        { $match: { link: { $in: linkIds }, date: { $gt: toDate, $lt: today } } },
+        { $group: { 
+            _id: null, 
+            totalPending: { $sum: { $multiply: [ { $divide: [{ $ifNull: ["$clickWeight", 0] }, 85] }, { $ifNull: ["$clicks", 0] } ] } } 
+        } }
+    ]);
+
+    const totalPending = (pendingAgg[0]?.totalPending || 0) + pendingToday;
+
+    let ppReferralIncome = 0;
+    let ppUserIncome = 0;
+
+    if (period) {
+        const referredUserIds = await User.find({ referrer: user.PID }).distinct("_id");
+
+        const referralAgg = await UserRevenuePeriod.aggregate([
+            { $match: { user: { $in: referredUserIds }, period: period._id } },
+            { $group: { _id: null, referrerIncome: { $sum: { $ifNull: ["$referrerIncome", 0] } } } }
+        ]);
+
+        const incomeAgg = await UserRevenuePeriod.findOne({ user: user._id, period: period._id }).select('userIncome');
+
+        ppReferralIncome = referralAgg[0]?.referrerIncome || 0;
+        ppUserIncome = incomeAgg?.userIncome || 0;
+    }
+
+    // Most recent payout request
+
+    return { 
+        clicksToday, clicksTodayChange, pendingToday, pendingTodayChange, clicksTwoWeeks, clicksTwoWeeksChange,
+        totalPending, ppUserIncome, ppReferralIncome, fromDate
+    };
 
     function percentChange(oldValue, newValue, multiplier) {
         if (oldValue === 0) return 0;
