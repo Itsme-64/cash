@@ -9,39 +9,45 @@ import LinkStatsMonthly from '../models/link-stats-monthly.js';
 import UserRevenuePeriod from '../models/user-revenue-period.js';
 
 export async function getReferralData(user) {
-    const referredAccounts = (await User.find({ referrer: user.PID })).map(u => u._id);
-    const referralData = [];
+    const referredUserIds = await User
+        .find({ referrer: user.PID })
+        .distinct("_id");
 
-    if (referredAccounts.length === 0) return [];
+    if (referredUserIds.length === 0) return [];
 
-    let periodReferralAmount = 0;
-    const periods = await RevenuePeriod.find().sort({ fromDate: 1 });
+    const referralAgg = await UserRevenuePeriod.aggregate([
+        { $match: { user: { $in: referredUserIds } } },
+        { $group: { _id: "$period", amount: { $sum: 1 }, income: { $sum: { $ifNull: ["$referrerIncome", 0] } } } }
+    ]);
 
-    for (const period of periods) {
-        const periodReferredAccounts = await UserRevenuePeriod.find({ user: { $in: referredAccounts }, period: period._id });
+    const periodIds = referralAgg.map(p => p._id);
 
-        if (!periodReferredAccounts) continue;
+    const periods = await RevenuePeriod
+        .find({ _id: { $in: periodIds } })
+        .sort({ fromDate: 1 })
+        .lean();
 
-        const periodData = {
-            fromDate: period.fromDate,
-            toDate: period.toDate,
-            amount: periodReferredAccounts.length,
-            difference: (periodReferredAccounts.length - periodReferralAmount),
-            income: periodReferredAccounts.reduce((sum, p) => sum + (p.referrerIncome || 0), 0)
-        };
+    let prevAmount = 0;
 
-        referralData.push(periodData);
+    const result = periods.map(period => {
+        const agg = referralAgg.find(a => String(a._id) === String(period._id));
 
-        periodReferralAmount = periodReferredAccounts.length;
-    }
+        const amount = agg?.amount || 0;
+        const income = agg?.income || 0;
 
-    return referralData;
+        const diff = amount - prevAmount;
+        prevAmount = amount;
+
+        return { fromDate: period.fromDate, toDate: period.toDate, amount, difference: diff, income };
+    });
+
+    return result;
 }
 
 export async function getPayoutsEnabledData(user) {
-    const payouts = await Payout.find({ user: user._id })
-    const userInfoThis = await UserInfo.findOne({ user: user._id })
-    const payoutMethod = await PayoutMethod.findOne({ user })
+    const payouts = await Payout.find({ user: user._id });
+    const userInfoThis = await UserInfo.findOne({ user: user._id });
+    const payoutMethod = await getPayoutMethod(user._id);
 
     const payoutsEnabled =
         payoutMethod &&
@@ -143,30 +149,16 @@ export async function getLinkData(req, page) {
     return { totalPages, links, currentPage }
 }
 
-export async function monthlyMonetization(req) {
-    const links = await Link.find({ user: req.user._id });
-    let count = 0;
+export async function monthlyMonetization(userId) {
+    const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    const count = await Link.countDocuments({ user: userId, monetization: false, createdAt: { $gte: startOfMonth } });
 
-    const currentDate = new Date();
-    const month = currentDate.getMonth();
-    const year = currentDate.getFullYear();
-
-    for (const link of links) {
-        const linkDate = new Date(link.createdAt);
-        if (!link.monetization && linkDate.getMonth() == month && linkDate.getFullYear() == year) {
-            ++count;
-            if (count >= 5) break;
-        }
-    }
-
-    return { maxLinksReached: count >= 5, count }
+    return { maxLinksReached: count >= 5, count };
 }
 
-export async function getPayoutMethod(req) {
-    const user = req.user;
-
+export async function getPayoutMethod(userId) {
     return await PayoutMethod
-        .findOne({ user })
+        .findOne({ user: userId })
         .sort({ createdAt: -1 }) || 'none';
 }
 
@@ -179,6 +171,9 @@ export async function getDashboardData(userId) {
 
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1)
+
+    const now = new Date();
+    const todayProgress = Number((now - today) / (24 * 60 * 60 * 1000)).toFixed(4);
 
     const twoWeeks = new Date(today);
     twoWeeks.setDate(twoWeeks.getDate() - 14);
@@ -208,8 +203,8 @@ export async function getDashboardData(userId) {
     const clicksToday = todayAgg[0]?.clicksToday || 0;
     const pendingToday = todayAgg[0]?.pendingToday || 0;
 
-    const clicksTodayChange = percentChange(yesterdayAgg[0]?.clicksYesterday || 0, clicksToday);
-    const pendingTodayChange = percentChange(yesterdayAgg[0]?.pendingYesterday || 0, pendingToday);
+    const clicksTodayChange = percentChange(yesterdayAgg[0]?.clicksYesterday || 0, clicksToday, todayProgress);
+    const pendingTodayChange = percentChange(yesterdayAgg[0]?.pendingYesterday || 0, pendingToday, todayProgress);
 
     const twoWeeksAgg = await LinkStatsDaily.aggregate([
         { $match: { link: { $in: linkIds }, date: { $gte: twoWeeks, $lt: today } } },
@@ -222,15 +217,15 @@ export async function getDashboardData(userId) {
     ]);
 
     const clicksTwoWeeks = twoWeeksAgg[0]?.clicksTwoWeeks || 0;
-    const clicksTwoWeeksChange = percentChange(fourWeeksAgg[0]?.clicksFourWeeks || 0, clicksTwoWeeks)
+    const clicksTwoWeeksChange = percentChange(fourWeeksAgg[0]?.clicksFourWeeks || 0, clicksTwoWeeks, 1);
 
     // Left chart
 
 
     return { clicksToday, clicksTodayChange, pendingToday, pendingTodayChange, clicksTwoWeeks, clicksTwoWeeksChange };
 
-    function percentChange(oldValue, newValue) {
+    function percentChange(oldValue, newValue, multiplier) {
         if (oldValue === 0) return 0;
-        return Number(((newValue - oldValue) / oldValue) * 100).toPrecision(2);
+        return Number(((newValue - oldValue) / oldValue) * 100 * multiplier).toPrecision(2);
     }
 }

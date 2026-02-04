@@ -85,7 +85,7 @@ router.get('/faq', (req, res) => {
 router.get('/new', checkAuthenticated, async (req, res, next) => {
     try {
         const linkData = await getLinkData(req, 'new')
-        const monetizationData = await monthlyMonetization(req)
+        const monetizationData = await monthlyMonetization(req.user._id)
         
         res.render('createNewLink', { ...linkData, ...monetizationData, data: {} })
     } catch (err) {
@@ -108,8 +108,7 @@ router.get('/operator', checkAuthenticated, async (req, res, next) => {
 
 router.get('/payout', checkAuthenticated, async (req, res, next) => {
     try {
-        const user = req.user
-        const data = await getPayoutsEnabledData(user)
+        const data = await getPayoutsEnabledData(req.user)
 
         res.render('payouts', { ...data, payoutData: {} })
     } catch (err) {
@@ -150,7 +149,7 @@ router.get('/you', checkAuthenticated, async (req, res) => {
     try {
         const user = req.user;
         const userInfo = await UserInfo.findOne({ user: user._id })
-        const payoutMethod = await getPayoutMethod(req)
+        const payoutMethod = await getPayoutMethod(user._id)
 
         res.render('account', { data: {}, form: 'none', userInfo, payoutMethod })
     } catch(err) {
@@ -325,7 +324,7 @@ router.post('/payout', checkAuthenticated, payoutValidation, async (req, res, ne
     }
     
     try {
-        const payoutMethod = await getPayoutMethod(req)
+        const payoutMethod = await getPayoutMethod(user._id)
 
         await Payout.create({
             user: user._id,
@@ -581,6 +580,12 @@ router.post('/updateAutomaticPayouts', checkAuthenticated, async (req, res, next
         err.status = 500
         next(err)
     }
+});
+
+router.post('/subscribeToPremium', checkAuthenticated, async (req, res) => {
+    const err = new Error()
+    err.status = 501
+    return next(err)
 });
 
 // Tickets
