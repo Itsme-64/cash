@@ -25,4 +25,13 @@ userRevenuePeriodSchema.virtual('referrerIncome').get(() => {
     Math.round(this.userIncome * 0.10)   
 });
 
+userRevenuePeriodSchema.index(
+    { user: 1 }
+);
+
+userRevenuePeriodSchema.index(
+    { period: 1 }
+);
+
+
 export default mongoose.model('UserRevenuePeriod', userRevenuePeriodSchema);

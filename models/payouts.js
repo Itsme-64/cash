@@ -36,4 +36,8 @@ const payoutSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
+payoutSchema.index(
+    { user: 1 }
+);
+
 export default mongoose.model('Payout', payoutSchema);

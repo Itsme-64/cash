@@ -10,10 +10,10 @@ const ticketSchema = new mongoose.Schema({
     },
     shortID: {
         type: String,
+        default: shortId.generate,
         required: true,
-        default: shortId.generate(),
-        unique: true,
-        immutable: true
+        immutable: true,
+        unique: true
     },
     title: {
         type: String,
@@ -59,5 +59,10 @@ const ticketSchema = new mongoose.Schema({
         default: []
     }
 }, { timestamps: true });
+
+// unique: true | On shortID automatically creates an index for it.
+ticketSchema.index(
+    { user: 1 }
+);
 
 export default mongoose.model('Ticket', ticketSchema);

@@ -29,4 +29,13 @@ const clickEventSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
+clickEventSchema.index(
+    { createdAt: 1 }
+);
+
+clickEventSchema.index(
+    { link: 1 },
+    { createdAt: 1 }
+);
+
 export default mongoose.model('ClickEvent', clickEventSchema);

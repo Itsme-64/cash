@@ -10,8 +10,8 @@ const linkSchema = new mongoose.Schema({
     },
     short: {
         type: String,
+        default: shortId.generate,
         required: true,
-        default: shortId.generate(),
         unique: true,
         immutable: true
     },
@@ -59,5 +59,9 @@ linkSchema.virtual('weight').get(() => {
 
     return Math.round(weight);
 })
+
+linkSchema.index(
+    { user: 1 }
+);
 
 export default mongoose.model('Link', linkSchema);

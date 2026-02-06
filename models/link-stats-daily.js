@@ -24,4 +24,13 @@ const linkStatsDailySchema = new mongoose.Schema({
     }
 });
 
+linkStatsDailySchema.index(
+    { date: 1 }
+);
+
+linkStatsDailySchema.index(
+    { link: 1 },
+    { date: 1 }
+);
+
 export default mongoose.model('LinkStatsDaily', linkStatsDailySchema);

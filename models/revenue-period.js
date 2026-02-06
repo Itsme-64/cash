@@ -41,4 +41,8 @@ revenuePeriodSchema.virtual('payableAmount').get(() => {
     return Math.round(this.amount * 0.80);
 });
 
+revenuePeriodSchema.index(
+    { toDate: -1 }
+);
+
 export default mongoose.model('RevenuePeriod', revenuePeriodSchema);

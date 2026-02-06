@@ -19,4 +19,8 @@ const linkStatsMonthlySchema = new mongoose.Schema({
     }
 });
 
+linkStatsMonthlySchema.index(
+    { link: 1 }
+);
+
 export default mongoose.model('LinkStatsMonthly', linkStatsMonthlySchema);

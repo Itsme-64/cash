@@ -23,4 +23,8 @@ const payoutMethodSchema = new mongoose.Schema({
     },
 });
 
+payoutMethodSchema.index(
+    { user: 1 }
+);
+
 export default mongoose.model('PayoutMethod', payoutMethodSchema);

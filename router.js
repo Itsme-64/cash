@@ -340,17 +340,23 @@ router.post('/payout', checkAuthenticated, payoutValidation, async (req, res, ne
 
 router.post('/ticket', checkAuthenticated, ticketValidation, fileUpload(), async (req, res, next) => {
 
-    const user = req.user;
-    const tickets = await Ticket.find({ user: user._id })
+    const userId = req.user._id;
 
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-        return res.render('tickets', { tickets, errors: errors.array(), data: req.body })
+        try {
+            const tickets = await Ticket.find({ user: userId })
+
+            return res.render('tickets', { tickets, errors: errors.array(), data: req.body })
+        } catch (err) {
+            err.status = 500
+            next(err)
+        }
     }
 
     try {
         const ticket = await Ticket.create({
-            user: user._id,
+            user: userId,
             title: req.body.ticketTitle,
             body: req.body.ticketBody
         })
@@ -550,7 +556,9 @@ router.post('/updatePassword', checkAuthenticated, updatePasswordValidation, asy
 
             await user.save()
         } else {
-            return res.status(400).send('Password was incorrect or new passwords do not match')
+            const err = new Error()
+            err.status = 400
+            return next(err)
         }
 
         res.redirect('/you')
