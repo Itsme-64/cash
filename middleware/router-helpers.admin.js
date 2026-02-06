@@ -1,10 +1,10 @@
 import RevenuePeriod from '../models/revenue-period.js';
 
 export async function getDoneDates() {
-    const periods = RevenuePeriod.find();
+    const periods = await RevenuePeriod.find();
     const dates = [];
 
-    await periods.forEach(period => {
+    periods.forEach(period => {
         const fromDate = period.fromDate;
         const toDate = period.toDate;
 

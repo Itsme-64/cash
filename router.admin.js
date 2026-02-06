@@ -13,8 +13,14 @@ adminRouter.use(requireAdmin);
 adminRouter.get('/', async (req, res, next) => {
     try {
         const doneDates = await getDoneDates(req)
+        // const period = await RevenuePeriod.findOne().sort({ toDate: -1 })
 
-        res.render('admin/admin', { doneDates })
+        const period = {}
+
+        period.fromDate = new Date(0)
+        period.toDate = new Date(0)
+
+        res.render('admin/admin', { doneDates, period })
     } catch (err) {
         err.status = 500
         next(err)

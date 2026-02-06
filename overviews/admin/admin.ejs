@@ -8,63 +8,109 @@
   <%- include('../ledger/assets/css.ejs', { cssFiles: [ 'forms', 'calendar' ] }) %>
   <link rel="shortcut icon" href="/src/images/favicon.png" />
 
-  <style>
-      body {
-          display: flex;
-          flex-direction: column;
-          min-height: 100vh;
-          overflow: hidden;
-      }
-  </style>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+    </style>
 </head>
 
 <body data-done-dates="<%= doneDates %>">
     <div class="container-fluid page-body-wrapper">
-      <div class="main-panel-noheader">
-        <div class="content-wrapper">
-          <div class="page-header">
-            <h3 class="page-title"> Admin Panel </h3>
-            <nav aria-label="breadcrumb">
-              <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/operator">159.cash</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Admin Panel</li>
-              </ol>
-            </nav>
-          </div>
-          <div class="row">
-            <div class="col-12 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">Create a new Revenue Period</h4>
-                  <form action="/createRevenuePeriod" class="forms-sample" autocomplete="off" method="POST">
-                    <%- include('./calendarTemplate') %>
-                    <div class="form-group hidden-label row">
-                      <div class="col">
-                          <label for="amount"></label>
-                          <input type="number" min="5" class="form-control" id="amount" name="amount" placeholder="Amount">
-                      </div>
-                      <div class="col">
-                          <label for="dateSelection"></label>
-                          <input type="text" class="form-control" id="dateSelection" name="dateSelection" 
-                              placeholder="MM/DD/YYYY - MM/DD/YYYY" readonly>
-                      </div>
-                    </div>
-                    <div class="d-flex align-items-center">
-                      <button type="submit" class="btn btn-primary me-2">Send Earnings</button>
-                      <button type="reset" class="btn btn-dark" style="margin-left: 0.15rem">Clear</button>
-                      <p class="text-warning mb-0" style="margin-left: 1rem" id="monetization-warning"></p>
-                    </div>
-                  </form>
+        <div class="main-panel-noheader">
+            <div class="content-wrapper">
+                <div class="page-header">
+                    <h3 class="page-title"> Admin Panel </h3>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/operator">159.cash</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Admin Panel</li>
+                        </ol>
+                    </nav>
                 </div>
-              </div>
+                <div class="row">
+                    <div class="col-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Create a new Revenue Period</h4>
+                                <form action="/createRevenuePeriod" class="forms-sample" autocomplete="off" method="POST">
+                                    <div class="calendar-row">
+                                        <%- include('./calendarTemplate') %>
+                                        <div class="calendar-container" style="grid: none;">
+                                            <% if (period) { %>
+                                                <div class="controls">
+                                                    <strong class="label">
+                                                        Period: 
+                                                        <%= period?.fromDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) %>
+                                                        &nbsp;-&nbsp;
+                                                        <%= period?.toDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) %>
+                                                    </strong>
+                                                    <p class="text-muted">
+                                                        Applied:
+                                                        <% if (period.applied) { %>
+                                                            <span class="text-success">Yes</span>
+                                                        <% } else { %>
+                                                            <span class="text-danger">No</span>
+                                                        <% } %>
+                                                        | Amount: 
+                                                        <span class="text-success"><%= period.amount %></span>
+                                                    </p>
+                                                </div>
+                                                <div class="form-group row" style="margin: 0px;">
+                                                    <label class="col-sm-4 col-form-label" for="paid">Paid Amount</label>
+                                                    <div class="col-sm-7">
+                                                        <input class="form-control" id="paid" name="paid" placeholder="<%= period.paidAmount %>" readonly disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row" style="margin: 0px;">
+                                                    <label class="col-sm-4 col-form-label" for="referral">Referral Amount</label>
+                                                    <div class="col-sm-7">
+                                                        <input class="form-control" id="referral" name="referral" placeholder="<%= period.referralAmount %>" readonly disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row" style="margin: 0px;">
+                                                    <label class="col-sm-4 col-form-label" for="admin">Admin Amount</label>
+                                                    <div class="col-sm-7">
+                                                        <input class="form-control" id="admin" name="admin" placeholder="<%= period.adminAmount %>" readonly disabled>
+                                                    </div>
+                                                </div>
+                                            <% } else { %>
+                                                <div class="controls">
+                                                    <strong class="label text-danger">NO RECENT PERIODS FOUND</strong>
+                                                </div>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <div class="form-group hidden-label row">
+                                        <div class="col">
+                                            <label for="amount"></label>
+                                            <input type="number" min="5" class="form-control" id="amount" name="amount" placeholder="Amount">
+                                        </div>
+                                        <div class="col">
+                                            <label for="dateSelection"></label>
+                                            <input type="text" class="form-control" id="dateSelection" name="dateSelection" 
+                                                placeholder="MM/DD/YYYY - MM/DD/YYYY" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <button type="submit" class="btn btn-primary me-2">Send Earnings</button>
+                                        <button type="reset" class="btn btn-dark" style="margin-left: 0.15rem">Clear</button>
+                                        <p class="text-warning mb-0" style="margin-left: 1rem" id="monetization-warning"></p>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                  
+                </div>
             </div>
-          </div>
-          <div class="row">
-            
-          </div>
+            <%- include('../ledger/footer') %>
         </div>
-        <%- include('../ledger/footer') %>
-      </div>
     </div>
     <script src="/public/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/src/js/admin.js"></script>

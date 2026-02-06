@@ -1,5 +1,3 @@
-import { isArray } from "chart.js/helpers";
-
 const datePicker = document.querySelector('.calendar');
 const rangeInput = document.getElementById('dateSelection');
 const calendarContainer = datePicker.querySelector('.calendar');
@@ -91,7 +89,7 @@ const applyHighlighting = () => {
         }
     }
 
-    if (isArray(doneDates) && doneDates.length > 0) {
+    if (Array.isArray(doneDates) && doneDates.length > 0) {
         for (const dateElement of dateElements) {
             const date = new Date(dateElement.dataset.date);
             date.setHours(0, 0, 0, 0);

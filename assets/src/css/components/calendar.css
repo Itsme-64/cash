@@ -1,4 +1,9 @@
-.calendar {
+.calendar-row {
+    display: flex;
+    gap: 120px;
+    justify-content: space-between;
+}
+.calendar-container {
     padding: 1rem;
     user-select: none;
     text-align: center;
@@ -11,6 +16,10 @@
     background-color: #22262E;
     border-radius: 12px;
     margin-bottom: 8px;
+}
+.calendar-row > .calendar-container:last-child {
+    flex-grow: 1;
+    margin-right: 100px;
 }
 
 .side {
