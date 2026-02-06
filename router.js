@@ -22,7 +22,8 @@ import { getPayoutsEnabledData,
          getLinkData,
          monthlyMonetization,
          getPayoutMethod,
-         getDashboardData } from './middleware/router-helpers.js';
+         getDashboardData, 
+         getAnalyticsData } from './middleware/router-helpers.js';
 import { newLinkValidation, 
          payoutValidation, 
          ticketValidation, 
@@ -35,11 +36,6 @@ import { newLinkValidation,
          updatePasswordValidation } from './middleware/validation.js';
 
 const router = express.Router();
-
-// == TEMP == \\
-router.get('/adm', (req, res) => {
-    res.render('admin/admin')
-});
 
 // Get Pages
 router.get('/', checkNotAuthenticated, (req, res) => {
@@ -68,12 +64,15 @@ router.get('/advertise', checkAuthenticated, (req, res, next) => {
     //res.render('advertise')
 });
 
-router.get('/analytics', checkAuthenticated, (req, res, next) => {
-    const err = new Error()
-    err.status = 501
-    return next(err)
+router.get('/analytics', checkAuthenticated, async (req, res, next) => {
+    try {
+        const data = await getAnalyticsData(req.user)
 
-    //res.render('analytics')
+        res.render('analytics', { ...data })
+    } catch (err) {
+        err.status = 500
+        next(err)
+    }
 });
 
 router.get('/faq', (req, res) => {

@@ -82,16 +82,16 @@
                                     <div class="row">
                                         <div class="col-9">
                                             <div class="d-flex align-items-center align-self-start">
-                                                <h3 class="mb-0">$<%= (pendingToday / 10000).toFixed(4) %></h3>
+                                                <h3 class="mb-0"><%= (pendingYesterday / 10000).toFixed(4) %></h3>
                                                 <p class="ms-2 mb-0 font-weight-medium 
                                                     <% let pendingIconBox = ""; let pendingIcon = "" %>
-                                                    <% if (pendingTodayChange > 0) { pendingIconBox = "success"; pendingIcon = "arrow-top-right" %> text-success
-                                                    <% } else if (pendingTodayChange < 0) { pendingIconBox = "danger"; pendingIcon = "arrow-bottom-left" %> text-danger
+                                                    <% if (pendingYesterdayChange > 0) { pendingIconBox = "success"; pendingIcon = "arrow-top-right" %> text-success 
+                                                    <% } else if (pendingYesterdayChange < 0) { pendingIconBox = "danger"; pendingIcon = "arrow-bottom-left" %> text-danger
                                                     <% } else { pendingIconBox = "warning"; pendingIcon = "tilde" %> text-warning 
                                                     <% } %>">
-                                                    <% if (pendingTodayChange >= 0) { %>+
+                                                    <% if (pendingYesterdayChange >= 0) { %>+
                                                     <% } %>
-                                                    <%= pendingTodayChange %>%
+                                                    <%= pendingYesterdayChange %>%
                                                 </p>
                                             </div>
                                         </div>
@@ -101,7 +101,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <h6 class="text-muted font-weight-normal">Approximate Revenue (today)</h6>
+                                    <h6 class="text-muted font-weight-normal">Approximate Income (yesterday)</h6>
                                 </div>
                             </div>
                         </div>
@@ -177,7 +177,6 @@
             </div>
         </div>
     </div>
-    <script src="/public/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/public/apexcharts/dist/apexcharts.min.js"></script>
     <script src="/src/js/dashboard.js"></script>
     <script src="/src/js/main.js"></script>

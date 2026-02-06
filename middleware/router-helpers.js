@@ -170,14 +170,17 @@ export async function getDashboardData(user) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1)
-
     const now = new Date();
     const todayProgress = Number((now - today) / (24 * 60 * 60 * 1000)).toFixed(4);
 
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const twoDays = new Date(yesterday)
+    twoDays.setDate(twoDays.getDate() - 1);
+
     const twoWeeks = new Date(today);
-    twoWeeks.setDate(twoWeeks.getDate() - 14);
+    twoWeeks.setDate(twoWeeks.getDate() - 13);
 
     const fourWeeks = new Date(today);
     fourWeeks.setDate(fourWeeks.getDate() - 28);
@@ -187,8 +190,7 @@ export async function getDashboardData(user) {
         { $match: { link: { $in: linkIds }, date: today } },
         { $group: { 
             _id: null, 
-            clicksToday: { $sum: { $ifNull: ["$clicks", 0] } },
-            pendingToday: { $sum: { $multiply: [ { $divide: [{ $ifNull: ["$clickWeight", 0] }, 85] }, { $ifNull: ["$clicks", 0] } ] } }
+            clicksToday: { $sum: { $ifNull: ["$clicks", 0] } }
         } }
     ]);
 
@@ -201,11 +203,19 @@ export async function getDashboardData(user) {
         } }
     ]);
 
+    const twoDaysAgg = await LinkStatsDaily.aggregate([
+        { $match: { link: { $in: linkIds }, date: twoDays } },
+        { $group: {
+            _id: null,
+            pendingTwoDays: { $sum: { $multiply: [ { $divide: [{ $ifNull: ["$clickWeight", 0] }, 85] }, { $ifNull: ["$clicks", 0] } ] } }
+        } }
+    ]);
+
     const clicksToday = todayAgg[0]?.clicksToday || 0;
-    const pendingToday = todayAgg[0]?.pendingToday || 0;
+    const pendingYesterday = yesterdayAgg[0]?.pendingYesterday || 0;
 
     const clicksTodayChange = percentChange(yesterdayAgg[0]?.clicksYesterday || 0, clicksToday, todayProgress);
-    const pendingTodayChange = percentChange(yesterdayAgg[0]?.pendingYesterday || 0, pendingToday, todayProgress);
+    const pendingYesterdayChange = percentChange(twoDaysAgg[0]?.pendingTwoDays || 0, pendingYesterday, 1);
 
     const twoWeeksAgg = await LinkStatsDaily.aggregate([
         { $match: { link: { $in: linkIds }, date: { $gte: twoWeeks, $lt: today } } },
@@ -234,7 +244,7 @@ export async function getDashboardData(user) {
         } }
     ]);
 
-    const totalPending = (pendingAgg[0]?.totalPending || 0) + pendingToday;
+    const totalPending = (pendingAgg[0]?.totalPending || 0);
 
     let ppReferralIncome = 0;
     let ppUserIncome = 0;
@@ -253,7 +263,7 @@ export async function getDashboardData(user) {
         ppUserIncome = incomeAgg?.userIncome || 0;
     }
 
-    // General Info Card
+    // General Info Cards
     const mostRecentPayoutRequest = await Payout
         .findOne({ user: user._id })
         .sort({ createdAt: -1 })
@@ -265,7 +275,7 @@ export async function getDashboardData(user) {
         .select('shortID title status');
 
     return { 
-        clicksToday, clicksTodayChange, pendingToday, pendingTodayChange, clicksTwoWeeks, clicksTwoWeeksChange,
+        clicksToday, clicksTodayChange, pendingYesterday, pendingYesterdayChange, clicksTwoWeeks, clicksTwoWeeksChange,
         totalPending, ppUserIncome, ppReferralIncome, fromDate,
         mostRecentPayoutRequest, mostRecentTicket
     };
@@ -274,4 +284,120 @@ export async function getDashboardData(user) {
         if (oldValue === 0) return 0;
         return Number(((newValue - oldValue) / oldValue) * 100 * multiplier).toPrecision(2);
     }
+}
+
+export async function getAnalyticsData(user) {
+    const links = await Link.find({ user: user._id });
+    const linkIds = links.map(l => l._id);
+    
+    const period = await RevenuePeriod.findOne({ applied: true }).sort({ toDate: -1 })
+    const toDate = period?.toDate || new Date(0);
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const twoWeeks = new Date(today);
+    twoWeeks.setDate(twoWeeks.getDate() - 14);
+    
+    const pendingAgg = await LinkStatsDaily.aggregate([
+        { $match: { link: { $in: linkIds }, date: { $gte: toDate, $lt: today } } },
+        { $addFields: { pendingValue: { $multiply: [ { $divide: [{ $ifNull: ['$clickWeight', 0] }, 85] }, { $ifNull: ['$clicks', 0] } ] } } },
+        { $facet: { 
+            dailyPending: [ 
+                { $match: { date: { $gte: twoWeeks } } }, 
+                { $group: { _id: '$date', dailyPending: { $sum: '$pendingValue' } } } 
+            ],
+            totalPending: [  
+                { $group: { _id: null, pending: { $sum: '$pendingValue' } } } 
+            ]
+        } }
+    ]);
+
+    // Top cards
+    const pending = pendingAgg[0]?.totalPending[0]?.pending ?? 0;
+    let referrerIncome = 0
+
+    if (period) {
+        const referredUserIds = await User.find({ referrer: user.PID }).distinct("_id");
+
+        const referralAgg = await UserRevenuePeriod.aggregate([
+            { $match: { user: { $in: referredUserIds }, period: period._id } },
+            { $group: { _id: null, referrerIncome: { $sum: { $ifNull: ["$referrerIncome", 0] } } } }
+        ]);
+
+        referrerIncome = referralAgg[0]?.referrerIncome || 0;
+    }
+
+    // Main chart
+    const dates = [];
+    const fromDate = new Date(twoWeeks)
+
+    while (fromDate <= today) {
+        dates.push(new Date(fromDate));
+        fromDate.setDate(fromDate.getDate() + 1);
+    }
+
+    const clicksDailyAgg = await LinkStatsDaily.aggregate([
+        { $match: { link: { $in: linkIds }, date: { $gt: twoWeeks } } },
+        { $group: { _id: '$date', dailyClicks: { $sum: { $ifNull: ["$clicks", 0] } } } }
+    ]);
+
+    const clicksByDate = Object.fromEntries(clicksDailyAgg.map(d => [d._id.toISOString().slice(0, 10), d.dailyClicks]));   
+
+    const dailyClicks = Array.from({ length: 14 }, (_, i) => {
+        const d = new Date(today);
+        d.setDate(d.getDate() - (13 - i));
+        const key = d.toISOString().slice(0, 10);
+        return clicksByDate[key] ?? 0;
+    });
+
+    const periods = await RevenuePeriod.find({ toDate: { $gt: twoWeeks }, applied: true }).select('_id fromDate toDate');
+    const periodPaid = [];
+
+    for (const period of periods) {
+        const urp = await UserRevenuePeriod.findOne({ period: period._id }).select('userIncome');
+        if (!urp) continue;
+
+        let start = new Date(period.fromDate);
+        let end = new Date(period.toDate);
+        let days = Math.max(1, Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1);
+
+        const dailyIncome = urp.userIncome / days
+
+        while (start <= end) {
+            if (start >= twoWeeks) {
+                periodPaid.push({ date: new Date(start).toISOString().slice(0, 10), amount: dailyIncome });
+            }
+            start.setDate(start.getDate() + 1);
+        }
+    }
+
+    const dailyPending = pendingAgg[0]?.dailyPending ?? [];
+    const pendingDates = [];
+
+    const pendingByDate = Object.fromEntries(dailyPending.map(d => [d._id.toISOString().slice(0, 10), d.dailyPending]));
+    const paidByDate = Object.fromEntries(periodPaid.map(d => [new Date(d.date).toISOString().slice(0, 10), d.amount]));
+
+    const revenueByDate = Array.from({ length: 14 }, (_, i) => {
+        const d = new Date(today);
+        d.setDate(d.getDate() - (13 - i));
+        const key = d.toISOString().slice(0, 10);
+
+        if (paidByDate[key] != null) {
+            return paidByDate[key];
+        }
+
+        pendingDates.push(d);
+
+        if (pendingByDate[key] != null) {
+            return pendingByDate[key];
+        }
+
+        return 0;
+    });
+
+    return {
+        pending, referrerIncome,
+        revenueByDate, pendingDates, dailyClicks, dates
+    };
 }

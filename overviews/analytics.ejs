@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Analytics | 159.cash</title>
+  <%- include('ledger/assets/css.ejs', { cssFiles: [ 'buttons' ] }) %>
+  <link rel="shortcut icon" href="/src/images/favicon.png" />
+</head>
+
+<body>
+    <div class="container-scroller">
+        <%- include('ledger/sidebar', { currentPage: 'analytics' }) %>
+        <%- include('ledger/sidebarMini') %>
+        <div class="container-fluid page-body-wrapper">
+            <div class="main-panel-noheader">
+                <div class="content-wrapper">
+                    <div class="page-header">
+                        <h3 class="page-title">Analytics</h3>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/operator">Cash</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Analytics</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-4 col-sm-6 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <div class="d-flex align-items-center align-self-start">
+                                                <h3 class="mb-0">$<%= (user.balance / 10000).toFixed(4) %></h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h6 class="text-muted font-weight-normal">Current Withdrawable Balance</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-sm-6 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <div class="d-flex align-items-center align-self-start">
+                                                <h3 class="mb-0">≈ $<%= (pending / 10000).toFixed(4) %></h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h6 class="text-muted font-weight-normal">Approximate Pending Balance</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-sm-6 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <div class="d-flex align-items-center align-self-start">
+                                                <h3 class="mb-0">$<%= (referrerIncome / 10000).toFixed(4) %></h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h6 class="text-muted font-weight-normal">Recent Referral Income</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex flex-row justify-content-between">
+                                    <h4 class="card-title mb-1" style="text-transform: none;"><%= user.username %>'s Analytics For The Past <b>14</b> Days</h4>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 position-relative">
+                                        <div class="chart-container" style="margin: 20px">
+                                            <div id="mainChart" 
+                                                data-revenue="<%= JSON.stringify([ revenueByDate ]) %>"
+                                                data-clicks="<%= JSON.stringify([ dailyClicks ]) %>"
+                                                data-dates="<%= JSON.stringify([ dates ]) %>">
+                                            </div>
+                                        </div>
+                                        <small class="text-muted">Warning: earnings from the following dates are still pending: <|
+                                            <% pendingDates.forEach(date => { %> <%= date.toLocaleDateString("en-US", { month: "short", day: "numeric" }) %> |<% }) %>> 
+                                            <br> Data is <b>not</b> final and subject to change
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <%- include('ledger/footer') %>
+            </div>
+        </div>
+    </div>
+    <script src="/public/apexcharts/dist/apexcharts.min.js"></script>
+    <script src="/src/js/analytics.js"></script>
+    <script src="/src/js/main.js"></script>
+</body>
+
+</html>
