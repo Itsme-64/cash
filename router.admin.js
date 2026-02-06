@@ -1,6 +1,7 @@
 import express from 'express';
+import Payout from './models/payouts.js'
 import RevenuePeriod from './models/revenue-period.js';
-import { getDoneDates } from './middleware/router-helpers.admin.js';
+import { getDoneDates, getPeriodData, getPayoutData } from './middleware/router-helpers.admin.js';
 import { checkAuthenticated, requireAdmin } from './middleware/auth.js';
 import { createRevenuePeriodValidation } from './middleware/validation.admin.js';
 import { applyRevenuePeriod } from './services/apply-revenue-period.js';
@@ -12,15 +13,11 @@ adminRouter.use(requireAdmin);
 
 adminRouter.get('/', async (req, res, next) => {
     try {
-        const doneDates = await getDoneDates(req)
-        // const period = await RevenuePeriod.findOne().sort({ toDate: -1 })
+        const doneDates = await getDoneDates()
+        const { period } = await getPeriodData()
+        const payouts = await getPayoutData()
 
-        const period = {}
-
-        period.fromDate = new Date(0)
-        period.toDate = new Date(0)
-
-        res.render('admin/admin', { doneDates, period })
+        res.render('admin/admin', { doneDates, period, payouts })
     } catch (err) {
         err.status = 500
         next(err)
@@ -40,6 +37,34 @@ adminRouter.post('/createRevenuePeriod', createRevenuePeriodValidation, async (r
         })
 
         await applyRevenuePeriod(period._id)
+
+        res.redirect('/')
+    } catch (err) {
+        console.err(err)
+        err.status = 500
+        next(err)
+    }
+});
+
+adminRouter.post('/:payout/complete', async (req, res, next) => {
+    try {
+        const payout = await Payout.findOne({ payoutID: req.params.payout })
+        payout.status = 'completed'
+        await payout.save()
+
+        res.redirect('/')
+    } catch (err) {
+        console.err(err)
+        err.status = 500
+        next(err)
+    }
+});
+
+adminRouter.post('/:payout/reject', async (req, res, next) => {
+    try {
+        const payout = await Payout.findOne({ payoutID: req.params.payout })
+        payout.status = 'rejected'
+        await payout.save()
 
         res.redirect('/')
     } catch (err) {

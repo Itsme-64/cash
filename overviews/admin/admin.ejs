@@ -106,7 +106,49 @@
                     </div>
                 </div>
                 <div class="row">
-                  
+                    <div class="col-lg-6 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Pending Payouts</h4>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Amount</th>
+                                                <th>Recipient</th>
+                                            </tr>
+                                        </thead>
+                                        <% if (Array.isArray(payouts) && payouts.length > 0) { %>
+                                            <% payouts.slice().forEach(payout => { %>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <form action="/<%= payout.payoutID %>/complete" autocomplete="off" method="POST">
+                                                                <button type="submit" title="mark complete" class="btn btn-info me-2">
+                                                                    # <%= payout.payoutID %>
+                                                                </button>
+                                                            </form>
+                                                        </td>
+                                                        <td>$ <span class="text-success"><%= payout.amount.toFixed(2) %></span></td>
+                                                        <td><%= payout.method %></td>
+                                                    </tr>
+                                                </tbody>
+                                            <% }); %>
+                                        <% } else { %>
+                                            <tbody>
+                                                <tr>
+                                                    <td>There are currently no pending payouts</td>
+                                                    <td>#</td>
+                                                    <td>#</td>
+                                                </tr>
+                                            </tbody>
+                                        <% } %>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <%- include('../ledger/footer') %>
