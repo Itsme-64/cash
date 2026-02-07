@@ -12,131 +12,140 @@
 </head>
 
 <body>
-  <div class="container-scroller">
-  <% if (isAuthenticatedFAQ) { %>
-    <%- include('ledger/sidebar', { currentPage: 'frequentlyAskedQuestions' }) %>
-  <% } else { %>
-    <%- include('ledger/index/sidebar', { currentPage: 'frequentlyAskedQuestions' }) %>
-  <% } %>
-  <%- include('ledger/sidebarMini') %>
-    <div class="container-fluid page-body-wrapper">
-      <div class="main-panel-noheader">
-        <div class="content-wrapper">
-          <div class="page-header">
-            <h3 class="page-title"> Frequently Asked Questions </h3>
-            <nav aria-label="breadcrumb">
-              <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="./operator">Cash</a></li>
-                <li class="breadcrumb-item active" aria-current="page">F.A.Q.</li>
-              </ol>
-            </nav>
-          </div>
-          <div class="row">
-            <div class="col-md-6 d-flex align-items-stretch">
-              <div class="row">
-                <div class="col-md-12 grid-margin stretch-card">
-                  <div class="card border-primary-subtle2">
-                    <div class="card-body">
-                      <h4 class="card-title">Why should I choose 159.cash?</h4>
-                      <p>159.cash should be your first choice when it comes to link shortening if you care about user trust. Our service has no hidden 
-                        tricks to stop your users from reaching their destination. No 60-minute wait times, or multiple redirects!
-                      </p>
+    <div class="container-scroller">
+        <% if (isAuthenticatedFAQ) { %>
+            <%- include('ledger/sidebar', { currentPage: 'frequentlyAskedQuestions' }) %>
+        <% } else { %>
+            <%- include('ledger/index/sidebar', { currentPage: 'frequentlyAskedQuestions' }) %>
+        <% } %>
+        <%- include('ledger/sidebarMini') %>
+        <div class="container-fluid page-body-wrapper">
+            <div class="main-panel-noheader">
+                <div class="content-wrapper">
+                    <div class="page-header">
+                        <h3 class="page-title"> Frequently Asked Questions </h3>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="./operator">Cash</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">F.A.Q.</li>
+                            </ol>
+                        </nav>
                     </div>
-                  </div>
-                </div>
-                <div class="col-md-12 grid-margin stretch-card">
-                  <div class="card border-info-subtle2">
-                    <div class="card-body">
-                      <h4 class="card-title">How does the 159.cash service work?</h4>
-                      <p>159.cash is a user-friendly way to make money from internet traffic. Replace existing links with your 159.cash shortened ones, 
-                        and earn money from every click!
-                      </p>
+                    <div class="row">
+                        <div class="col-md-6 d-flex align-items-stretch">
+                            <div class="row">
+                                <div class="col-md-12 grid-margin stretch-card">
+                                    <div class="card border-primary-subtle2">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Why should I choose 159.cash?</h4>
+                                            <p>
+                                                159.cash should be your first choice when it comes to link shortening if you care about user trust. Our service has no hidden 
+                                                tricks to stop your users from reaching their destination. No 60-minute wait times, or multiple redirects!
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 grid-margin stretch-card">
+                                    <div class="card border-info-subtle2">
+                                        <div class="card-body">
+                                            <h4 class="card-title">How does the 159.cash service work?</h4>
+                                            <p>
+                                                159.cash is a user-friendly way to make money from internet traffic. Replace existing links with your 159.cash shortened ones, 
+                                                and earn money from every click!
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 grid-margin stretch-card">
+                                    <div class="card border-info-subtle2">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Why should I care about user-friendliness?</h4>
+                                            <p>
+                                                Redirecting users to a site they can trust, and one that will not hinder their actions greating increases not only 
+                                                their satisfaction with the service your provide, but also the chance that they return for more. Repeat customors are 
+                                                increadibly valuable and 159.cash helps you achieve this while monetizing your links.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 grid-margin stretch-card">
+                                  <div class="card border-success-subtle2">
+                                    <div class="card-body">
+                                      <h4 class="card-title">Is 159.cash free?</h4>
+                                      <p>Yes! The base version of 159.cash is completely free to use, and there are no costs relating to payouts either!</p>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-12 grid-margin stretch-card">
+                                    <div class="card border-success-subtle2">
+                                        <div class="card-body">
+                                            <h4 class="card-title">How can I get paid?</h4>
+                                            <p>159.cash offers two main payout methods: <br> 1) Bitcoin (for this you need a valid Bitcoin address.) <br> 2) PayPal</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-stretch">
+                            <div class="row">
+                                <div class="col-md-12 grid-margin stretch-card">
+                                    <div class="card border-success-subtle2">
+                                        <div class="card-body">
+                                            <h4 class="card-title">What is the minimum payout threshold?</h4>
+                                            <p>
+                                                You can request your first payout as soon as you've made $10 or more! The threshold is in place due to the costs assiciated 
+                                                with paying users. Requesting payouts on 159.cash is completely free!
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 grid-margin stretch-card">
+                                    <div class="card border-danger-subtle2">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Are there any specific rules I have to follow?</h4>
+                                            <p>
+                                                To make the most out of your 159.cash account, it is extremely important to read through our 
+                                                <a href="tos" target="_blank">terms of service</a> 
+                                                as they outline the rules you should follow to ensure quality traffic and payouts on this platform!
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 grid-margin stretch-card">
+                                    <div class="card border-success-subtle2">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Is there a referral program?</h4>
+                                            <p>
+                                                Yes! 159.cash offers a referral program you can make use of as soon as you create your account. 
+                                                Refer new users using your custom link to recieve 12% of their earnings for life!
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 grid-margin stretch-card">
+                                    <div class="card border-warning-subtle2">
+                                      <div class="card-body">
+                                          <h4 class="card-title">I have more questions, what can I do?</h4>
+                                          <p>
+                                              Feel free to create a ticket 
+                                              <a href="/ticket">here</a>, 
+                                              or reach out to us directly through our official 
+                                              <a href="/discord" target="_blank">Discord Server.</a>
+                                          </p>
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
+                    <%- include('ledger/infoCards') %>
                 </div>
-                <div class="col-md-12 grid-margin stretch-card">
-                  <div class="card border-info-subtle2">
-                    <div class="card-body">
-                      <h4 class="card-title">Why should I care about user-friendliness?</h4>
-                      <p>Redirecting users to a site they can trust, and one that will not hinder their actions greating increases not only 
-                        their satisfaction with the service your provide, but also the chance that they return for more. Repeat customors are 
-                        increadibly valuable and 159.cash helps you achieve this while monetizing your links.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-12 grid-margin stretch-card">
-                  <div class="card border-success-subtle2">
-                    <div class="card-body">
-                      <h4 class="card-title">Is 159.cash free?</h4>
-                      <p>Yes! The base version of 159.cash is completely free to use, and there are no costs relating to payouts either!</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-12 grid-margin stretch-card">
-                  <div class="card border-success-subtle2">
-                    <div class="card-body">
-                      <h4 class="card-title">How can I get paid?</h4>
-                      <p>159.cash offers two main payout methods: <br> 1) Bitcoin (for this you need a valid Bitcoin address.) <br> 2) PayPal</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                <%- include('ledger/footer') %>
             </div>
-            <div class="col-md-6 d-flex align-items-stretch">
-              <div class="row">
-                <div class="col-md-12 grid-margin stretch-card">
-                  <div class="card border-success-subtle2">
-                    <div class="card-body">
-                      <h4 class="card-title">What is the minimum payout threshold?</h4>
-                      <p>You can request your first payout as soon as you've made $10 or more! The threshold is in place due to the costs assiciated 
-                        with paying users. Requesting payouts on 159.cash is completely free!
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-12 grid-margin stretch-card">
-                  <div class="card border-danger-subtle2">
-                    <div class="card-body">
-                      <h4 class="card-title">Are there any specific rules I have to follow?</h4>
-                      <p>To make the most out of your 159.cash account, it is extremely important to read through our 
-                        <a href="tos" target="_blank">terms of service</a> as they outline the rules you should follow to ensure quality traffic 
-                        and payouts on this platform!
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-12 grid-margin stretch-card">
-                  <div class="card border-success-subtle2">
-                    <div class="card-body">
-                      <h4 class="card-title">Is there a referral program?</h4>
-                      <p>Yes! 159.cash offers a referral program you can make use of as soon as you create your account. Refer new users using your 
-                        custom link to recieve 12% of their earnings for life!
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-12 grid-margin stretch-card">
-                  <div class="card border-warning-subtle2">
-                    <div class="card-body">
-                      <h4 class="card-title">I have more questions, what can I do?</h4>
-                      <p>Feel free to create a ticket <a href="/ticket">here</a>, or reach out to us directly through our official 
-                        <a href="/discord" target="_blank">Discord Server.</a>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <%- include('ledger/infoCards') %>
         </div>
-        <%- include('ledger/footer') %>
-      </div>
     </div>
-  </div>
-  <script src="/public/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="/src/js/main.js"></script>
+    <script src="/public/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/src/js/main.js"></script>
 </body>
 
 </html>

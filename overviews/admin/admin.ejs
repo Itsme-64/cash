@@ -68,7 +68,8 @@
                                                 <div class="form-group row" style="margin: 0px;">
                                                     <label class="col-sm-4 col-form-label" for="referral">Referral Amount</label>
                                                     <div class="col-sm-7">
-                                                        <input class="form-control" id="referral" name="referral" placeholder="<%= period.referralAmount %>" readonly disabled>
+                                                        <input class="form-control" id="referral" name="referral" 
+                                                            placeholder="<%= period.referralAmount %>" readonly disabled>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row" style="margin: 0px;">
@@ -171,7 +172,13 @@
                                                             <a href="/admin/tickets/<%= ticket.shortID %>" target="_blank"><%= ticket.title %></a>
                                                         </td>
                                                         <td># <%= ticket.shortID %></td>
-                                                        <td><%= new Date(ticket.updatedAt).toLocaleDateString("en-UK", { day: "numeric", month: "numeric", year: "numeric" }) %></td>
+                                                        <td>
+                                                            <%= new Date(ticket.updatedAt).toLocaleDateString("en-UK", { 
+                                                                day: "numeric", 
+                                                                month: "numeric", 
+                                                                year: "numeric" 
+                                                            }) %>
+                                                        </td>
                                                         <td>
                                                             <div style="display: flex; flex-direction: row;">
                                                                 <form action="/admin/<%= ticket.shortID %>/resolve" autocomplete="off" method="POST">

@@ -126,7 +126,11 @@
                                                     <h6 class="mb-1">Payout <%= mostRecentPayoutRequest.payoutID %></h6>
                                                     <p class="text-muted mb-0">
                                                         Requested At
-                                                        <%= mostRecentPayoutRequest.createdAt.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) %>
+                                                        <%= mostRecentPayoutRequest.createdAt.toLocaleDateString("en-US", { 
+                                                            month: "long",
+                                                            day: "numeric",
+                                                            year: "numeric" 
+                                                        }) %>
                                                     </p>
                                                 </div>
                                                 <% if (mostRecentPayoutRequest.status == 'pending') { %>

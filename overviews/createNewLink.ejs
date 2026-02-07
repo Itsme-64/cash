@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-  <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>New Link | 159.cash</title>
@@ -11,98 +10,96 @@
 </head>
 
 <body>
-  <div class="container-scroller">
-    <%- include('ledger/sidebar', { currentPage: 'createNewLink' }) %>
-    <%- include('ledger/sidebarMini') %>
-    <div class="container-fluid page-body-wrapper">
-      <div class="main-panel-noheader">
-        <div class="content-wrapper">
-          <div class="page-header">
-            <h3 class="page-title"> Create Link </h3>
-            <nav aria-label="breadcrumb">
-              <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/operator">Cash</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Create Link</li>
-              </ol>
-            </nav>
-          </div>
-          <div class="row">
-            <div class="col-12 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">Shorten a new link</h4>
-                  <form action="/new" class="forms-sample" autocomplete="off" method="POST">
-                    <div class="form-check form-check-flat form-check-primary">
-                      <label class="form-check-label">
-                        <span id="monetization-label" data-count="<%= count %>">Monetization enabled</span>
-                        <input type="checkbox" class="form-check-input" id="monetization" name="monetization" checked 
-                          <% if (maxLinksReached) { %>
-                            disabled
-                          <% } %>
-                        >
-                      </label>
+    <div class="container-scroller">
+        <%- include('ledger/sidebar', { currentPage: 'createNewLink' }) %>
+        <%- include('ledger/sidebarMini') %>
+        <div class="container-fluid page-body-wrapper">
+            <div class="main-panel-noheader">
+                <div class="content-wrapper">
+                    <div class="page-header">
+                        <h3 class="page-title"> Create Link </h3>
+                          <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/operator">Cash</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Create Link</li>
+                            </ol>
+                        </nav>
                     </div>
-                    <div id="monetization-options" style="display: block;" class="mt-2">
-                      <div class="btn-group" role="group" style="margin-bottom: 1rem">
-                        <input type="radio" class="btn-check" name="monetizationDuration" id="option1" value="5000">
-                        <label class="btn btn-outline-primary" for="option1">5s</label>
-                        <input type="radio" class="btn-check" name="monetizationDuration" id="option2" value="10000"
-                          checked>
-                        <label class="btn btn-outline-primary" for="option2">10s (default)</label>
-                        <input type="radio" class="btn-check" name="monetizationDuration" id="option3"
-                          value="15000">
-                        <label class="btn btn-outline-primary" for="option3">15s</label>
-                      </div>
+                    <div class="row">
+                        <div class="col-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Shorten a new link</h4>
+                                    <form action="/new" class="forms-sample" autocomplete="off" method="POST">
+                                        <div class="form-check form-check-flat form-check-primary">
+                                            <label class="form-check-label">
+                                                <span id="monetization-label" data-count="<%= count %>">Monetization enabled</span>
+                                                <input type="checkbox" class="form-check-input" id="monetization" 
+                                                    <% if (maxLinksReached) { %>
+                                                        disabled
+                                                    <% } %>
+                                                    name="monetization" checked>
+                                            </label>
+                                        </div>
+                                        <div id="monetization-options" style="display: block;" class="mt-2">
+                                            <div class="btn-group" role="group" style="margin-bottom: 1rem">
+                                                <input type="radio" class="btn-check" name="monetizationDuration" id="option1" value="5000">
+                                                <label class="btn btn-outline-primary" for="option1">5s</label>
+                                                <input type="radio" class="btn-check" name="monetizationDuration" id="option2" value="10000" checked>
+                                                <label class="btn btn-outline-primary" for="option2">10s (default)</label>
+                                                <input type="radio" class="btn-check" name="monetizationDuration" id="option3" value="15000">
+                                                <label class="btn btn-outline-primary" for="option3">15s</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-check form-check-flat form-check-primary">
+                                            <label class="form-check-label">
+                                                <span id="redirectInstantly-label">Redirect users instantly
+                                                    <i class="mdi mdi-information-outline text-muted" data-bs-toggle="tooltip" data-bs-placement="top" 
+                                                        title="Removes the 'skip' button and automatically redirects users after the set duration.
+                                                        Good if redirect time matters, bad for maximizing income. Recommendation: keep OFF by default.">
+                                                    </i>
+                                                </span>
+                                                <input type="checkbox" class="form-check-input" id="redirectInstantly" name="redirectInstantly">
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-check-flat form-check-primary">
+                                            <label class="form-check-label">
+                                            <input type="checkbox" class="form-check-input" id="bulkToggle" name="bulkToggle"> Bulk shorten links </label>
+                                        </div>
+                                        <div class="form-group hidden-label" id="singleLinkInput">
+                                            <label for="singleLink" type="hidden"></label>
+                                            <input type="url" class="form-control" id="singleLink" name="singleLink" value="<%= data.singleLink || '' %>" 
+                                                placeholder="https://">
+                                        </div>
+                                        <div class="form-group" id="bulkLinkInput" style="display: none;">
+                                            <label for="bulkLinks">Please enter only one link per line</label>
+                                            <textarea class="form-control" id="bulkLinks" name="bulkLinks" placeholder="https://" rows="5"></textarea>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <button type="submit" class="btn btn-primary me-2">Shrink</button>
+                                            <button type="reset" class="btn btn-dark" style="margin-left: 0.15rem">Clear</button>
+                                            <p class="text-danger mb-0" style="margin-left: 1rem">
+                                                <% if (typeof errors != 'undefined') { %>
+                                                    <%= errors[0].msg %>
+                                                <% } %>
+                                            </p>
+                                            <p class="text-warning mb-0" style="margin-left: 1rem" id="monetization-warning"></p>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-check form-check-flat form-check-primary">
-                      <label class="form-check-label">
-                        <span id="redirectInstantly-label">Redirect users instantly
-                          <i class="mdi mdi-information-outline text-muted" data-bs-toggle="tooltip" data-bs-placement="top" 
-                            title="Removes the 'skip' button and automatically redirects users after the set duration.
-                            Good if redirect time matters, bad for maximizing income. Recommendation: keep OFF by default.">
-                          </i>
-                        </span>
-                        <input type="checkbox" class="form-check-input" id="redirectInstantly" name="redirectInstantly">
-                      </label>
-                    </div>
-                    <div class="form-check form-check-flat form-check-primary">
-                      <label class="form-check-label">
-                        <input type="checkbox" class="form-check-input" id="bulkToggle" name="bulkToggle"> Bulk shorten links </label>
-                    </div>
-                    <div class="form-group hidden-label" id="singleLinkInput">
-                      <label for="singleLink" type="hidden"></label>
-                      <input type="url" class="form-control" id="singleLink" name="singleLink" value="<%= data.singleLink || '' %>"
-                        placeholder="https://">
-                    </div>
-                    <div class="form-group" id="bulkLinkInput" style="display: none;">
-                      <label for="bulkLinks">Please enter only one link per line</label>
-                      <textarea class="form-control" id="bulkLinks" name="bulkLinks" placeholder="https://" rows="5"></textarea>
-                    </div>
-                    <div class="d-flex align-items-center">
-                      <button type="submit" class="btn btn-primary me-2">Shrink</button>
-                      <button type="reset" class="btn btn-dark" style="margin-left: 0.15rem">Clear</button>
-                      <p class="text-danger mb-0" style="margin-left: 1rem">
-                        <% if (typeof errors != 'undefined') { %>
-                          <%= errors[0].msg %>
-                        <% } %>
-                      </p>
-                      <p class="text-warning mb-0" style="margin-left: 1rem" id="monetization-warning"></p>
-                    </div>
-                  </form>
+                    <%- include('ledger/userLinks', { width: 12, source: 'new' }) %>
+                    <%- include('ledger/infoCards') %>
                 </div>
-              </div>
+                <%- include('ledger/footer') %>
             </div>
-          </div>
-          <%- include('ledger/userLinks', { width: 12, source: 'new' }) %>
-          <%- include('ledger/infoCards') %>
         </div>
-        <%- include('ledger/footer') %>
-      </div>
     </div>
-  </div>
-  <script src="/public/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="/src/js/createNewLink.js"></script>
-  <script src="/src/js/main.js"></script>
+    <script src="/public/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/src/js/createNewLink.js"></script>
+    <script src="/src/js/main.js"></script>
 </body>
 
 </html>

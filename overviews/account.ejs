@@ -10,292 +10,295 @@
 </head>
 
 <body>
-  <div class="container-scroller">
-  <%- include('ledger/sidebar', { currentPage: 'account' }) %>
-  <%- include('ledger/sidebarMini') %>
-    <div class="container-fluid page-body-wrapper">
-      <div class="main-panel-noheader">
-        <div class="content-wrapper">
-          <div class="page-header">
-            <h3 class="page-title"> Your Account </h3>
-            <nav aria-label="breadcrumb">
-              <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="./operator">Cash</a></li>
-                <li class="breadcrumb-item active" aria-current="page">You</li>
-              </ol>
-            </nav>
-          </div>
-          <div class="col-md-10 grid-margin stretch-card">
-            <div class="card">
-              <div class="card-body">
-                <h4 class="card-title" id="account">Account information</h4>
-                <p class="card-description">Most information is required for payout processing</p>
-                <form class="forms-sample" action="/updateAccountInformation" method="post" enctype="multipart/form-data">
-                  <div class="form-check form-check-flat form-check-primary">
-                    <label class="form-check-label">
-                      <input id="editToggle" type="checkbox" class="form-check-input">Edit account info</label>
-                  </div>
-                  <div id="formInputs">
-                    <div class="form-group row">
-                      <label for="name" class="col-sm-3 col-form-label">Full Name: *</label>
-                      <div class="col-sm-9">
-                        <input disabled type="text" class="form-control" id="name" name="name" autocomplete="name" 
-                          value="<%= userInfo?.name ?? "" %>">
-                      </div>
+    <div class="container-scroller">
+        <%- include('ledger/sidebar', { currentPage: 'account' }) %>
+        <%- include('ledger/sidebarMini') %>
+        <div class="container-fluid page-body-wrapper">
+            <div class="main-panel-noheader">
+                <div class="content-wrapper">
+                    <div class="page-header">
+                        <h3 class="page-title"> Your Account </h3>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="./operator">Cash</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">You</li>
+                            </ol>
+                        </nav>
                     </div>
-                    <div class="form-group row">
-                      <label for="line1" class="col-sm-3 col-form-label">Address: (line 1) *</label>
-                      <div class="col-sm-9">
-                        <input disabled type="text" class="form-control" id="line1" name="line1" autocomplete="address-line1" 
-                          value="<%= userInfo?.address?.line1 ?? "" %>">
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label for="line2" class="col-sm-3 col-form-label">Address: (line 2)</label>
-                      <div class="col-sm-9">
-                        <input disabled type="text" class="form-control" id="line2" name="line2" autocomplete="address-line2" 
-                          value="<%= userInfo?.address?.line2 ?? "" %>">
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label for="city" class="col-sm-3 col-form-label">City: *</label>
-                      <div class="col-sm-9">
-                        <input disabled type="text" class="form-control" id="city" name="city" value="<%= userInfo?.address?.city ?? "" %>">
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label for="zip" class="col-sm-3 col-form-label">Zip Code: *</label>
-                      <div class="col-sm-9">
-                        <input disabled type="text" class="form-control" id="zip" name="zip" autocomplete="postal-code" 
-                          value="<%= userInfo?.address?.zip ?? "" %>">
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label for="country" class="col-sm-3 col-form-label">Country: *</label>
-                      <div class="col-sm-9">
-                        <select disabled class="form-select" id="country" name="country" autocomplete="country" 
-                          value="<%= userInfo?.address?.country ?? "" %>">
-                          <%- include('ledger/assets/countries') %>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label for="tel" class="col-sm-3 col-form-label">Phone number:</label>
-                      <div class="col-sm-9">
-                        <input disabled type="tel" class="form-control" id="tel" name="tel" autocomplete="tel" value="<%= userInfo?.tel ?? "" %>">
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label for="userIcon" class="col-sm-3 col-form-label">Profile picture:</label>
-                      <div class="col-sm-9">
-                        <div class="input-group d-flex align-items-center">
-                          <input type="text" class="form-control file-upload-info" id="file-name-display" disabled
-                            placeholder="Only png & jpg/jpeg files">
-                          <input disabled type="file" id="userIcon" name="userIcon" class="d-none" accept=".jpg,.png,.jpeg,.webp">
-                          <button disabled type="button" class="btn btn-primary ms-2" id="upload-btn">Upload</button>
+                    <div class="col-md-10 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title" id="account">Account information</h4>
+                                <p class="card-description">Most information is required for payout processing</p>
+                                <form class="forms-sample" action="/updateAccountInformation" method="post" enctype="multipart/form-data">
+                                    <div class="form-check form-check-flat form-check-primary">
+                                        <label class="form-check-label">
+                                            <input id="editToggle" type="checkbox" class="form-check-input">Edit account info
+                                        </label>
+                                    </div>
+                                    <div id="formInputs">
+                                        <div class="form-group row">
+                                            <label for="name" class="col-sm-3 col-form-label">Full Name: *</label>
+                                            <div class="col-sm-9">
+                                                <input disabled type="text" class="form-control" id="name" name="name" autocomplete="name" 
+                                                    value="<%= userInfo?.name ?? "" %>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="line1" class="col-sm-3 col-form-label">Address: (line 1) *</label>
+                                            <div class="col-sm-9">
+                                                <input disabled type="text" class="form-control" id="line1" name="line1" autocomplete="address-line1" 
+                                                    value="<%= userInfo?.address?.line1 ?? "" %>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="line2" class="col-sm-3 col-form-label">Address: (line 2)</label>
+                                            <div class="col-sm-9">
+                                                <input disabled type="text" class="form-control" id="line2" name="line2" autocomplete="address-line2" 
+                                                    value="<%= userInfo?.address?.line2 ?? "" %>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="city" class="col-sm-3 col-form-label">City: *</label>
+                                            <div class="col-sm-9">
+                                                <input disabled type="text" class="form-control" id="city" name="city" 
+                                                    value="<%= userInfo?.address?.city ?? "" %>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="zip" class="col-sm-3 col-form-label">Zip Code: *</label>
+                                            <div class="col-sm-9">
+                                                <input disabled type="text" class="form-control" id="zip" name="zip" autocomplete="postal-code" 
+                                                    value="<%= userInfo?.address?.zip ?? "" %>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="country" class="col-sm-3 col-form-label">Country: *</label>
+                                            <div class="col-sm-9">
+                                                <select disabled class="form-select" id="country" name="country" autocomplete="country" 
+                                                    value="<%= userInfo?.address?.country ?? "" %>">
+                                                    <%- include('ledger/assets/countries') %>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="tel" class="col-sm-3 col-form-label">Phone number:</label>
+                                            <div class="col-sm-9">
+                                                <input disabled type="tel" class="form-control" id="tel" name="tel" autocomplete="tel" value="<%= userInfo?.tel ?? "" %>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="userIcon" class="col-sm-3 col-form-label">Profile picture:</label>
+                                            <div class="col-sm-9">
+                                                <div class="input-group d-flex align-items-center">
+                                                    <input type="text" class="form-control file-upload-info" id="file-name-display" 
+                                                        disabled placeholder="Only png & jpg/jpeg files">
+                                                    <input disabled type="file" id="userIcon" name="userIcon" class="d-none" accept=".jpg,.png,.jpeg,.webp">
+                                                    <button disabled type="button" class="btn btn-primary ms-2" id="upload-btn">Upload</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <button disabled type="submit" id="submitBtn" class="btn btn-primary me-2">Update</button>
+                                        <button disabled id="cancelBtn" type="button" class="btn btn-dark" style="margin-left: 0.15rem">Cancel</button>
+                                        <p class="text-danger mb-0" style="margin-left: 1rem">
+                                            <% if (typeof errors != 'undefined' && form == 'updateAccountInformation') { %>
+                                                <%= errors[0].msg %>
+                                            <% } %>
+                                        </p>
+                                    </div>
+                                </form>
+                                <div class="form-group row" style="margin-top: 4rem;">
+                                    <label for="userEmail" class="col-sm-3 col-form-label">Email address:</label>
+                                    <div class="col-sm-9 d-flex align-items-center gap-2">
+                                        <input type="email" class="form-control" id="userEmail" value="<%= user.email %>" readonly>
+                                        <% if (user.verified) { %>
+                                            <p class="text-muted mb-0 d-flex align-items-center gap-1">
+                                                <i class="icon-sm mdi mdi-check text-success ml-auto"></i>&nbsp;&nbsp;Verified
+                                            </p>
+                                        <% } else { %>
+                                            <p class="text-muted mb-0 d-flex align-items-center gap-1">
+                                                <i class="icon-sm mdi mdi-alert-circle-outline text-danger ml-auto"></i>&nbsp;Unverified
+                                            </p>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="username" class="col-sm-3 col-form-label">Username:</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="username" value="<%= user.username %>" autocomplete="username" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="PID" class="col-sm-3 col-form-label">Account ID:</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="PID" name="PID" value="<%= user.PID %>" readonly>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                      </div>
+                        <h6 class="text-muted font-weight-normal" style="position: absolute; right: 0; margin-right: 3rem;">
+                            Navigation:<br>
+                            <a href="#account" style="display: inline-block; margin-top: 0.2rem;">account</a><br>
+                            <a href="#payout" style="display: inline-block; margin-top: 0.2rem;">payout</a><br>
+                            <a href="#updatePassword" style="display: inline-block; margin-top: 0.2rem;">password</a><br>
+                            <a href="#autoPayoutsHref" style="display: inline-block; margin-top: 0.2rem;">auto payouts</a><br>
+                            <a href="#premium" style="display: inline-block; margin-top: 0.2rem;">premium</a>
+                        </h6>
                     </div>
-                  </div>
-                  <div class="d-flex align-items-center">
-                    <button disabled type="submit" id="submitBtn" class="btn btn-primary me-2">Update</button>
-                    <button disabled id="cancelBtn" type="button" class="btn btn-dark" style="margin-left: 0.15rem">Cancel</button>
-                    <p class="text-danger mb-0" style="margin-left: 1rem">
-                      <% if (typeof errors != 'undefined' && form == 'updateAccountInformation') { %>
-                        <%= errors[0].msg %>
-                      <% } %>
-                    </p>
-                  </div>
-                </form>
-                <div class="form-group row" style="margin-top: 4rem;">
-                  <label for="userEmail" class="col-sm-3 col-form-label">Email address:</label>
-                  <div class="col-sm-9 d-flex align-items-center gap-2">
-                    <input type="email" class="form-control" id="userEmail" value="<%= user.email %>" readonly>
-                    <% if (user.verified) { %>
-                      <p class="text-muted mb-0 d-flex align-items-center gap-1">
-                        <i class="icon-sm mdi mdi-check text-success ml-auto"></i>&nbsp;&nbsp;Verified
-                      </p>
-                    <% } else { %>
-                      <p class="text-muted mb-0 d-flex align-items-center gap-1">
-                        <i class="icon-sm mdi mdi-alert-circle-outline text-danger ml-auto"></i>&nbsp;Unverified
-                      </p>
-                    <% } %>
-                  </div>
+                    <div class="row">
+                        <div class="col-md-6 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title" id="payout">Payout Information</h4>
+                                    <form class="forms-sample" action="/updatePayoutInformation" method="post">
+                                        <div class="form-group">
+                                            <label for="payoutMethod">Payout method</label>
+                                            <select class="form-select" id="payoutMethod" name="payoutMethod" required>
+                                                <option value="none" <% if (payoutMethod == 'none') { %> selected <% } %>>Choose method</option>
+                                                <option value="paypal" <% if (payoutMethod?.type == "paypal") { %> selected <% } %>>PayPal</option>
+                                                <option value="btc" <% if (payoutMethod?.type == "btc") { %> selected <% } %>>Bitcoin</option>
+                                            </select>
+                                        </div>
+                                        <div id="paypalFormGroup" class="form-group">
+                                            <label for="paypalEmail">PayPal email address</label>
+                                            <input type="email" class="form-control" id="paypalEmail" name="paypalEmail" placeholder="Email" 
+                                                value="<%= payoutMethod?.details?.email ?? "" %>">
+                                        </div>
+                                        <div id="btcFormGroup" class="form-group">
+                                            <label for="btcAddress">Bitcoin address</label>
+                                            <input type="text" class="form-control" id="btcAddress" name="btcAddress" placeholder="Address" 
+                                                value="<%= payoutMethod?.details?.btcAddress ?? "" %>">
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <button type="submit" class="btn btn-primary me-2">Update information</button>
+                                            <button type="reset" class="btn btn-dark" style="margin-left: 0.15rem">Clear</button>
+                                            <p class="text-danger mb-0" style="margin-left: 1rem">
+                                                <% if (typeof errors != 'undefined' && form == 'updatePayoutInformation') { %>
+                                                    <%= errors[0].msg %>
+                                                <% } %>
+                                            </p>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title" id="updatePassword">Update Password</h4>
+                                    <p class="card-description">Forgot your password? Reset it <a href="#">here</a>!</p>
+                                    <form class="forms-sample" action="/updatePassword" method="post">
+                                        <div class="form-group">
+                                            <label for="password">Current password</label>
+                                            <input type="password" class="form-control" id="password" name="password" placeholder="your password"
+                                                autocomplete="current-password" required>
+                                        </div>
+                                        <div class="form-group position-relative">
+                                            <label for="newPassword">New password</label>
+                                            <input type="password" class="form-control countedInput" id="newPassword" minlength="8" name="newPassword"
+                                                placeholder="strong password" autocomplete="new-password" required>
+                                            <small class="position-absolute bottom-0 end-0 pe-2 pb-1 text-danger counter"></small>
+                                        </div>
+                                        <div class="form-group position-relative">
+                                            <label for="newPasswordVerification">Re new password</label>
+                                            <input type="password" class="form-control countedInput" id="newPasswordVerification" minlength="8" name="newPasswordVerification"
+                                                placeholder="same strong password" autocomplete="new-password" required>
+                                            <small class="position-absolute bottom-0 end-0 pe-2 pb-1 text-danger counter"></small>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <button type="submit" class="btn btn-primary me-2">Update password</button>
+                                            <button type="reset" class="btn btn-dark" style="margin-left: 0.15rem">Clear</button>
+                                            <p class="text-danger mb-0" style="margin-left: 1rem">
+                                                <% if (typeof errors != 'undefined' && form == 'updatePassword') { %>
+                                                    <%= errors[0].msg %>
+                                                <% } %>
+                                            </p>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title" id="autoPayoutsHref">Automatic Payouts</h4>
+                                    <p class="card-description">Automatically submit a new payout request on the first of each month if the payout threshold is met</p>
+                                    <form class="forms-sample" action="/updateAutomaticPayouts" method="post">
+                                        <div class="form-check form-check-flat form-check-primary">
+                                            <label class="form-check-label" for="autoPayouts">
+                                                <input type="checkbox" class="form-check-input" id="autoPayouts" name="autoPayouts" value="true"> 
+                                                Enable automatic payout requests 
+                                            </label>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <button type="submit" class="btn btn-primary me-2" style="margin-top: 0.75rem;">Update selection</button>
+                                            <p class="text-danger mb-0" style="margin-left: 1rem">
+                                                <% if (typeof errors != 'undefined' && form == 'updateAutomaticPayouts') { %>
+                                                    <%= errors[0].msg %>
+                                                <% } %>
+                                            </p>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title" id="premium">
+                                    <i class="icon-sm mdi mdi-diamond-outline text-success ml-auto"></i>
+                                    &nbsp;&nbsp;Premium Subscription
+                                </h4>
+                                <ul class="list-arrow">
+                                    <p class="card-description">For just <b>$6.-</b> per month.</p>
+                                    <li class="text-muted">Create unlimited links without advertisements</li>
+                                    <li class="text-muted">Priority payout processing</li>
+                                    <li class="text-muted">Priority support</li>
+                                    <li class="text-muted">No payment information required: simply use you 159.cash account balance</li>
+                                </ul>
+                                <form class="forms-sample" action="/subscribeToPremium" method="post">
+                                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                                        <label for="payment">Payment method</label>
+                                        <select class="form-select" id="paymentMethod" name="paymentMethod" required>
+                                            <option value="none">Choose method</option>
+                                            <option value="balance">Use 159.cash balance</option>
+                                            <option value="PayPal">PayPal</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-check form-check-flat form-check-primary">
+                                        <label for="premiumStatus" class="form-check-label">
+                                            <input type="checkbox" class="form-check-input" name="premiumStatus" id="premiumStatus">
+                                            Enable premium subscription 
+                                        </label>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <button type="submit" class="btn btn-primary me-2" style="margin-top: 0.75rem;">Update selection</button>
+                                        <p class="text-danger mb-0" style="margin-left: 1rem">
+                                            <% if (typeof errors != 'undefined' && form == "") { %> 
+                                                <%= errors[0].msg %>
+                                            <% } %>
+                                        </p>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group row">
-                  <label for="username" class="col-sm-3 col-form-label">Username:</label>
-                  <div class="col-sm-9">
-                    <input type="text" class="form-control" id="username" value="<%= user.username %>" autocomplete="username" readonly>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="PID" class="col-sm-3 col-form-label">Account ID:</label>
-                  <div class="col-sm-9">
-                    <input type="text" class="form-control" id="PID" name="PID" value="<%= user.PID %>" readonly>
-                  </div>
-                </div>
-              </div>
+                <%- include('ledger/footer') %>
             </div>
-            <h6 class="text-muted font-weight-normal" style="position: absolute; right: 0; margin-right: 3rem;">
-              Navigation:<br>
-              <a href="#account" style="display: inline-block; margin-top: 0.2rem;">account</a><br>
-              <a href="#payout" style="display: inline-block; margin-top: 0.2rem;">payout</a><br>
-              <a href="#updatePassword" style="display: inline-block; margin-top: 0.2rem;">password</a><br>
-              <a href="#autoPayoutsHref" style="display: inline-block; margin-top: 0.2rem;">auto payouts</a><br>
-              <a href="#premium" style="display: inline-block; margin-top: 0.2rem;">premium</a>
-            </h6>
-          </div>
-          <div class="row">
-            <div class="col-md-6 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title" id="payout">Payout Information</h4>
-                  <form class="forms-sample" action="/updatePayoutInformation" method="post">
-                    <div class="form-group">
-                      <label for="payoutMethod">Payout method</label>
-                      <select class="form-select" id="payoutMethod" name="payoutMethod" required>
-                        <option value="none" <% if (payoutMethod == 'none') { %> selected <% } %>>Choose method</option>
-                        <option value="paypal" <% if (payoutMethod?.type == "paypal") { %> selected <% } %>>PayPal</option>
-                        <option value="btc" <% if (payoutMethod?.type == "btc") { %> selected <% } %>>Bitcoin</option>
-                      </select>
-                    </div>
-                    <div id="paypalFormGroup" class="form-group">
-                      <label for="paypalEmail">PayPal email address</label>
-                      <input type="email" class="form-control" id="paypalEmail" name="paypalEmail" placeholder="Email" 
-                        value="<%= payoutMethod?.details?.email ?? "" %>">
-                    </div>
-                    <div id="btcFormGroup" class="form-group">
-                      <label for="btcAddress">Bitcoin address</label>
-                      <input type="text" class="form-control" id="btcAddress" name="btcAddress" placeholder="Address" 
-                        value="<%= payoutMethod?.details?.btcAddress ?? "" %>">
-                    </div>
-                    <div class="d-flex align-items-center">
-                      <button type="submit" class="btn btn-primary me-2">Update information</button>
-                      <button type="reset" class="btn btn-dark" style="margin-left: 0.15rem">Clear</button>
-                      <p class="text-danger mb-0" style="margin-left: 1rem">
-                        <% if (typeof errors != 'undefined' && form == 'updatePayoutInformation') { %>
-                          <%= errors[0].msg %>
-                        <% } %>
-                      </p>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title" id="updatePassword">Update Password</h4>
-                  <p class="card-description">Forgot your password? Reset it <a href="#">here</a>!</p>
-                  <form class="forms-sample" action="/updatePassword" method="post">
-                    <div class="form-group">
-                      <label for="password">Current password</label>
-                      <input type="password" class="form-control" id="password" name="password"
-                        placeholder="your password" autocomplete="current-password" required>
-                    </div>
-                    <div class="form-group position-relative">
-                      <label for="newPassword">New password</label>
-                      <input type="password" class="form-control countedInput" id="newPassword" minlength="8" 
-                        name="newPassword" placeholder="strong password" autocomplete="new-password" required>
-                      <small class="position-absolute bottom-0 end-0 pe-2 pb-1 text-danger counter"></small>
-                    </div>
-                    <div class="form-group position-relative">
-                      <label for="newPasswordVerification">Re new password</label>
-                      <input type="password" class="form-control countedInput" id="newPasswordVerification" minlength="8"
-                        name="newPasswordVerification" placeholder="same strong password" autocomplete="new-password" required>
-                      <small class="position-absolute bottom-0 end-0 pe-2 pb-1 text-danger counter"></small>
-                    </div>
-                    <div class="d-flex align-items-center">
-                      <button type="submit" class="btn btn-primary me-2">Update password</button>
-                      <button type="reset" class="btn btn-dark" style="margin-left: 0.15rem">Clear</button>
-                      <p class="text-danger mb-0" style="margin-left: 1rem">
-                        <% if (typeof errors != 'undefined' && form == 'updatePassword') { %>
-                          <%= errors[0].msg %>
-                        <% } %>
-                      </p>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title" id="autoPayoutsHref">Automatic Payouts</h4>
-                  <p class="card-description">Automatically submit a new payout request on the first of each 
-                    month if the payout threshold is met</p>
-                  <form class="forms-sample" action="/updateAutomaticPayouts" method="post">
-                    <div class="form-check form-check-flat form-check-primary">
-                      <label class="form-check-label" for="autoPayouts">
-                        <input type="checkbox" class="form-check-input" id="autoPayouts" name="autoPayouts" value="true"> Enable automatic payout requests </label>
-                    </div>
-                    <div class="d-flex align-items-center">
-                      <button type="submit" class="btn btn-primary me-2" style="margin-top: 0.75rem;">Update selection</button>
-                      <p class="text-danger mb-0" style="margin-left: 1rem">
-                        <% if (typeof errors != 'undefined' && form == 'updateAutomaticPayouts') { %>
-                          <%= errors[0].msg %>
-                        <% } %>
-                      </p>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 grid-margin stretch-card">
-            <div class="card">
-              <div class="card-body">
-                <h4 class="card-title" id="premium">
-                  <i class="icon-sm mdi mdi-diamond-outline text-success ml-auto"></i>
-                  &nbsp;&nbsp;Premium Subscription
-                </h4>
-                <ul class="list-arrow">
-                  <p class="card-description">For just <b>$6.-</b> per month.</p>
-                  <li class="text-muted">Create unlimited links without advertisements</li>
-                  <li class="text-muted">Priority payout processing</li>
-                  <li class="text-muted">Priority support</li>
-                  <li class="text-muted">No payment information required: simply use you 159.cash account balance
-                  </li>
-                </ul>
-                <form class="forms-sample" action="/subscribeToPremium" method="post">
-                  <div class="form-group" style="margin-bottom: 1.5rem;">
-                    <label for="payment">Payment method</label>
-                    <select class="form-select" id="paymentMethod" name="paymentMethod" required>
-                      <option value="none">Choose method</option>
-                      <option value="balance">Use 159.cash balance</option>
-                      <option value="PayPal">PayPal</option>
-                    </select>
-                  </div>
-                  <div class="form-check form-check-flat form-check-primary">
-                    <label for="premiumStatus" class="form-check-label">
-                      <input type="checkbox" class="form-check-input" name="premiumStatus" id="premiumStatus">
-                      Enable premium subscription </label>
-                  </div>
-                  <div class="d-flex align-items-center">
-                    <button type="submit" class="btn btn-primary me-2" style="margin-top: 0.75rem;">Update selection</button>
-                    <p class="text-danger mb-0" style="margin-left: 1rem">
-                      <% if (typeof errors != 'undefined' && form == "") { %> 
-                        <%= errors[0].msg %>
-                      <% } %>
-                    </p>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
         </div>
-        <%- include('ledger/footer') %>
-      </div>
     </div>
-  </div>
-  <script src="/public/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="/src/js/main.js"></script>
-  <script src="/src/js/account.js"></script>
-  <script>
-    const fileInput = document.getElementById('userIcon');
-  </script>
-  <script src="/src/js/fileUpload.js"></script>
-  <script src="/src/js/liveValidate.js"></script>
+    <script src="/public/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/src/js/main.js"></script>
+    <script src="/src/js/account.js"></script>
+    <script>
+      const fileInput = document.getElementById('userIcon');
+    </script>
+    <script src="/src/js/fileUpload.js"></script>
+    <script src="/src/js/liveValidate.js"></script>
 </body>
 
 </html>
