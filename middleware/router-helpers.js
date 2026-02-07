@@ -64,19 +64,6 @@ export async function getPayoutsEnabledData(user) {
     return { payouts, payoutsEnabled, payoutMethod }
 }
 
-export function getTicketValidation(user, ticket) {
-    if (ticket === null) {
-        const err = new Error()
-        err.status = 404
-        return next(err)
-    }
-    if (ticket.user !== user._id) {
-        const err = new Error()
-        err.status = 403
-        return next(err)
-    }
-}
-
 export async function getLinkData(req, page) {
     // Pagination
     const currentPage = parseInt(req.query.page) || 1;

@@ -1,0 +1,41 @@
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title text-muted">Ticket <%= ticket.shortID %></h4>
+                <h3><%= ticket.title %></h3><br>
+                <div class="d-flex align-items-center">
+                    <label class="text-primary" for="ticket-body"><%= username %></label>
+                    <p class="text-muted mb-0" style="margin-left: 1rem">
+                        <%= new Date(ticket.createdAt).toLocaleDateString("en-US", {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric"
+                        }) %>
+                    </p>
+                    <p class="text-muted mb-0" style="margin-left: 1rem">files: <%= ticket.files %></p>
+                </div>
+                <textarea class="form-control" name="ticket-body" style="width: 75%" readonly><%= ticket.body %></textarea>
+                <% if (Array.isArray(ticket.messageHistory) && ticket.messageHistory.length > 0) { %>
+                    <% ticket.messageHistory.forEach(ticketMessage => { %>
+                        <br><div class="d-flex align-items-center">
+                            <% if (ticketMessage.from == "user") { %>
+                                <label class="text-primary" for="message-body"><%= username %></label>
+                            <% } else { %>
+                                <label class="text-danger" for="message-body">Admin</label>
+                            <% } %>
+                            <p class="text-muted mb-0" style="margin-left: 1rem">
+                                <%= new Date(ticketMessage.date).toLocaleDateString("en-US", {
+                                    month: "long",
+                                    day: "numeric",
+                                    year: "numeric"
+                                }) %>
+                            </p>
+                        </div>
+                        <textarea class="form-control" name="message-body" style="width: 75%" readonly><%= ticketMessage.message %></textarea>
+                    <% }); %>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>

@@ -18,7 +18,6 @@ import { processTicketFiles } from './middleware/ticket-files-config.js';
 import { checkAuthenticated, checkNotAuthenticated } from './middleware/auth.js';
 import { getPayoutsEnabledData,
          getReferralData,
-         getTicketValidation,
          getLinkData,
          monthlyMonetization,
          getPayoutMethod,
@@ -152,6 +151,30 @@ router.get('/you', checkAuthenticated, async (req, res) => {
 
         res.render('account', { data: {}, form: 'none', userInfo, payoutMethod })
     } catch(err) {
+        err.status = 500
+        next(err)
+    }
+});
+
+// Tickets
+router.get('/tickets/:link', checkAuthenticated, async (req, res, next) => {
+    try {
+        const user = await User.findById(req.user._id)
+        const ticket = await Ticket.findOne({ shortID: req.params.link })
+
+        if (ticket === null) {
+            const err = new Error()
+            err.status = 404
+            return next(err)
+        }
+        if (ticket.user !== user._id) {
+            const err = new Error()
+            err.status = 403
+            return next(err)
+        }
+
+        res.render('ticket', { ticket, data: {} })
+    } catch (err) {
         err.status = 500
         next(err)
     }
@@ -379,7 +402,16 @@ router.post('/tickets/:link', checkAuthenticated, ticketMessageValidation, async
     const user = await User.findById(req.user._id)
     const ticket = await Ticket.findOne({ shortID: req.params.link })
     
-    getTicketValidation(user, ticket)
+    if (ticket === null) {
+        const err = new Error()
+        err.status = 404
+        return next(err)
+    }
+    if (ticket.user !== user._id) {
+        const err = new Error()
+        err.status = 403
+        return next(err)
+    }
 
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
@@ -593,21 +625,6 @@ router.post('/subscribeToPremium', checkAuthenticated, async (req, res) => {
     const err = new Error()
     err.status = 501
     return next(err)
-});
-
-// Tickets
-router.get('/tickets/:link', checkAuthenticated, async (req, res, next) => {
-    try {
-        const user = await User.findById(req.user._id)
-        const ticket = await Ticket.findOne({ shortID: req.params.link })
-
-        getTicketValidation(user, ticket)
-
-        res.render('ticket', { ticket, data: {} })
-    } catch (err) {
-        err.status = 500
-        next(err)
-    }
 });
 
 // Ads

@@ -2,11 +2,11 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Admin</title>
-  <%- include('../ledger/assets/css.ejs', { cssFiles: [ 'forms', 'calendar' ] }) %>
-  <link rel="shortcut icon" href="/src/images/favicon.png" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Admin</title>
+    <%- include('../ledger/assets/css.ejs', { cssFiles: [ 'forms', 'calendar' ] }) %>
+    <link rel="shortcut icon" href="/src/images/favicon.png" />
 
     <style>
         body {
@@ -124,7 +124,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <td>
-                                                            <form action="/<%= payout.payoutID %>/complete" autocomplete="off" method="POST">
+                                                            <form action="/admin/<%= payout.payoutID %>/complete" autocomplete="off" method="POST">
                                                                 <button type="submit" title="mark complete" class="btn btn-info me-2">
                                                                     # <%= payout.payoutID %>
                                                                 </button>
@@ -139,6 +139,61 @@
                                             <tbody>
                                                 <tr>
                                                     <td>There are currently no pending payouts</td>
+                                                    <td>#</td>
+                                                    <td>#</td>
+                                                </tr>
+                                            </tbody>
+                                        <% } %>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Pending Tickets</h4>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Title</th>
+                                                <th>Date</th>
+                                                <th>Options</th>
+                                            </tr>
+                                        </thead>
+                                        <% if (Array.isArray(tickets) && tickets.length > 0) { %>
+                                            <% tickets.slice().forEach(ticket => { %>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                                            <a href="/admin/tickets/<%= ticket.shortID %>" target="_blank"><%= ticket.title %></a>
+                                                        </td>
+                                                        <td># <%= ticket.shortID %></td>
+                                                        <td><%= new Date(ticket.updatedAt).toLocaleDateString("en-UK", { day: "numeric", month: "numeric", year: "numeric" }) %></td>
+                                                        <td>
+                                                            <div style="display: flex; flex-direction: row;">
+                                                                <form action="/admin/<%= ticket.shortID %>/resolve" autocomplete="off" method="POST">
+                                                                    <button type="submit" title="resolve ticket" class="btn btn-success me-2">
+                                                                        <i class="mdi mdi-check-circle-outline"></i>
+                                                                    </button>
+                                                                </form>
+                                                                <form action="/admin/<%= ticket.shortID %>/close" autocomplete="off" method="POST">
+                                                                    <button type="submit" title="close ticket" class="btn btn-danger me-2">
+                                                                        <i class="mdi mdi-cancel"></i>
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            <% }); %>
+                                        <% } else { %>
+                                            <tbody>
+                                                <tr>
+                                                    <td>There are currently no open tickets</td>
+                                                    <td>#</td>
                                                     <td>#</td>
                                                     <td>#</td>
                                                 </tr>

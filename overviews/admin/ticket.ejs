@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Ticket | 159.cash</title>
+    <%- include('../ledger/assets/css.ejs', { cssFiles: [ 'forms' ] }) %>
+    <link rel="shortcut icon" href="/src/images/favicon.png" />
+
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel-noheader">
+            <div class="content-wrapper">
+                <div class="page-header">
+                    <h3 class="page-title"> A User's Ticket </h3>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/operator">Cash</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Contact</li>
+                        </ol>
+                    </nav>
+                </div>
+                <%- include('../ledger/ticketDisplay', { username: 'User' }) %>
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Send new message</h4>
+                            <form class="forms-sample" autocomplete="off" action="/admin/tickets/<%= ticket.shortID %>" method="POST">
+                                <div class="form-group" id="message-body">
+                                    <textarea class="form-control" id="messageBody" name="messageBody" placeholder="message" rows="10" maxlength="20000" required></textarea>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <button type="submit" class="btn btn-primary me-2">Send</button>
+                                    <button type="reset" class="btn btn-dark" style="margin-left: 0.15rem">Clear</button>
+                                    <a href="/admin/" style="margin-left: 1rem;" class="text-primary"><i class="mdi mdi-home-circle-outline"></i></a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <%- include('../ledger/footer') %>
+        </div>
+    </div>
+    <script src="/public/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/src/js/main.js"></script>
+</body>
+
+</html>
