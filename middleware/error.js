@@ -83,6 +83,16 @@ export function errorHandler(err, req, res, next) {
             errData.redirect = 'previous'
             break;
         }
+        case 431: {
+            errData.message = "Request header fields too large!"
+            errData.redirect = 'previous'
+            break;
+        }
+        case 451: {
+            errData.message = "Unavailable for legal reasons!"
+            errData.redirect = 'home'
+            break;
+        }
         case 500: { 
             errData.message = 'Internal server error!'
             errData.redirect = 'home'
@@ -111,6 +121,11 @@ export function errorHandler(err, req, res, next) {
         case 508: { 
             errData.message = 'Infinite loop detected!'
             errData.redirect = 'home'
+            break;
+        }
+        case 1984: { 
+            errData.message = 'Literally 1984...'
+            errData.redirect = 'previous'
             break;
         }
     }

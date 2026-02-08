@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Payouts | 159.cash</title>
-  <%- include('ledger/assets/css.ejs', { cssFiles: [ 'tables' ] }) %>
+  <%- include('ledger/assets/css.ejs', { cssFiles: [ 'tables', 'forms' ] }) %>
   <link rel="shortcut icon" href="/src/images/favicon.png" />
 </head>
 
@@ -20,7 +20,7 @@
                         <h3 class="page-title"> Payouts </h3>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="./operator">Cash</a></li>
+                                <li class="breadcrumb-item"><a href="/operator">Cash</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Payouts</li>
                             </ol>
                         </nav>
@@ -31,26 +31,29 @@
                                 <div class="card-body">
                                     <h4 class="card-title" id="payout">Account Balance</h4>
                                     <div class="form-group row">
-                                        <label for="exampleInputUsername2" class="col-sm-3 col-form-label">USD</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control text-success" id="balance" value="<%= user.balance %>" readonly>
+                                        <label for="exampleInputUsername2" class="col-sm-2 col-form-label">USD</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" class="form-control text-success" id="balance" disabled readonly
+                                                value="<%= (user.balance / 10000).toFixed(4) %>">
                                         </div>
                                     </div>
                                     <p class="card-description"> 
                                         Payout details:<br>
                                         <b>You</b> are responsible for assuring your
-                                        <a href="./you#payout">payout information</a> 
+                                        <a href="/you#payout">payout information</a> 
                                         is set correctly<br>
                                         <% if (!user.verified) { %>
                                             <p class="text-danger">You must verify your account to request payouts</p>
-                                        <% } else if (!payoutMethod) { %>
-                                            <p class="text-danger">You must have added a Payout Method to request payouts</p>
+                                        <% } else if (!payoutMethod || !(payoutMethod?.details?.email || payoutMethod?.details?.btcAddress)) { %>
+                                            <p class="text-danger">You must have added a valid Payout Method to request payouts</p>
                                         <% } else if (!user.name || !user.address.line1 || !user.address.city || !user.address.zip || !user.address.country) { %>
                                             <p class="text-danger">Account information is incomplete</p>
-                                        <% } else if (user.balance < 10) { %>
+                                        <% } else if ((user.balance / 10000).toFixed(4) < 10) { %>
                                             <p class="text-danger">Minimum payout threshold is $10.-</p>
+                                        <% } else if (!payoutsEnabled) { %>
+                                            <p class="text-danger">You are unable to request payout, reach out to an admin or support for further information</p>
                                         <% } else { %>
-                                            <p class="text-danger">You are able to request payout</p>
+                                            <p class="text-primary">You are able to request payouts</p>
                                         <% } %>
                                     </p>
                                 </div>
@@ -67,27 +70,33 @@
                                         <% } else { %>
                                             <code>Off</code>
                                         <% } %>
-                                        <a href="./you#autoPayout"> Manage</a><br>
-                                        <a href="./you#payout">Edit your payout information.</a>
+                                        <a href="/you#autoPayout"> Manage</a><br>
+                                        <a href="/you#payout">Edit your payout information.</a>
                                     </p>
                                     <form class="forms-sample" action="/payout" method="post" autocomplete="off">
                                         <div class="form-group row">
                                             <label for="amount" class="col-sm-3 col-form-label">Amount (USD)</label>
                                             <div class="col-sm-9">
-                                                <input type="number" class="form-control text-success" id="amount" name="amount" min="10" max="1000" 
-                                                placeholder="10.00" value="<%= typeof payoutData !== 'undefined' ? payoutData.amount : '' %> required">
+                                                <input type="number" class="form-control text-success" id="amount" name="amount" min="10" required
+                                                    max="<%= Math.floor((user.balance / 10000).toFixed(4)) %>" 
+                                                    value="<%= typeof payoutData !== 'undefined' ? payoutData.amount : '' %>"
+                                                    <% if (!payoutsEnabled) { %>
+                                                        disabled placeholder="Disabled, see the left tile for details"
+                                                    <% } else { %>
+                                                        placeholder="10.00"
+                                                    <% } %>>
                                             </div>
                                         </div>
                                         <div class="d-flex align-items-center">
                                             <button type="submit" class="btn btn-primary me-2"
                                                 <% if (!payoutsEnabled) { %>
-                                                    disabled
-                                                <% } %>
-                                                >Request
+                                                    disabled title="You are unable to request payouts, see the left tile for more information"
+                                                <% } %>>
+                                                Request
                                             </button>
                                             <p class="text-danger mb-0" style="margin-left: 1rem">
                                                 <% if (typeof errors != 'undefined') { %>
-                                                <%= errors[0].msg %>
+                                                    <%= errors[0].msg %>
                                                 <% } %>
                                             </p>
                                         </div>

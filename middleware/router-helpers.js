@@ -45,13 +45,14 @@ export async function getReferralData(user) {
     return result;
 }
 
-export async function getPayoutsEnabledData(user) {
+export async function getPayoutsData(user) {
     const payouts = await Payout.find({ user: user._id });
     const userInfoThis = await UserInfo.findOne({ user: user._id });
     const payoutMethod = await getPayoutMethod(user._id);
 
     const payoutsEnabled =
         payoutMethod &&
+        (payoutMethod?.details?.email || payoutMethod?.details?.btcAddress) &&
         user.verified &&
         userInfoThis.name &&
         userInfoThis.address &&
@@ -59,7 +60,7 @@ export async function getPayoutsEnabledData(user) {
         userInfoThis.address.city &&
         userInfoThis.address.zip &&
         userInfoThis.address.country &&
-        user.balance >= 10;
+        (user.balance / 10000).toFixed(4) >= 10;
 
     return { payouts, payoutsEnabled, payoutMethod }
 }

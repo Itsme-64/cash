@@ -13,7 +13,7 @@ import LinkStatsDaily from './models/link-stats-daily.js';
 import { validationResult } from 'express-validator';
 import { shortIdValidation } from './middleware/shortId-config.js';
 import { checkAuthenticated, checkNotAuthenticated } from './middleware/auth.js';
-import { getPayoutsEnabledData,
+import { getPayoutsData,
          getReferralData,
          getLinkData,
          monthlyMonetization,
@@ -49,7 +49,7 @@ router.get('/', checkNotAuthenticated, (req, res) => {
         });
     }
 
-    res.render('index')
+    return res.status(200).render('index')
 });
 
 router.get('/advertise', checkAuthenticated, (req, res, next) => {
@@ -57,14 +57,14 @@ router.get('/advertise', checkAuthenticated, (req, res, next) => {
     err.status = 501
     return next(err)
 
-    //res.render('advertise')
+    // return res.status(200).render('advertise')
 });
 
 router.get('/analytics', checkAuthenticated, async (req, res, next) => {
     try {
         const data = await getAnalyticsData(req.user)
 
-        res.render('analytics', { ...data })
+        return res.status(200).render('analytics', { ...data })
     } catch (err) {
         err.status = 500
         next(err)
@@ -97,7 +97,7 @@ router.get('/operator', checkAuthenticated, async (req, res, next) => {
         const linkData = await getLinkData(req, 'operator')
         const dashboardData = await getDashboardData(req.user)
 
-        res.render('dashboard', { ...linkData, ...dashboardData })
+        return res.status(200).render('dashboard', { ...linkData, ...dashboardData })
     } catch (err) {
         err.status = 500
         next(err)
@@ -106,7 +106,7 @@ router.get('/operator', checkAuthenticated, async (req, res, next) => {
 
 router.get('/payout', checkAuthenticated, async (req, res, next) => {
     try {
-        const data = await getPayoutsEnabledData(req.user)
+        const data = await getPayoutsData(req.user)
 
         return res.status(200).render('payouts', { ...data, })
     } catch (err) {
@@ -117,10 +117,9 @@ router.get('/payout', checkAuthenticated, async (req, res, next) => {
 
 router.get('/referral', checkAuthenticated, async (req, res, next) => {
     try {
-        const user = req.user
-        const referralData = await getReferralData(user)
+        const referralData = await getReferralData(req.user)
 
-        res.render('referrals', { referralData })
+       return res.status(200).render('referrals', { referralData })
     } catch (err) {
         err.status = 500
         next(err)
@@ -132,21 +131,20 @@ router.get('/ticket', async (req, res, next) => {
         try {
             const tickets = await Ticket.find({ user: req.user._id })
 
-            res.render('tickets', { tickets })
+            return res.status(200).render('tickets', { tickets })
         } catch (err) {
             err.status = 500
             next(err)
         }
     } else {
-        res.render('ticketsUnauth')
+        return res.status(308).render('ticketsUnauth')
     }
 });
 
 router.get('/you', checkAuthenticated, async (req, res) => {
     try {
         const data = await getYouData(req)
-
-        res.render('account', { ...data })
+        return res.status(200).render('account', { ...data })
     } catch(err) {
         err.status = 500
         next(err)
@@ -176,7 +174,7 @@ router.get('/tickets/:link', checkAuthenticated, async (req, res, next) => {
             return next(err)
         }
 
-        res.render('ticket', { ticket })
+        return res.status(200).render('ticket', { ticket })
     } catch (err) {
         err.status = 500
         next(err)
@@ -201,19 +199,19 @@ router.get("/checkUsername", checkNotAuthenticated, async (req, res) => {
 
 // User
 router.get('/login', checkNotAuthenticated, (req, res) => {
-    res.render('user/login', { errorMessages: req.flash('error') })
+    return res.status(200).render('user/login', { errorMessages: req.flash('error') })
 });
 
 router.get('/register', checkNotAuthenticated, (req, res) => {
-    res.render('user/register', { errorMessages: req.flash('error'), ref: req.query.ref || '' })
+    return res.status(200).render('user/register', { errorMessages: req.flash('error'), ref: req.query.ref || '' })
 });
 
 router.get('/tos', (req, res) => {
-    res.render('user/termsOfService')
+    return res.status(200).render('user/termsOfService')
 });
 
 router.get('/privacy', (req, res) => {
-    res.render('user/privacyPolicy')
+    return res.status(200).render('user/privacyPolicy')
 });
 
 router.get('/reportAdvertisement', async (req, res) => {
@@ -224,7 +222,7 @@ router.get('/reportAdvertisement', async (req, res) => {
     const message = "Thank you for your report, it has been submitted and will be handled shortly. "
                   + "We appreciate your efforts to help make 159.cash a better place!"
 
-    res.render('user/error', { number: 'Rep.', redirect , message })
+    return res.status(202).render('user/error', { number: 'Rep.', redirect , message })
 });
 
 // Redirect
@@ -271,7 +269,7 @@ router.post('/new', checkAuthenticated, newLinkValidation, async (req, res, next
             })
         }
 
-        res.redirect('/new')
+        return res.status(201).redirect('/new')
     } catch (err) {
         err.status = 500
         next(err)
@@ -299,7 +297,7 @@ router.post('/:link/status', checkAuthenticated, async (req, res, next) => {
         shortLink.status = !shortLink.status
         await shortLink.save()
 
-        return source === 'operator' ? res.redirect('/operator') : res.redirect('/new')
+        return source === 'operator' ? res.status(200).redirect('/operator') : res.status(200).redirect('/new')
     } catch (err) {
         err.status = 500
         next(err)
@@ -350,7 +348,7 @@ router.post('/payout', checkAuthenticated, payoutValidation, async (req, res, ne
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
         try {
-            const data = await getPayoutsEnabledData(user)
+            const data = await getPayoutsData(user)
             return res.status(400).render('payouts', { ...data, errors: errors.array(), payoutData: req.body })
         } catch (err) {
             err.status = 500
@@ -367,7 +365,7 @@ router.post('/payout', checkAuthenticated, payoutValidation, async (req, res, ne
             payoutMethod: payoutMethod
         })
 
-        res.redirect('/payout')
+        return res.status(201).redirect('/payout')
     } catch (err) {
         err.status = 500
         next(err)
@@ -396,7 +394,7 @@ router.post('/ticket', checkAuthenticated, ticketValidation, async (req, res, ne
             body: req.body.ticketBody
         })
 
-        res.redirect('/ticket')
+        return res.status(201).redirect('/ticket')
     } catch (err) {
         err.status = 500
         next(err)
@@ -432,7 +430,7 @@ router.post('/tickets/:link', checkAuthenticated, ticketMessageValidation, async
 
         await ticket.save()
 
-        res.redirect(`/tickets/${ticket.shortID}`)
+        return res.status(200).redirect(`/tickets/${ticket.shortID}`)
     } catch (err) {
         err.status = 500
         next(err)
@@ -490,10 +488,10 @@ router.post('/register', checkNotAuthenticated, registerValidation, async (req, 
             user: newUser._id
         })
 
-        res.redirect('/login')
+        return res.status(201).redirect('/login')
     } catch {
         console.error(err)
-        res.redirect('/register')
+        res.status(400).redirect('/register')
     }
 });
 
@@ -541,7 +539,7 @@ router.post('/updateAccountInformation', updateAccountValidation, async (req, re
 
         await userInfoThis.save()
 
-    res.redirect('/you')
+    return res.status(200).redirect('/you')
     } catch (err) {
         err.status = 500
         next(err)
@@ -584,7 +582,7 @@ router.post('/updatePayoutInformation', checkAuthenticated, updatePayoutInformat
             await userPayoutMethod.save()
         }
 
-        res.redirect('/you')
+        return res.status(201).redirect('/you')
     } catch (err) {
         err.status = 500
         next(err)
@@ -620,7 +618,7 @@ router.post('/updatePassword', checkAuthenticated, updatePasswordValidation, asy
             return next(err)
         }
 
-        res.redirect('/you')
+        return res.status(200).redirect('/you')
     } catch (err) {
         err.status = 500
         next(err)
@@ -636,7 +634,7 @@ router.post('/updateAutomaticPayouts', checkAuthenticated, async (req, res, next
 
         await user.save()
 
-        res.redirect('/you')
+        return res.status(200).redirect('/you')
     } catch (err) {
         err.status = 500
         next(err)
@@ -653,7 +651,7 @@ router.post('/subscribeToPremium', checkAuthenticated, async (req, res) => {
 router.get('/example', (req, res) => {
     const url = { full: '/', short: 'example', redirectInstantly: false, duration: 10000 }
     
-    res.render('ads/adPage', { url, clickId: 0 });
+    res.status(200).render('ads/adPage', { url, clickId: 0 });
 });
 
 router.get('/:link', async (req, res, next) => {
@@ -680,7 +678,7 @@ router.get('/:link', async (req, res, next) => {
             userAgent: req.headers['user-agent']
         }).catch(console.error);    
 
-        url.monetization ? res.render('ads/adPage', { url, clickId: click._id }) : res.redirect(url.full)
+        return url.monetization ? res.status(200).render('ads/adPage', { url, clickId: click._id }) : res.status(200).redirect(url.full)
     } catch (err) {
         err.status = 500
         next(err)
@@ -693,7 +691,7 @@ router.delete('/logout', checkAuthenticated, async (req, res, next) => {
         await new Promise((resolve, reject) => {
             req.logout(err => (err ? reject(err) : resolve()))
         });
-        res.redirect('/login')
+        return res.status(200).redirect('/login')
     } catch (err) {
         next(err);
     }

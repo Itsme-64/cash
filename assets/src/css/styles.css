@@ -13,6 +13,10 @@
   + Demo styles
 */
 
+html {
+  overflow-y: scroll;
+}
+
 /* Reset Styles */
 body {
   padding: 0;
