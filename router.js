@@ -2,7 +2,6 @@ import express from 'express';
 import bcrypt from 'bcrypt';
 import passport from 'passport';
 import geoip from 'geoip-lite'
-import fileUpload from 'express-fileupload';
 import Link from './models/links.js';
 import User from './models/users.js';
 import Payout from './models/payouts.js';
@@ -12,9 +11,7 @@ import ClickEvent from './models/click-event.js';
 import PayoutMethod from './models/payout-method.js';
 import LinkStatsDaily from './models/link-stats-daily.js';
 import { validationResult } from 'express-validator';
-import { processUserImage } from './middleware/image-config.js';
 import { shortIdValidation } from './middleware/shortId-config.js';
-import { processTicketFiles } from './middleware/ticket-files-config.js';
 import { checkAuthenticated, checkNotAuthenticated } from './middleware/auth.js';
 import { getPayoutsEnabledData,
          getReferralData,
@@ -361,7 +358,8 @@ router.post('/payout', checkAuthenticated, payoutValidation, async (req, res, ne
     }
 });
 
-router.post('/ticket', checkAuthenticated, ticketValidation, fileUpload(), async (req, res, next) => {
+router.post('/ticket', checkAuthenticated, ticketValidation, async (req, res, next) => {
+    // use fileUpload() middleware
 
     const userId = req.user._id;
 
@@ -384,11 +382,11 @@ router.post('/ticket', checkAuthenticated, ticketValidation, fileUpload(), async
             body: req.body.ticketBody
         })
 
-        if (req.files) {
-            const files = await processTicketFiles(req.files.ticketFiles, ticket.shortID)
-            ticket.files = files
-            await ticket.save()
-        }
+        // if (req.files) {
+        //     const files = await processTicketFiles(req.files.ticketFiles, ticket.shortID)
+        //     ticket.files = files
+        //     await ticket.save()
+        // }
 
         res.redirect('/ticket')
     } catch (err) {
@@ -498,7 +496,8 @@ router.post('/sendEmail', checkNotAuthenticated, sendEmailValidation, async (req
     //const {name, email, subject, message} = req.body
 });
 
-router.post('/updateAccountInformation', updateAccountValidation, fileUpload(), async (req, res, next) => {
+router.post('/updateAccountInformation', updateAccountValidation, async (req, res, next) => {
+    // use fileUpload() middleware
   
     const user = req.user
 
@@ -519,11 +518,11 @@ router.post('/updateAccountInformation', updateAccountValidation, fileUpload(), 
         },
         userInfoThis.tel = req.body.tel
 
-        if (req.files) {
-            const userIcon = req.files.userIcon
-            await processUserImage(userIcon, user.PID)
-            userInfoThis.hasProfile = true
-        }
+        // if (req.files) {
+        //     const userIcon = req.files.userIcon
+        //     await processUserImage(userIcon, user.PID)
+        //     userInfoThis.hasProfile = true
+        // }
 
         await userInfoThis.save()
 

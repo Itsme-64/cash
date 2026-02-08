@@ -28,13 +28,58 @@ export function errorHandler(err, req, res, next) {
             errData.redirect = 'previous'
             break;
         }
+        case 405: {
+            errData.message = "Method not allowed"
+            errData.redirect = 'previous'
+            break;
+        }
+        case 406: {
+            errData.message = "Content not acceptable!"
+            errData.redirect = 'previous'
+            break;
+        }
+        case 408: {
+            errData.message = "Request timeout!"
+            errData.redirect = 'previous'
+            break;
+        }
+        case 409: {
+            errData.message = "Resource conflict!"
+            errData.redirect = 'previous'
+            break;
+        }
+        case 410: {
+            errData.message = "Resource no longer available!"
+            errData.redirect = 'previous'
+            break;
+        }
         case 413: {
             errData.message = 'File too large!'
             errData.redirect = 'previous'
             break;
         }
+        case 414: {
+            errData.message = "URL too long!"
+            errData.redirect = 'previous'
+            break;
+        }
+        case 415: {
+            errData.message = "Unsupported file type!"
+            errData.redirect = 'previous'
+            break;
+        }
         case 418: { 
             errData.message = "I'm a teapot!"
+            errData.redirect = 'previous'
+            break;
+        }
+        case 422: {
+            errData.message = "Unprocessable request!"
+            errData.redirect = 'previous'
+            break;
+        }
+        case 429: {
+            errData.message = "Too many requests!"
             errData.redirect = 'previous'
             break;
         }
@@ -53,8 +98,18 @@ export function errorHandler(err, req, res, next) {
             errData.redirect = 'home'
             break;
         }
+        case 503: { 
+            errData.message = 'Service unavailable!'
+            errData.redirect = 'home'
+            break;
+        }
         case 504: { 
             errData.message = 'Gateway timeout!'
+            errData.redirect = 'home'
+            break;
+        }
+        case 508: { 
+            errData.message = 'Infinite loop detected!'
             errData.redirect = 'home'
             break;
         }
@@ -67,58 +122,3 @@ export function notFound(req, res) {
     const message = "The page you're looking for was not found."
     res.status(404).render('user/error', { number: 404, redirect: 'previous', message })
 }
-
-// router.use((req, res) => {
-//     const message = "Method not allowed!";
-//     res.status(405).render('user/error', { number: 405, redirect: "previous", message })
-// });
-
-// router.use((req, res) => {
-//     const message = "Content not acceptable!";
-//     res.status(406).render('user/error', { number: 406, redirect: "previous", message })
-// });
-
-// router.use((req, res) => {
-//     const message = "Request timeout!";
-//     res.status(408).render('user/error', { number: 408, redirect: "previous", message })
-// });
-
-// router.use((req, res) => {
-//     const message = "Resource conflict!";
-//     res.status(409).render('user/error', { number: 409, redirect: "previous", message })
-// });
-
-// router.use((req, res) => {
-//     const message = "Resource no longer available!";
-//     res.status(410).render('user/error', { number: 410, redirect: "home", message })
-// });
-
-// router.use((req, res) => {
-//     const message = "URL too long!";
-//     res.status(414).render('user/error', { number: 414, redirect: "previous", message })
-// });
-
-// router.use((req, res) => {
-//     const message = "Unsupported file type!";
-//     res.status(415).render('user/error', { number: 415, redirect: "previous", message })
-// });
-
-// router.use((req, res) => {
-//     const message = "Unprocessable request!";
-//     res.status(422).render('user/error', { number: 422, redirect: "previous", message })
-// });
-
-// router.use((req, res) => {
-//     const message = "Too many requests!";
-//     res.status(429).render('user/error', { number: 429, redirect: "home", message })
-// });
-
-// router.use((req, res) => {
-//     const message = "Service unavailable!";
-//     res.status(503).render('user/error', { number: 503, redirect: "home", message })
-// });
-
-// router.use((req, res) => {
-//     const message = "Infinite loop detected!";
-//     res.status(508).render('user/error', { number: 508, redirect: "home", message })
-// });

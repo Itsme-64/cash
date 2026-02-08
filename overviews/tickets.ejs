@@ -50,8 +50,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="card-title">Create a new ticket</h4>
-                                    <form class="forms-sample" autocomplete="off" action="/ticket" method="POST"
-                                        enctype="multipart/form-data">
+                                    <form class="forms-sample" autocomplete="off" action="/ticket" method="POST"> <!-- enctype="multipart/form-data" -->
                                         <div class="form-group" id="title">
                                             <input type="text" class="form-control" id="ticketTitle" name="ticketTitle" placeholder="Title" 
                                                 value="<%= data.ticketTitle || '' %>">
@@ -61,7 +60,7 @@
                                                 maxlength="20000" value="<%= data.ticketBody || '' %>">
                                             </textarea>
                                         </div>
-                                        <div class="form-group">
+                                        <!-- <div class="form-group">
                                             <label for="ticketFiles">Upload up to 6 files [optional]</label>
                                             <div class="input-group d-flex align-items-center">
                                                 <input type="text" class="form-control file-upload-info" id="file-name-display" disabled
@@ -69,10 +68,13 @@
                                                 <input type="file" id="ticketFiles" name="ticketFiles" class="d-none" accept=".jpg,.png,.jpeg,.webp,.pdf" multiple>
                                                 <button type="button" class="btn btn-primary ms-2" id="upload-btn">Upload</button>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <h6 class="text-muted font-weight-normal">
                                             Please allow up to 5 business days for a response.<br>
-                                            ^ Tickets are sorted by oldest first so bumping will <b>not</b> improve response time, thank you.
+                                            ^ Tickets are sorted by oldest first so bumping will <b>not</b> improve response time, thank you. <br><br>
+                                            If you have any files you wish to share you can upload them to a file sharing service such as mediafire and leave the
+                                                link at the bottom of your message.<br>
+                                            Please refer specifically to the meaning of these messages within your message body.
                                         </h6><br>
                                         <div class="d-flex align-items-center">
                                             <button type="submit" class="btn btn-primary me-2">Send</button>
@@ -96,10 +98,12 @@
     </div>
     <script src="/public/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/src/js/main.js"></script>
+    <!--
     <script>
         const fileInput = document.getElementById('ticketFiles');
     </script>
     <script src="/src/js/fileUpload.js"></script>
+    -->
 </body>
 
 </html>
