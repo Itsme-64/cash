@@ -41,42 +41,42 @@
                                             <label for="name" class="col-sm-3 col-form-label">Full Name: *</label>
                                             <div class="col-sm-9">
                                                 <input disabled type="text" class="form-control" id="name" name="name" autocomplete="name" 
-                                                    value="<%= userInfo?.name ?? "" %>">
+                                                    value="<%= userInfo?.name ?? data?.name ?? "" %>">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="line1" class="col-sm-3 col-form-label">Address: (line 1) *</label>
                                             <div class="col-sm-9">
                                                 <input disabled type="text" class="form-control" id="line1" name="line1" autocomplete="address-line1" 
-                                                    value="<%= userInfo?.address?.line1 ?? "" %>">
+                                                    value="<%= userInfo?.address?.line1 ?? data?.line1 ?? "" %>">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="line2" class="col-sm-3 col-form-label">Address: (line 2)</label>
                                             <div class="col-sm-9">
                                                 <input disabled type="text" class="form-control" id="line2" name="line2" autocomplete="address-line2" 
-                                                    value="<%= userInfo?.address?.line2 ?? "" %>">
+                                                    value="<%= userInfo?.address?.line2 ?? data?.line2 ?? "" %>">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="city" class="col-sm-3 col-form-label">City: *</label>
                                             <div class="col-sm-9">
                                                 <input disabled type="text" class="form-control" id="city" name="city" 
-                                                    value="<%= userInfo?.address?.city ?? "" %>">
+                                                    value="<%= userInfo?.address?.city ?? data?.city ?? "" %>">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="zip" class="col-sm-3 col-form-label">Zip Code: *</label>
                                             <div class="col-sm-9">
                                                 <input disabled type="text" class="form-control" id="zip" name="zip" autocomplete="postal-code" 
-                                                    value="<%= userInfo?.address?.zip ?? "" %>">
+                                                    value="<%= userInfo?.address?.zip ?? typeof data !== 'undefined' ? data?.zip ?? "" : "" %>">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="country" class="col-sm-3 col-form-label">Country: *</label>
                                             <div class="col-sm-9">
                                                 <select disabled class="form-select" id="country" name="country" autocomplete="country" 
-                                                    value="<%= userInfo?.address?.country ?? "" %>">
+                                                    value="<%= userInfo?.address?.country ?? typeof data !== 'undefined' ? data?.country ?? "" : "" %>">
                                                     <%- include('ledger/assets/countries') %>
                                                 </select>
                                             </div>
@@ -84,7 +84,8 @@
                                         <div class="form-group row">
                                             <label for="tel" class="col-sm-3 col-form-label">Phone number:</label>
                                             <div class="col-sm-9">
-                                                <input disabled type="tel" class="form-control" id="tel" name="tel" autocomplete="tel" value="<%= userInfo?.tel ?? "" %>">
+                                                <input disabled type="tel" class="form-control" id="tel" name="tel" autocomplete="tel" 
+                                                    value="<%= userInfo?.tel ?? typeof data !== 'undefined' ? data?.tel ?? "" : "" %>">
                                             </div>
                                         </div>
                                         <!-- <div class="form-group row">
@@ -103,7 +104,7 @@
                                         <button disabled type="submit" id="submitBtn" class="btn btn-primary me-2">Update</button>
                                         <button disabled id="cancelBtn" type="button" class="btn btn-dark" style="margin-left: 0.15rem">Cancel</button>
                                         <p class="text-danger mb-0" style="margin-left: 1rem">
-                                            <% if (typeof errors != 'undefined' && form == 'updateAccountInformation') { %>
+                                            <% if (typeof errors !== 'undefined' && typeof form !== 'undefined' && form == 'updateAccountInformation') { %>
                                                 <%= errors[0].msg %>
                                             <% } %>
                                         </p>
@@ -112,7 +113,7 @@
                                 <div class="form-group row" style="margin-top: 4rem;">
                                     <label for="userEmail" class="col-sm-3 col-form-label">Email address:</label>
                                     <div class="col-sm-9 d-flex align-items-center gap-2">
-                                        <input type="email" class="form-control" id="userEmail" value="<%= user.email %>" readonly>
+                                        <input type="email" class="form-control" id="userEmail" value="<%= user.email %>" disabled readonly>
                                         <% if (user.verified) { %>
                                             <p class="text-muted mb-0 d-flex align-items-center gap-1">
                                                 <i class="icon-sm mdi mdi-check text-success ml-auto"></i>&nbsp;&nbsp;Verified
@@ -127,13 +128,13 @@
                                 <div class="form-group row">
                                     <label for="username" class="col-sm-3 col-form-label">Username:</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="username" value="<%= user.username %>" autocomplete="username" readonly>
+                                        <input type="text" class="form-control" id="username" value="<%= user.username %>" autocomplete="username" disabled readonly>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label for="PID" class="col-sm-3 col-form-label">Account ID:</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="PID" name="PID" value="<%= user.PID %>" readonly>
+                                        <input type="text" class="form-control" id="PID" name="PID" value="<%= user.PID %>" disabled readonly>
                                     </div>
                                 </div>
                             </div>
@@ -164,18 +165,18 @@
                                         <div id="paypalFormGroup" class="form-group">
                                             <label for="paypalEmail">PayPal email address</label>
                                             <input type="email" class="form-control" id="paypalEmail" name="paypalEmail" placeholder="Email" 
-                                                value="<%= payoutMethod?.details?.email ?? "" %>">
+                                                value="<%= payoutMethod?.details?.email ?? typeof data !== 'undefined' ? data?.paypalEmail ?? "" : "" %>">
                                         </div>
                                         <div id="btcFormGroup" class="form-group">
                                             <label for="btcAddress">Bitcoin address</label>
                                             <input type="text" class="form-control" id="btcAddress" name="btcAddress" placeholder="Address" 
-                                                value="<%= payoutMethod?.details?.btcAddress ?? "" %>">
+                                                value="<%= payoutMethod?.details?.btcAddress ?? typeof data !== 'undefined' ? data?.btcAddress ?? "" : "" %>">
                                         </div>
                                         <div class="d-flex align-items-center">
                                             <button type="submit" class="btn btn-primary me-2">Update information</button>
                                             <button type="reset" class="btn btn-dark" style="margin-left: 0.15rem">Clear</button>
                                             <p class="text-danger mb-0" style="margin-left: 1rem">
-                                                <% if (typeof errors != 'undefined' && form == 'updatePayoutInformation') { %>
+                                                <% if (typeof errors != 'undefined' && typeof form !== 'undefined' && form == 'updatePayoutInformation') { %>
                                                     <%= errors[0].msg %>
                                                 <% } %>
                                             </p>
@@ -211,7 +212,7 @@
                                             <button type="submit" class="btn btn-primary me-2">Update password</button>
                                             <button type="reset" class="btn btn-dark" style="margin-left: 0.15rem">Clear</button>
                                             <p class="text-danger mb-0" style="margin-left: 1rem">
-                                                <% if (typeof errors != 'undefined' && form == 'updatePassword') { %>
+                                                <% if (typeof errors != 'undefined' && typeof form !== 'undefined' && form == 'updatePassword') { %>
                                                     <%= errors[0].msg %>
                                                 <% } %>
                                             </p>
@@ -234,11 +235,6 @@
                                         </div>
                                         <div class="d-flex align-items-center">
                                             <button type="submit" class="btn btn-primary me-2" style="margin-top: 0.75rem;">Update selection</button>
-                                            <p class="text-danger mb-0" style="margin-left: 1rem">
-                                                <% if (typeof errors != 'undefined' && form == 'updateAutomaticPayouts') { %>
-                                                    <%= errors[0].msg %>
-                                                <% } %>
-                                            </p>
                                         </div>
                                     </form>
                                 </div>
@@ -277,9 +273,7 @@
                                     <div class="d-flex align-items-center">
                                         <button type="submit" class="btn btn-primary me-2" style="margin-top: 0.75rem;">Update selection</button>
                                         <p class="text-danger mb-0" style="margin-left: 1rem">
-                                            <% if (typeof errors != 'undefined' && form == "") { %> 
-                                                <%= errors[0].msg %>
-                                            <% } %>
+                                            <!-- details here like: You have enabled the subscription w/ balance. Will activate once balance is sufficient etc -->
                                         </p>
                                     </div>
                                 </form>
@@ -294,10 +288,12 @@
     <script src="/public/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/src/js/main.js"></script>
     <script src="/src/js/account.js"></script>
+    <!-- 
     <script>
       const fileInput = document.getElementById('userIcon');
     </script>
     <script src="/src/js/fileUpload.js"></script>
+    -->
     <script src="/src/js/liveValidate.js"></script>
 </body>
 

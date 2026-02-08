@@ -68,12 +68,14 @@
                                         </div>
                                         <div class="form-group hidden-label" id="singleLinkInput">
                                             <label for="singleLink" type="hidden"></label>
-                                            <input type="url" class="form-control" id="singleLink" name="singleLink" value="<%= data.singleLink || '' %>" 
-                                                placeholder="https://">
+                                            <input type="url" class="form-control" id="singleLink" name="singleLink" placeholder="https://"
+                                                value="<%= typeof data !== 'undefined' ? data.singleLink : '' %>" >
                                         </div>
                                         <div class="form-group" id="bulkLinkInput" style="display: none;">
                                             <label for="bulkLinks">Please enter only one link per line</label>
-                                            <textarea class="form-control" id="bulkLinks" name="bulkLinks" placeholder="https://" rows="5"></textarea>
+                                            <textarea class="form-control" id="bulkLinks" name="bulkLinks" placeholder="https://" rows="5" 
+                                                value="<%= typeof data !== 'undefined' ? data.bulkLinks : '' %>">
+                                            </textarea>
                                         </div>
                                         <div class="d-flex align-items-center">
                                             <button type="submit" class="btn btn-primary me-2">Shrink</button>

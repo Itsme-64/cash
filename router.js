@@ -79,15 +79,18 @@ router.get('/faq', (req, res) => {
 
 router.get('/new', checkAuthenticated, async (req, res, next) => {
     try {
-        const linkData = await getLinkData(req, 'new')
-        const monetizationData = await monthlyMonetization(req.user._id)
-        
-        res.render('createNewLink', { ...linkData, ...monetizationData, data: {} })
+        const data = await getNewData(req)
+        return res.status(200).render('createNewLink', { ...data })
     } catch (err) {
         err.status = 500
         next(err)
     }
 });
+async function getNewData(req) {
+    const linkData = await getLinkData(req, 'new');
+    const monetizationData = await monthlyMonetization(req.user._id);
+    return { ...linkData, ...monetizationData };
+}
 
 router.get('/operator', checkAuthenticated, async (req, res, next) => {
     try {
@@ -105,7 +108,7 @@ router.get('/payout', checkAuthenticated, async (req, res, next) => {
     try {
         const data = await getPayoutsEnabledData(req.user)
 
-        res.render('payouts', { ...data, payoutData: {} })
+        return res.status(200).render('payouts', { ...data, })
     } catch (err) {
         err.status = 500
         next(err)
@@ -127,10 +130,9 @@ router.get('/referral', checkAuthenticated, async (req, res, next) => {
 router.get('/ticket', async (req, res, next) => {
     if (req.isAuthenticated()) {
         try {
-            const user = req.user;
-            const tickets = await Ticket.find({ user: user._id })
+            const tickets = await Ticket.find({ user: req.user._id })
 
-            res.render('tickets', { tickets, data: {} })
+            res.render('tickets', { tickets })
         } catch (err) {
             err.status = 500
             next(err)
@@ -142,21 +144,25 @@ router.get('/ticket', async (req, res, next) => {
 
 router.get('/you', checkAuthenticated, async (req, res) => {
     try {
-        const user = req.user;
-        const userInfo = await UserInfo.findOne({ user: user._id })
-        const payoutMethod = await getPayoutMethod(user._id)
+        const data = await getYouData(req)
 
-        res.render('account', { data: {}, form: 'none', userInfo, payoutMethod })
+        res.render('account', { ...data })
     } catch(err) {
         err.status = 500
         next(err)
     }
 });
+async function getYouData(req) {
+    const userId = req.user._id;
+    const userInfo = await UserInfo.findOne({ user: userId })
+    const payoutMethod = await getPayoutMethod(userId)
+    return { userInfo, payoutMethod };
+}
 
 // Tickets
 router.get('/tickets/:link', checkAuthenticated, async (req, res, next) => {
     try {
-        const user = await User.findById(req.user._id)
+        const userId = req.user._id
         const ticket = await Ticket.findOne({ shortID: req.params.link })
 
         if (ticket === null) {
@@ -164,13 +170,13 @@ router.get('/tickets/:link', checkAuthenticated, async (req, res, next) => {
             err.status = 404
             return next(err)
         }
-        if (ticket.user !== user._id) {
+        if (ticket.user !== userId) {
             const err = new Error()
             err.status = 403
             return next(err)
         }
 
-        res.render('ticket', { ticket, data: {} })
+        res.render('ticket', { ticket })
     } catch (err) {
         err.status = 500
         next(err)
@@ -231,8 +237,13 @@ router.post('/new', checkAuthenticated, newLinkValidation, async (req, res, next
 
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-        const linkData = await getLinkData(req, 'new')
-        return res.render('createNewLink', { ...linkData, errors: errors.array(), data: req.body })
+        try {
+            const data = await getNewData(req)
+            return res.status(400).render('createNewLink', { ...data, errors: errors.array(), data: req.body })
+        } catch (err) {
+            err.status = 500
+            next(err)
+        }
     }
 
     try {
@@ -338,8 +349,13 @@ router.post('/payout', checkAuthenticated, payoutValidation, async (req, res, ne
 
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-        const payoutsEnabledData = await getPayoutsEnabledData(user)
-        return res.render('payouts', { ...payoutsEnabledData, errors: errors.array(), data: req.body })
+        try {
+            const data = await getPayoutsEnabledData(user)
+            return res.status(400).render('payouts', { ...data, errors: errors.array(), payoutData: req.body })
+        } catch (err) {
+            err.status = 500
+            next(err)
+        }
     }
     
     try {
@@ -359,7 +375,6 @@ router.post('/payout', checkAuthenticated, payoutValidation, async (req, res, ne
 });
 
 router.post('/ticket', checkAuthenticated, ticketValidation, async (req, res, next) => {
-    // use fileUpload() middleware
 
     const userId = req.user._id;
 
@@ -367,7 +382,6 @@ router.post('/ticket', checkAuthenticated, ticketValidation, async (req, res, ne
     if (!errors.isEmpty()) {
         try {
             const tickets = await Ticket.find({ user: userId })
-
             return res.render('tickets', { tickets, errors: errors.array(), data: req.body })
         } catch (err) {
             err.status = 500
@@ -376,17 +390,11 @@ router.post('/ticket', checkAuthenticated, ticketValidation, async (req, res, ne
     }
 
     try {
-        const ticket = await Ticket.create({
+        await Ticket.create({
             user: userId,
             title: req.body.ticketTitle,
             body: req.body.ticketBody
         })
-
-        // if (req.files) {
-        //     const files = await processTicketFiles(req.files.ticketFiles, ticket.shortID)
-        //     ticket.files = files
-        //     await ticket.save()
-        // }
 
         res.redirect('/ticket')
     } catch (err) {
@@ -421,6 +429,7 @@ router.post('/tickets/:link', checkAuthenticated, ticketMessageValidation, async
             message: req.body.messageBody,
             from: "user"
         })
+
         await ticket.save()
 
         res.redirect(`/tickets/${ticket.shortID}`)
@@ -433,7 +442,7 @@ router.post('/tickets/:link', checkAuthenticated, ticketMessageValidation, async
 router.post('/login', checkNotAuthenticated, loginValidation, async (req, res, next) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-        return res.render('user/login', { errors: errors.array() })
+        return res.render('user/login', { errors: errors.array(), data: req.body })
     }
 
     passport.authenticate('local', {
@@ -446,7 +455,7 @@ router.post('/login', checkNotAuthenticated, loginValidation, async (req, res, n
 router.post('/register', checkNotAuthenticated, registerValidation, async (req, res) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-        return res.render('user/register', { errors: errors.array() })
+        return res.render('user/register', { errors: errors.array(), data: req.body })
     }
     
     try {
@@ -503,7 +512,13 @@ router.post('/updateAccountInformation', updateAccountValidation, async (req, re
 
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-        return res.render('account', { errors: errors.array(), data: req.body, form: 'updateAccountInformation' })
+        try {
+            const data = await getYouData(req)
+            return res.render('account', { ...data, errors: errors.array(), data: req.body, form: 'updateAccountInformation' })
+        } catch (err) {
+            err.status = 500
+            next(err)
+        }
     }
 
     const userInfoThis = await UserInfo.findOne({ user: user._id })
@@ -539,7 +554,13 @@ router.post('/updatePayoutInformation', checkAuthenticated, updatePayoutInformat
 
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-        return res.render('account', { errors: errors.array(), data: req.body, form: 'updatePayoutInformation' })
+        try {
+            const data = await getYouData(req)
+            return res.render('account', { ...data, errors: errors.array(), data: req.body, form: 'updatePayoutInformation' })
+        } catch (err) {
+            err.status = 500
+            next(err)
+        }
     }
     
     try {
@@ -576,11 +597,18 @@ router.post('/updatePassword', checkAuthenticated, updatePasswordValidation, asy
 
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-        return res.render('account', { errors: errors.array(), data: req.body, form: 'updatePassword' })
+        try {
+            const data = await getYouData(req)
+            return res.render('account', { ...data, errors: errors.array(), data: req.body, form: 'updatePassword' })
+        } catch (err) {
+            err.status = 500
+            next(err)
+        }
     }
     
     try {
         const isMatch = await bcrypt.compare(req.body.password, user.password)
+
         if (isMatch && req.body.newPassword === req.body.newPasswordVerification) {
             const newHashedPassword = await bcrypt.hash(req.body.newPassword, 10)
             user.password = newHashedPassword
@@ -588,7 +616,7 @@ router.post('/updatePassword', checkAuthenticated, updatePasswordValidation, asy
             await user.save()
         } else {
             const err = new Error()
-            err.status = 400
+            err.status = 403
             return next(err)
         }
 
@@ -602,11 +630,6 @@ router.post('/updatePassword', checkAuthenticated, updatePasswordValidation, asy
 router.post('/updateAutomaticPayouts', checkAuthenticated, async (req, res, next) => {
     
     const user = req.user
-
-    const errors = validationResult(req)
-    if (!errors.isEmpty()) {
-        return res.render('account', { errors: errors.array(), data: req.body, form: 'updateAutomaticPayouts' })
-    } 
     
     try {
         user.autoPayouts = req.body.autoPayouts ? true : false;

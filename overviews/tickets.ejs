@@ -53,22 +53,13 @@
                                     <form class="forms-sample" autocomplete="off" action="/ticket" method="POST"> <!-- enctype="multipart/form-data" -->
                                         <div class="form-group" id="title">
                                             <input type="text" class="form-control" id="ticketTitle" name="ticketTitle" placeholder="Title" 
-                                                value="<%= data.ticketTitle || '' %>">
+                                                value="<%= typeof data !== 'undefined' ? data.ticketTitle : '' %>">
                                         </div>
                                         <div class="form-group" id="ticket-body">
                                             <textarea class="form-control" id="ticketBody" name="ticketBody" placeholder="Body" rows="10" 
-                                                maxlength="20000" value="<%= data.ticketBody || '' %>">
+                                                maxlength="20000" value="<%= typeof data !== 'undefined' ? data.ticketBody : '' %>">
                                             </textarea>
                                         </div>
-                                        <!-- <div class="form-group">
-                                            <label for="ticketFiles">Upload up to 6 files [optional]</label>
-                                            <div class="input-group d-flex align-items-center">
-                                                <input type="text" class="form-control file-upload-info" id="file-name-display" disabled
-                                                    placeholder="Upload an image, screenshot, or PDF file">
-                                                <input type="file" id="ticketFiles" name="ticketFiles" class="d-none" accept=".jpg,.png,.jpeg,.webp,.pdf" multiple>
-                                                <button type="button" class="btn btn-primary ms-2" id="upload-btn">Upload</button>
-                                            </div>
-                                        </div> -->
                                         <h6 class="text-muted font-weight-normal">
                                             Please allow up to 5 business days for a response.<br>
                                             ^ Tickets are sorted by oldest first so bumping will <b>not</b> improve response time, thank you. <br><br>
@@ -98,12 +89,6 @@
     </div>
     <script src="/public/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/src/js/main.js"></script>
-    <!--
-    <script>
-        const fileInput = document.getElementById('ticketFiles');
-    </script>
-    <script src="/src/js/fileUpload.js"></script>
-    -->
 </body>
 
 </html>

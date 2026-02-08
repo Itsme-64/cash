@@ -30,8 +30,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Send new message</h4>
-                                <form class="forms-sample" autocomplete="off" action="/tickets/<%= ticket.shortID %>" method="POST"
-                                    enctype="multipart/form-data">
+                                <form class="forms-sample" autocomplete="off" action="/tickets/<%= ticket.shortID %>" method="POST">
                                     <% if (ticket.status == "resolved" || ticket.status == "closed") { %>
                                         <p class="text-danger">This ticket has been <%= ticket.status %>, no new messages can be sent.</p>
                                         <div class="form-group" id="message-body">
@@ -44,7 +43,7 @@
                                     <% } else { %>
                                         <div class="form-group" id="message-body">
                                             <textarea class="form-control" id="messageBody" name="messageBody" placeholder="message" rows="10" maxlength="20000" 
-                                                value="<%= data.messageBody || '' %>" required>
+                                                value="<%= typeof data !== 'undefined' ? data.messageBody : '' %>" required>
                                             </textarea>
                                         </div>
                                         <div class="d-flex align-items-center">

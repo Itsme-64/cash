@@ -4,8 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description"
-        content="Register a new 159.cash account so you can start making unlimited ad-links today!" />
+    <meta name="description" content="Register a new 159.cash account so you can start making unlimited ad-links today!" />
     <title>Register | 159.cash</title>
     <%- include('../ledger/assets/css.ejs', { cssFiles: [ 'auth', 'forms', 'socials' ] }) %>
     <link rel="shortcut icon" href="/src/images/favicon.png" />
@@ -30,14 +29,14 @@
                                 <div class="position-relative">
                                     <label for="username">Username *</label>
                                     <input type="text" class="form-control p_input pe-5 countedInput" name="username" id="username" minlength="4" 
-                                        maxlength="400" autocomplete="username" required>
+                                        maxlength="400" autocomplete="username" value="<%= data?.username ?? "" %>" required>
                                     <small class="position-absolute bottom-0 end-0 pe-2 pb-1 text-danger counter"></small>
                                 </div>
                                 <p id="usernameFeedback" style="margin-top: 0.25rem;"></p>
                             </div>
                             <div class="form-group">
                                 <label for="email">Email *</label>
-                                <input type="email" class="form-control p_input" name="email" id="email" autocomplete="email" required>
+                                <input type="email" class="form-control p_input" name="email" id="email" autocomplete="email" value="<%= data?.email ?? "" %>" required>
                             </div>
                             <div class="form-group position-relative">
                                 <label for="password">Password *</label>
@@ -45,43 +44,43 @@
                                     maxlength="400" autocomplete="new-password" required>
                                 <small class="position-absolute bottom-0 end-0 pe-2 pb-1 text-danger counter"></small>
                             </div>
-                            <p class="text-muted">
-                                We need some information about you in order to process payouts, this can be added later.
-                            </p>
+                            <p class="text-muted">We need some information about you in order to process payouts, this can be added later.</p>
                             <div class="form-group row">
                                 <label for="name" class="col-sm-3 col-form-label">Full Name:</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="name" name="name" autocomplete="name">
+                                    <input type="text" class="form-control" id="name" name="name" autocomplete="name" value="<%= data?.name ?? "" %>">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="line1" class="col-sm-3 col-form-label">Address: (line 1)</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="line1" name="line1" autocomplete="address-line1">
+                                    <input type="text" class="form-control" id="line1" name="line1" autocomplete="address-line1" value="<%= data?.line1 ?? "" %>">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="line2" class="col-sm-3 col-form-label">Address: (line 2)</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="line2" name="line2" autocomplete="address-line2">
+                                    <input type="text" class="form-control" id="line2" name="line2" autocomplete="address-line2" value="<%= data?.line2 ?? "" %>">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="city" class="col-sm-3 col-form-label">City:</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="city" name="city">
+                                    <input type="text" class="form-control" id="city" name="city" value="<%= data?.city ?? "" %>">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="zipCode" class="col-sm-3 col-form-label">Zip Code:</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="zipCode" name="zipCode" autocomplete="postal-code">
+                                    <input type="text" class="form-control" id="zipCode" name="zipCode" autocomplete="postal-code" 
+                                        value="<%= data?.zipCode ?? "" %>">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="country" class="col-sm-3 col-form-label">Country</label>
                                 <div class="col-sm-9">
                                     <select class="form-select" id="country" name="country" autocomplete="country">
+                                        value="<%= data?.country ?? "" %>"
                                         <%- include('../ledger/assets/countries') %>
                                     </select>
                                 </div>
