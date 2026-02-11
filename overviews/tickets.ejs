@@ -56,8 +56,12 @@
                                                 value="<%= typeof data !== 'undefined' ? data.ticketTitle : '' %>">
                                         </div>
                                         <div class="form-group" id="ticket-body">
-                                            <textarea class="form-control" id="ticketBody" name="ticketBody" placeholder="Body" rows="10" 
-                                                maxlength="20000" value="<%= typeof data !== 'undefined' ? data.ticketBody : '' %>">
+                                            <textarea class="form-control"
+                                                id="ticketBody"
+                                                name="ticketBody"
+                                                placeholder="Body"
+                                                rows="10"
+                                                maxlength="20000"><%= typeof data !== 'undefined' ? data.ticketBody : '' %>
                                             </textarea>
                                         </div>
                                         <h6 class="text-muted font-weight-normal">
