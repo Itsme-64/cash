@@ -30,7 +30,7 @@
                             <div class="card-body">
                                 <h4 class="card-title" id="account">Account information</h4>
                                 <p class="card-description">Most information is required for payout processing</p>
-                                <form class="forms-sample" action="/updateAccountInformation" method="post"> <!-- enctype="multipart/form-data" -->
+                                <form class="forms-sample" action="/you/update" method="post"> <!-- enctype="multipart/form-data" -->
                                     <div class="form-check form-check-flat form-check-primary">
                                         <label class="form-check-label">
                                             <input id="editToggle" type="checkbox" class="form-check-input">Edit account info
@@ -104,7 +104,7 @@
                                         <button disabled type="submit" id="submitBtn" class="btn btn-primary me-2">Update</button>
                                         <button disabled id="cancelBtn" type="button" class="btn btn-dark" style="margin-left: 0.15rem">Cancel</button>
                                         <p class="text-danger mb-0" style="margin-left: 1rem">
-                                            <% if (typeof errors !== 'undefined' && typeof form !== 'undefined' && form == 'updateAccountInformation') { %>
+                                            <% if (typeof errors !== 'undefined' && typeof form !== 'undefined' && form == 'update') { %>
                                                 <%= errors[0].msg %>
                                             <% } %>
                                         </p>
@@ -153,7 +153,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="card-title" id="payout">Payout Information</h4>
-                                    <form class="forms-sample" action="/updatePayoutInformation" method="post">
+                                    <form class="forms-sample" action="/you/payout" method="post">
                                         <div class="form-group">
                                             <label for="payoutMethod">Payout method</label>
                                             <select class="form-select" id="payoutMethod" name="payoutMethod" required>
@@ -176,7 +176,7 @@
                                             <button type="submit" class="btn btn-primary me-2">Update information</button>
                                             <button type="reset" class="btn btn-dark" style="margin-left: 0.15rem">Clear</button>
                                             <p class="text-danger mb-0" style="margin-left: 1rem">
-                                                <% if (typeof errors != 'undefined' && typeof form !== 'undefined' && form == 'updatePayoutInformation') { %>
+                                                <% if (typeof errors != 'undefined' && typeof form !== 'undefined' && form == 'payout') { %>
                                                     <%= errors[0].msg %>
                                                 <% } %>
                                             </p>
@@ -190,7 +190,7 @@
                                 <div class="card-body">
                                     <h4 class="card-title" id="updatePassword">Update Password</h4>
                                     <p class="card-description">Forgot your password? Reset it <a href="#">here</a>!</p>
-                                    <form class="forms-sample" action="/updatePassword" method="post">
+                                    <form class="forms-sample" action="/you/password" method="post">
                                         <div class="form-group">
                                             <label for="password">Current password</label>
                                             <input type="password" class="form-control" id="password" name="password" placeholder="your password"
@@ -212,7 +212,7 @@
                                             <button type="submit" class="btn btn-primary me-2">Update password</button>
                                             <button type="reset" class="btn btn-dark" style="margin-left: 0.15rem">Clear</button>
                                             <p class="text-danger mb-0" style="margin-left: 1rem">
-                                                <% if (typeof errors != 'undefined' && typeof form !== 'undefined' && form == 'updatePassword') { %>
+                                                <% if (typeof errors != 'undefined' && typeof form !== 'undefined' && form == 'password') { %>
                                                     <%= errors[0].msg %>
                                                 <% } %>
                                             </p>
@@ -226,7 +226,7 @@
                                 <div class="card-body">
                                     <h4 class="card-title" id="autoPayoutsHref">Automatic Payouts</h4>
                                     <p class="card-description">Automatically submit a new payout request on the first of each month if the payout threshold is met</p>
-                                    <form class="forms-sample" action="/updateAutomaticPayouts" method="post">
+                                    <form class="forms-sample" action="/you/payouts/automatic" method="post">
                                         <div class="form-check form-check-flat form-check-primary">
                                             <label class="form-check-label" for="autoPayouts">
                                                 <input type="checkbox" class="form-check-input" id="autoPayouts" name="autoPayouts" value="true"> 
@@ -255,7 +255,7 @@
                                     <li class="text-muted">Priority support</li>
                                     <li class="text-muted">No payment information required: simply use you 159.cash account balance</li>
                                 </ul>
-                                <form class="forms-sample" action="/subscribeToPremium" method="post">
+                                <form class="forms-sample" action="/premium/subscribe" method="post">
                                     <div class="form-group" style="margin-bottom: 1.5rem;">
                                         <label for="payment">Payment method</label>
                                         <select class="form-select" id="paymentMethod" name="paymentMethod" required>

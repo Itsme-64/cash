@@ -125,7 +125,7 @@ export const registerValidation = [
     body('country').optional({ checkFalsy: true }).escape()
 ];
 
-export const sendEmailValidation = [
+export const ticketSendValidation = [
     body('name').notEmpty().escape().withMessage('Name cannot be empty'),
     body('email')
         .notEmpty().withMessage('Email cannot be empty')
@@ -135,7 +135,7 @@ export const sendEmailValidation = [
     body('message').notEmpty().escape().withMessage('Message cannot be empty')
 ];
 
-export const updateAccountValidation = [
+export const accountUpdateValidation = [
     body('name').optional({ checkFalsy: true }).escape(),
     body('address.line1').optional({ checkFalsy: true }).escape(),
     body('address.line2').optional({ checkFalsy: true }).escape(),
@@ -160,7 +160,7 @@ export const updateAccountValidation = [
             }),
 ];
 
-export const updatePayoutInformationValidation = [
+export const accountPayoutValidation = [
     body('payoutMethod')
         .custom((payoutMethod) => {
             if (payoutMethod != "PayPal" && payoutMethod != "Bitcoin") {
@@ -190,7 +190,7 @@ export const updatePayoutInformationValidation = [
         })
 ];
 
-export const updatePasswordValidation = [
+export const accountPasswordValidation = [
     body('newPassword')
         .notEmpty().withMessage('New password cannot be empty')
         .isLength({ min: 8 }).withMessage('New password must be at least 8 characters'),

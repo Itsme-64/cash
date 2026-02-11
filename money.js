@@ -6,6 +6,7 @@ import flash from 'express-flash';
 import methodOverride from 'method-override';
 import cookieParser from 'cookie-parser';
 import pages from './router.js';
+import apiPages from './router.api.js';
 import adminPages from './router.admin.js';
 import { registerJobs } from './services/jobs/time-is-money.js';
 import initializePassport from './middleware/passport-config.js';
@@ -60,6 +61,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/admin/', adminPages);
+app.use('/api/', apiPages);
 app.use('/', pages);
 app.use(errorHandler);
 app.use(notFound);

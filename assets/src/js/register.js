@@ -13,7 +13,7 @@ usernameInput.addEventListener("input", () => {
     }
 
     try {
-        const res = await fetch(`/checkUsername?username=${encodeURIComponent(username)}`);
+        const res = await fetch(`/api/check?username=${encodeURIComponent(username)}`);
         const data = await res.json();
 
         feedback.textContent = data.message;

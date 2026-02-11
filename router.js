@@ -26,10 +26,10 @@ import { newLinkValidation,
          ticketMessageValidation, 
          loginValidation, 
          registerValidation, 
-         sendEmailValidation, 
-         updateAccountValidation, 
-         updatePayoutInformationValidation, 
-         updatePasswordValidation } from './middleware/validation.js';
+         ticketSendValidation, 
+         accountUpdateValidation, 
+         accountPayoutValidation, 
+         accountPasswordValidation } from './middleware/validation.js';
 
 const router = express.Router();
 
@@ -181,22 +181,6 @@ router.get('/tickets/:link', checkAuthenticated, async (req, res, next) => {
     }
 });
 
-// Validation
-router.get("/checkUsername", checkNotAuthenticated, async (req, res) => {
-    const { username } = req.query;
-    if (!username) {
-        return res.json({ available: false, message: "Please enter a username" });
-    }
-
-    const exists = await User.findOne({ username });
-
-    if (exists) {
-        res.json({ available: false, message: "Username already taken" });
-    } else {
-        res.json({ available: true, message: "Username is available" });
-    }
-});
-
 // User
 router.get('/login', checkNotAuthenticated, (req, res) => {
     return res.status(200).render('user/login', { errorMessages: req.flash('error') })
@@ -214,8 +198,8 @@ router.get('/privacy', (req, res) => {
     return res.status(200).render('user/privacyPolicy')
 });
 
-router.get('/reportAdvertisement', async (req, res) => {
-    const url = await Link.findOne({ short: req.query.link })
+router.get('/report', async (req, res) => {
+    const url = await Link.findOne({ short: req.query.advertisement })
     let redirect = ''
     url ? redirect = `destination:${url.full}` : redirect = 'previous'
 
@@ -495,7 +479,7 @@ router.post('/register', checkNotAuthenticated, registerValidation, async (req, 
     }
 });
 
-router.post('/sendEmail', checkNotAuthenticated, sendEmailValidation, async (req, res) => {
+router.post('/ticket/send', checkNotAuthenticated, ticketSendValidation, async (req, res) => {
     const err = new Error()
     err.status = 501
     return next(err)
@@ -503,7 +487,7 @@ router.post('/sendEmail', checkNotAuthenticated, sendEmailValidation, async (req
     //const {name, email, subject, message} = req.body
 });
 
-router.post('/updateAccountInformation', updateAccountValidation, async (req, res, next) => {
+router.post('/you/update', accountUpdateValidation, async (req, res, next) => {
     // use fileUpload() middleware
   
     const user = req.user
@@ -512,7 +496,7 @@ router.post('/updateAccountInformation', updateAccountValidation, async (req, re
     if (!errors.isEmpty()) {
         try {
             const data = await getYouData(req)
-            return res.render('account', { ...data, errors: errors.array(), data: req.body, form: 'updateAccountInformation' })
+            return res.render('account', { ...data, errors: errors.array(), data: req.body, form: 'update' })
         } catch (err) {
             err.status = 500
             next(err)
@@ -546,7 +530,7 @@ router.post('/updateAccountInformation', updateAccountValidation, async (req, re
     }
 });
 
-router.post('/updatePayoutInformation', checkAuthenticated, updatePayoutInformationValidation, async (req, res, next) => {
+router.post('/you/payout', checkAuthenticated, accountPayoutValidation, async (req, res, next) => {
     
     const user = req.user
 
@@ -554,7 +538,7 @@ router.post('/updatePayoutInformation', checkAuthenticated, updatePayoutInformat
     if (!errors.isEmpty()) {
         try {
             const data = await getYouData(req)
-            return res.render('account', { ...data, errors: errors.array(), data: req.body, form: 'updatePayoutInformation' })
+            return res.render('account', { ...data, errors: errors.array(), data: req.body, form: 'payout' })
         } catch (err) {
             err.status = 500
             next(err)
@@ -589,7 +573,7 @@ router.post('/updatePayoutInformation', checkAuthenticated, updatePayoutInformat
     }
 });
 
-router.post('/updatePassword', checkAuthenticated, updatePasswordValidation, async (req, res, next) => {
+router.post('/you/password', checkAuthenticated, accountPasswordValidation, async (req, res, next) => {
     
     const user = req.user
 
@@ -597,7 +581,7 @@ router.post('/updatePassword', checkAuthenticated, updatePasswordValidation, asy
     if (!errors.isEmpty()) {
         try {
             const data = await getYouData(req)
-            return res.render('account', { ...data, errors: errors.array(), data: req.body, form: 'updatePassword' })
+            return res.render('account', { ...data, errors: errors.array(), data: req.body, form: 'password' })
         } catch (err) {
             err.status = 500
             next(err)
@@ -625,7 +609,7 @@ router.post('/updatePassword', checkAuthenticated, updatePasswordValidation, asy
     }
 });
 
-router.post('/updateAutomaticPayouts', checkAuthenticated, async (req, res, next) => {
+router.post('/you/payouts/automatic', checkAuthenticated, async (req, res, next) => {
     
     const user = req.user
     
@@ -641,7 +625,7 @@ router.post('/updateAutomaticPayouts', checkAuthenticated, async (req, res, next
     }
 });
 
-router.post('/subscribeToPremium', checkAuthenticated, async (req, res) => {
+router.post('/premium/subscribe', checkAuthenticated, async (req, res) => {
     const err = new Error()
     err.status = 501
     return next(err)
