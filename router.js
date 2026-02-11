@@ -52,12 +52,10 @@ router.get('/', checkNotAuthenticated, (req, res) => {
     return res.status(200).render('index')
 });
 
-router.get('/advertise', checkAuthenticated, (req, res, next) => {
-    const err = new Error()
-    err.status = 501
-    return next(err)
+router.get('/advertise', (req, res, next) => {
+    const isAuthenticated = req.isAuthenticated()
 
-    // return res.status(200).render('advertise')
+    return res.status(200).render('advertise', { isAuthenticated })
 });
 
 router.get('/analytics', checkAuthenticated, async (req, res, next) => {
@@ -72,9 +70,9 @@ router.get('/analytics', checkAuthenticated, async (req, res, next) => {
 });
 
 router.get('/faq', (req, res) => {
-    const isAuthenticatedFAQ = req.isAuthenticated()
+    const isAuthenticated = req.isAuthenticated()
 
-    res.render('frequentlyAskedQuestions', { isAuthenticatedFAQ })
+    res.render('frequentlyAskedQuestions', { isAuthenticated })
 });
 
 router.get('/new', checkAuthenticated, async (req, res, next) => {

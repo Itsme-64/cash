@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="This page answers all your questions concerning payouts, service, and general points in regards to 159.Cash, 
+                                    which is a free and user-friendly tool that allows users to monetize and shorten their url links." />
+  <title>Advertise | 159.cash</title>
+  <%- include('ledger/assets/css.ejs', { cssFiles: [] }) %>
+  <link rel="shortcut icon" href="/src/images/favicon.png" />
+</head>
+
+<body>
+    <div class="container-scroller">
+        <% if (isAuthenticated) { %>
+            <%- include('ledger/sidebar', { currentPage: 'advertise' }) %>
+        <% } else { %>
+            <%- include('ledger/index/sidebar', { currentPage: 'advertise' }) %>
+        <% } %>
+        <%- include('ledger/sidebarMini') %>
+        <div class="container-fluid page-body-wrapper">
+            <div class="main-panel-noheader">
+                <div class="content-wrapper">
+                    <div class="page-header">
+                        <h3 class="page-title"> Advertise </h3>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/operator">Cash</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Advertise</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-xl-12 col-sm-6 grid-margin stretch-card">
+                        <div class="card splash-text">
+                            <div class="card-body">
+                                <h1 class="md-0" style="margin-bottom: -0.01rem;">Discover a new Audience</h1><span class="text-muted">on 159.cash</span>
+                            </div>
+                        </div>
+                    </div>
+                    <% if (user?.advertiser ?? false) { %>
+                        <%- include('ledger/advertiseVerified') %>
+                    <% } else { %>
+                        <%- include('ledger/advertiseUnverified') %>
+                    <% } %>
+                </div>
+                <%- include('ledger/footer') %>
+            </div>
+        </div>
+    </div>
+    <script src="/public/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/src/js/main.js"></script>
+</body>
+
+</html>

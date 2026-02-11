@@ -1,0 +1,65 @@
+<div class="row d-flex align-items-stretch">
+    <div class="col-md-6 d-flex">
+        <div class="card w-100">
+            <div class="card-body">
+                <h4 class="card-title">Advertising Specifications</h4>
+                <ul class="list-ticked">
+                    <li>Discover a unique Audience on 159.cash</li>
+                    <p class="text-muted">159.cash has an adience including users from over 80 different countries</p>
+                    <li>Quality standards</li>
+                    <p class="text-muted">
+                        We assure quality traffic on 159.cash. Check out our 
+                        <a href="/tos" target="_blank">terms and conditions</a> 
+                        for the guidelines our advertising users have to follow
+                    </p>
+                    <li>Advertise how?</li>
+                    <p class="text-muted">
+                        159.cash serves a variety of interstitals to its users, with different wait times and customization options. 
+                        Target these specifically or use them to your advantage and reach your target audience
+                    </p>
+                    <li>Advertisements sold real-time</li>
+                    <p class="text-muted">All advertisements are sold live at auction and will only show in cases they can fit your budget</p>
+                    <li>Target demographic options</li>
+                    <p class="text-muted">Target specific countries, operating systems, and (groups of) IP addresses</p>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 d-flex flex-column">
+        <div class="card flex-fill">
+            <div class="card-body d-flex flex-column justify-content-center">
+                <h4 class="card-title text-center mb-4" style="text-align: left !important;">
+                    Visit your future user-experience
+                </h4>
+                <a href="/example?u=advertise" target="_blank"
+                    class="btn btn-info w-100 h-60 d-flex justify-content-center align-items-center text-center">
+                    <h3 class="mb-0">Example Link</h3>
+                </a>
+            </div>
+        </div>
+        <div class="card flex-fill" style="margin-top: 1.70rem">
+            <div class="card-body d-flex flex-column justify-content-center">
+                <h4 class="card-title text-center mb-4" style="text-align: left !important;">
+                    Apply to gain advertiser status
+                </h4>
+                <a href="<%= isAuthenticated ? '/advertise/apply' : '/login' %>"
+                    target="_blank"
+                    class="btn btn-info w-100 h-60 d-flex justify-content-center align-items-center text-center">
+                    <h3 class="mb-0">Submit <b>now</b></h3>
+                </a>
+            </div>
+        </div>
+        <div class="card flex-fill" style="margin-top: 1.70rem">
+            <div class="card-body d-flex flex-column justify-content-center">
+                <h4 class="text-center text-muted">Questions?&nbsp;&nbsp;
+                    <a href="/tickets" target="_blank" class="text-info">Contact Form</a> 
+                    &nbsp;|&nbsp;
+                    <a href="/discord" target="_blank" class="text-info">Discord Server</a>
+                </h4>
+            </div>
+        </div>
+    </div>
+</div>
+<% if (isAuthenticated) { %>
+    <%- include('./advertiseGraph') %>
+<% } %>

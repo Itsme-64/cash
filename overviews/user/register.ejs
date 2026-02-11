@@ -29,14 +29,14 @@
                                 <div class="position-relative">
                                     <label for="username">Username *</label>
                                     <input type="text" class="form-control p_input pe-5 countedInput" name="username" id="username" minlength="4" 
-                                        maxlength="400" autocomplete="username" value="<%= data?.username ?? "" %>" required>
+                                        maxlength="400" autocomplete="username" value="<%= typeof data !== 'undefined' ? data?.username ?? "" : "" %>" required>
                                     <small class="position-absolute bottom-0 end-0 pe-2 pb-1 text-danger counter"></small>
                                 </div>
                                 <p id="usernameFeedback" style="margin-top: 0.25rem;"></p>
                             </div>
                             <div class="form-group">
                                 <label for="email">Email *</label>
-                                <input type="email" class="form-control p_input" name="email" id="email" autocomplete="email" value="<%= data?.email ?? "" %>" required>
+                                <input type="email" class="form-control p_input" name="email" id="email" autocomplete="email" value="<%= typeof data !== 'undefined' ? data?.email ?? "" : "" %>" required>
                             </div>
                             <div class="form-group position-relative">
                                 <label for="password">Password *</label>
@@ -48,39 +48,39 @@
                             <div class="form-group row">
                                 <label for="name" class="col-sm-3 col-form-label">Full Name:</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="name" name="name" autocomplete="name" value="<%= data?.name ?? "" %>">
+                                    <input type="text" class="form-control" id="name" name="name" autocomplete="name" value="<%= typeof data !== 'undefined' ? data?.name ?? "" : "" %>">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="line1" class="col-sm-3 col-form-label">Address: (line 1)</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="line1" name="line1" autocomplete="address-line1" value="<%= data?.line1 ?? "" %>">
+                                    <input type="text" class="form-control" id="line1" name="line1" autocomplete="address-line1" value="<%= typeof data !== 'undefined' ? data?.line1 ?? "" : "" %>">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="line2" class="col-sm-3 col-form-label">Address: (line 2)</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="line2" name="line2" autocomplete="address-line2" value="<%= data?.line2 ?? "" %>">
+                                    <input type="text" class="form-control" id="line2" name="line2" autocomplete="address-line2" value="<%= typeof data !== 'undefined' ? data?.line2 ?? "" : "" %>">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="city" class="col-sm-3 col-form-label">City:</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="city" name="city" value="<%= data?.city ?? "" %>">
+                                    <input type="text" class="form-control" id="city" name="city" value="<%= typeof data !== 'undefined' ? data?.city ?? "" : "" %>">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="zipCode" class="col-sm-3 col-form-label">Zip Code:</label>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control" id="zipCode" name="zipCode" autocomplete="postal-code" 
-                                        value="<%= data?.zipCode ?? "" %>">
+                                        value="<%= typeof data !== 'undefined' ? data?.zipCode ?? "" : "" %>">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="country" class="col-sm-3 col-form-label">Country</label>
                                 <div class="col-sm-9">
                                     <select class="form-select" id="country" name="country" autocomplete="country">
-                                        value="<%= data?.country ?? "" %>"
+                                        value="<%= typeof data !== 'undefined' ? data?.country ?? "" : "" %>"
                                         <%- include('../ledger/assets/countries') %>
                                     </select>
                                 </div>

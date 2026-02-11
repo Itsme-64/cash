@@ -46,6 +46,10 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    advertiser: {
+        type: Boolean,
+        default: false    
+    },
     autoPayouts: {
         type: Boolean,
         default: false

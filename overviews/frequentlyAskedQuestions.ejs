@@ -13,7 +13,7 @@
 
 <body>
     <div class="container-scroller">
-        <% if (isAuthenticatedFAQ) { %>
+        <% if (isAuthenticated) { %>
             <%- include('ledger/sidebar', { currentPage: 'frequentlyAskedQuestions' }) %>
         <% } else { %>
             <%- include('ledger/index/sidebar', { currentPage: 'frequentlyAskedQuestions' }) %>
@@ -26,7 +26,7 @@
                         <h3 class="page-title"> Frequently Asked Questions </h3>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="./operator">Cash</a></li>
+                                <li class="breadcrumb-item"><a href="/operator">Cash</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">F.A.Q.</li>
                             </ol>
                         </nav>

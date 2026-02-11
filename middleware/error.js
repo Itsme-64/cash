@@ -2,6 +2,9 @@ export function errorHandler(err, req, res, next) {
     const status = err.status || 500
     const errData = {};
 
+    // Development
+    console.error(err);
+
     switch(status) {
         case 400: {
             errData.message = 'Your browser sent a request this server could not understand'
