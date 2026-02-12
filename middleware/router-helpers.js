@@ -9,6 +9,46 @@ import LinkStatsDaily from '../models/link-stats-daily.js';
 import LinkStatsMonthly from '../models/link-stats-monthly.js';
 import UserRevenuePeriod from '../models/user-revenue-period.js';
 
+export async function getAdvertiseData() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const twoWeeks = new Date(today);
+    twoWeeks.setDate(twoWeeks.getDate() - 14);
+
+    const pendingAgg = await LinkStatsDaily.aggregate([
+        { $match: { date: { $gte: twoWeeks, $lt: today } } },
+        { $group: { 
+            _id: '$date', 
+            totalPending: { $sum: { $multiply: [{ $divide: [{ $ifNull: ['$clickWeight', 0] }, 85] }, { $ifNull: ['$clicks', 0] }] } },
+            totalClicks: { $sum: { $ifNull: ['$clicks', 0] } } 
+        } },
+        { $project: { averageValue: { $cond: [{ $eq: ['$totalClicks', 0] }, 0, { $divide: ['$totalPending', '$totalClicks'] } ] } } }
+    ]);
+
+    const map = new Map(
+        pendingAgg.map(d => [
+            d._id.toISOString().slice(0, 10),
+            d.averageValue
+        ])
+    );
+
+    const dates = [];
+    const values = [];
+
+    for (let i = 0; i < 14; i++) {
+        const current = new Date(twoWeeks);
+        current.setDate(twoWeeks.getDate() + i);
+
+        const key = current.toISOString().slice(0, 10);
+
+        dates.push(new Date(key).toLocaleDateString("en-US", { month: "short", day: "numeric" }));
+        values.push(map.get(key * 1000) ?? 0);
+    }
+
+    return { dates, values }
+}
+
 export async function getReferralData(user) {
     const referredUserIds = await User
         .find({ referrer: user.PID })

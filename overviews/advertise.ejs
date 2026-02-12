@@ -39,9 +39,22 @@
                             </div>
                         </div>
                     </div>
-                    <% if (user?.advertiser ?? false) { %>
-                        <%- include('ledger/advertiseVerified') %>
-                    <% } else { %>
+                    <% if (isAuthenticated) { %>
+                        <% if (user?.advertiser ?? false) { %>
+                            <div class="col-xl-12 col-sm-6 grid-margin stretch-card">
+                                <div class="card splash-text" style="border-color: #00d25b80 !important">
+                                    <div class="card-body">
+                                        <h3 class="md-0" style="margin-bottom: -0.01rem;">Congratulations, you are a verified advertiser</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
+                        <%- include('ledger/advertiseGraph') %>
+                        <% if (user?.advertiser ?? false) { %>
+                            <%- include('ledger/advertiseVerified') %>
+                        <% } %>
+                    <% } %>
+                    <% if (!isAuthenticated || !(user?.advertiser ?? false)) { %>
                         <%- include('ledger/advertiseUnverified') %>
                     <% } %>
                 </div>
@@ -50,6 +63,10 @@
         </div>
     </div>
     <script src="/public/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <% if (isAuthenticated) { %>
+        <script src="/public/apexcharts/dist/apexcharts.min.js"></script>
+        <script src="/src/js/advertise.js"></script>
+    <% } %>
     <script src="/src/js/main.js"></script>
 </body>
 

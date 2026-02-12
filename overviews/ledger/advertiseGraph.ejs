@@ -1,1 +1,10 @@
-<!-- implement a graph displaying indications as to the recent (average) advertisement values -->
+<div class="row">
+    <div class="col-12 position-relative">
+        <div class="chart-container" style="margin-bottom: 20px; margin-left: 6rem; margin-right: 6rem;">
+            <div id="chart" 
+                data-dates="<%= JSON.stringify([ dates ]) %>"
+                data-values="<%= JSON.stringify([ values ]) %>">
+            </div>
+        </div>
+    </div>
+</div>

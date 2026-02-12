@@ -42,7 +42,7 @@
                 <h4 class="card-title text-center mb-4" style="text-align: left !important;">
                     Apply to gain advertiser status
                 </h4>
-                <a href="<%= isAuthenticated ? '/advertise/apply' : '/login' %>"
+                <a href="/advertise/apply"
                     target="_blank"
                     class="btn btn-info w-100 h-60 d-flex justify-content-center align-items-center text-center">
                     <h3 class="mb-0">Submit <b>now</b></h3>
@@ -60,6 +60,3 @@
         </div>
     </div>
 </div>
-<% if (isAuthenticated) { %>
-    <%- include('./advertiseGraph') %>
-<% } %>

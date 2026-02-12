@@ -13,7 +13,8 @@ import LinkStatsDaily from './models/link-stats-daily.js';
 import { validationResult } from 'express-validator';
 import { shortIdValidation } from './middleware/shortId-config.js';
 import { checkAuthenticated, checkNotAuthenticated } from './middleware/auth.js';
-import { getPayoutsData,
+import { getAdvertiseData,
+         getPayoutsData,
          getReferralData,
          getLinkData,
          monthlyMonetization,
@@ -52,10 +53,20 @@ router.get('/', checkNotAuthenticated, (req, res) => {
     return res.status(200).render('index')
 });
 
-router.get('/advertise', (req, res, next) => {
-    const isAuthenticated = req.isAuthenticated()
+router.get('/advertise', async (req, res, next) => {
+    try {
+        const isAuthenticated = req.isAuthenticated()
+        let data = {}
 
-    return res.status(200).render('advertise', { isAuthenticated })
+        if (isAuthenticated) {
+            data = await getAdvertiseData()
+        }
+
+        return res.status(200).render('advertise', { isAuthenticated, ...data })
+    } catch(err) {
+        err.status = 500
+        next(err)
+    }
 });
 
 router.get('/analytics', checkAuthenticated, async (req, res, next) => {
@@ -179,6 +190,24 @@ router.get('/tickets/:link', checkAuthenticated, async (req, res, next) => {
     }
 });
 
+router.get('/advertise/apply', checkAuthenticated, async (req, res) => {
+    try {
+        const tickets = await Ticket.find({ user: req.user._id })
+
+        const data = {}
+        data.ticketTitle = `Advertiser Application: ${req.user.username} (${req.user.PID})`
+        data.ticketBody = "<-- FOR A VALUD APPLICATION A USER MUST INCLUDE: --> \n" + 
+            "1. Data about the body you are wishing to advertise for (company/individual, company information or individual activities you perform):\n" +
+            "2. A short description about the specific avertisements you would like to display on 159.cash:\n" +
+            "3. Any questions? Feel free to ask them here, thank you!"
+
+        return res.status(200).render('tickets', { tickets, data })
+    } catch (err) {
+        err.status = 500
+        next(err) 
+    }
+});
+
 // User
 router.get('/login', checkNotAuthenticated, (req, res) => {
     return res.status(200).render('user/login', { errorMessages: req.flash('error') })
@@ -210,24 +239,6 @@ router.get('/report', async (req, res) => {
 // Redirect
 router.get('/discord', (req, res) => {
     res.redirect('https://discord.gg/dhUzNMmVpb')
-});
-
-router.get('/advertise/apply', checkAuthenticated, async (req, res) => {
-    try {
-        const tickets = await Ticket.find({ user: req.user._id })
-
-        const data = {}
-        data.ticketTitle = `Advertiser Application: ${req.user.username} (${req.user.PID})`
-        data.ticketBody = "<-- FOR A VALUD APPLICATION A USER MUST INCLUDE: --> \n" + 
-            "1. Data about the body you are wishing to advertise for (company/individual, company information or individual activities you perform):\n" +
-            "2. A short description about the specific avertisements you would like to display on 159.cash:\n" +
-            "3. Any questions? Feel free to ask them here, thank you!"
-
-        return res.status(200).render('tickets', { tickets, data })
-    } catch (err) {
-        err.status = 500
-        next(err) 
-    }
 });
 
 // Post

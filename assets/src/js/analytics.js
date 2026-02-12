@@ -71,26 +71,30 @@ const options = {
         theme: 'dark',
         y: {
             formatter: function (value, { seriesIndex, w }) {
-            if (value === undefined) return value;
+                if (value === undefined) return value;
 
-            const seriesName = w.config.series[seriesIndex].name;
+                const seriesName = w.config.series[seriesIndex].name;
 
-            if (seriesName === 'Earnings') {
-                return '≈ $' + value.toFixed(0);
-            }
+                if (seriesName === 'Earnings') {
+                    return '≈ $' + value.toFixed(0);
+                }
 
-            if (seriesName === 'Clicks') {
-                return value.toFixed(0);
-            }
+                if (seriesName === 'Clicks') {
+                    return value.toFixed(0);
+                }
 
-            return value;
+                return value;
             }
         }
     },
     legend: {
         markers: {
             strokeWidth: 0
-        }
+        },
+        onItemClick: {
+            toggleDataSeries: false
+        },
+        position: 'bottom'
     }
 };
 
