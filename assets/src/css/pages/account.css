@@ -1,0 +1,30 @@
+.delete-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 9999;
+}
+
+.delete-overlay.active {
+  opacity: 1 !important;
+  pointer-events: all;
+}
+
+.delete-card {
+  background: #191c24;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 600px;
+  max-width: 90%;
+  color: #e0e0e0;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}

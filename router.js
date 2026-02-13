@@ -652,6 +652,25 @@ router.post('/you/payouts/automatic', checkAuthenticated, async (req, res, next)
     }
 });
 
+router.post('/you/delete', checkAuthenticated, async (req, res, next) => {
+    const user = req.user
+    const deleteUsername = req.body.deleteusername
+
+    if (user.username != deleteUsername) {
+        const err = new Error()
+        err.status = 400
+        return next(err)
+    }
+
+    user.status = false
+    user.username = '__deleted__user__' + user.username + '__deleted__user__'
+    user.email = '__deleted__user__' + user.email + '__deleted__user__'
+
+    await user.save()
+
+    return res.status(200).redirect('/logout')
+});
+
 router.post('/premium/subscribe', checkAuthenticated, async (req, res) => {
     const err = new Error()
     err.status = 501

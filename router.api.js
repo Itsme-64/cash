@@ -3,17 +3,25 @@ import User from './models/users.js';
 
 const apiRouter = express.Router();
 
-apiRouter.get("/api/check", async (req, res, next) => {
+apiRouter.get("/check", async (req, res, next) => {
     try {
-        const { username } = req.query;
+        const { username, shoulddelete } = req.query;
 
         if (username) {
             const exists = await User.findOne({ username });
 
             if (exists) {
-                res.status(200).json({ available: false, message: "Username already taken" });
+                return res.status(200).json({ available: false, message: "Username already taken" });
             } else {
-                res.status(200).json({ available: true, message: "Username is available" });
+                return res.status(200).json({ available: true, message: "Username is available" });
+            }
+        } else if (shoulddelete) {
+            const validUsername = req.user.username.trim();
+
+            if (validUsername == shoulddelete) {
+                return res.status(200).json({ valid: true, message: "correct username" });
+            } else {
+                return res.status(200).json({ valid: false, message: "incorrect username" });
             }
         }
 

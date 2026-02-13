@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Your Account | 159.cash</title>
-  <%- include('ledger/assets/css.ejs', { cssFiles: [ 'forms' ] }) %>
+  <%- include('ledger/assets/css.ejs', { cssFiles: [ 'forms' ], page: 'account' }) %>
   <link rel="shortcut icon" href="/src/images/favicon.png" />
 </head>
 
@@ -257,7 +257,7 @@
                                 </ul>
                                 <form class="forms-sample" action="/premium/subscribe" method="post">
                                     <div class="form-group" style="margin-bottom: 1.5rem;">
-                                        <label for="payment">Payment method</label>
+                                        <label for="paymentMethod">Payment method</label>
                                         <select class="form-select" id="paymentMethod" name="paymentMethod" required>
                                             <option value="none">Choose method</option>
                                             <option value="balance">Use 159.cash balance</option>
@@ -281,13 +281,44 @@
                         </div>
                     </div>
                 </div>
-                <%- include('ledger/footer') %>
+                <div id="deletionCard" class="delete-overlay">
+                    <div class="delete-card">
+                        <h4 class="card-title">Account Deletion</h4>
+                        <p class="card-description">
+                            Are you sure you want to delete your account? <br>
+                            <span class="text-warning">Warning: This action is permanent</span>
+                        </p>
+                        <form class="forms-sample" action="/you/delete" method="post" autocomplete="off">
+                            <div class="form-group position-relative">
+                                <label for="deleteusername" class="text-muted">Enter your username below to confirm account <span class="text-danger">deletion</span></label>
+                                <input type="text" class="form-control" id="deleteusername" minlength="4" name="deleteusername" placeholder="username" required>
+                                <small class="position-absolute bottom-0 end-0 pe-2 pb-1 text-warning" id="deleteFeedback"></small>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button type="submit" class="btn btn-danger me-2">Confirm</button>
+                                <button type="button" id="cancelDeleteButton" class="btn btn-primary" style="margin-left: 0.15rem">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <footer class="footer">
+                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © <span id="year"></span> 
+                            <a href="/index" target="_blank">159.Cash</a>. All rights reserved.
+                        </span>
+                        <span class="text-muted float-none float-sm-end d-block mt-1 mt-sm-0 text-center">
+                            <a class="text-danger" id="deleteButton" href="#">Delete Account</a> - 
+                            <a href="/privacy" target="_blank">Privacy Policy</a> - 
+                            <a href="/tos" target="_blank">Terms of Service</a>
+                        </span>
+                    </div>
+                </footer>
             </div>
         </div>
     </div>
     <script src="/public/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/src/js/main.js"></script>
     <script src="/src/js/account.js"></script>
+    <script src="/src/js/main.js"></script>
     <!-- 
     <script>
       const fileInput = document.getElementById('userIcon');

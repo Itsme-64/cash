@@ -108,7 +108,7 @@ export const registerValidation = [
         .isEmail().withMessage('Email address is invalid')
         .normalizeEmail()
         .custom(async (email) => {
-            const existingUser = await User.findOne({ email });
+            const existingUser = await User.findOne({ email: email, status: true });
             if (existingUser) {
                 throw new Error('Email is already in use');
             }
