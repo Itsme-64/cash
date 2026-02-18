@@ -15,7 +15,7 @@ function checkNotAuthenticated(req, res, next) {
 
 function requireAdmin(req, res, next) {
     const ADMIN_EMAILS = process.env.ADMIN_EMAIL.split(',');
-    const ADMIN_USERS = process.env.ADMIN_USER.split(',')
+    const ADMIN_USERS = process.env.ADMIN_USER.toLowerCase().split(',');
 
     if (!req.user || !ADMIN_EMAILS.includes(req.user.email) || !ADMIN_USERS.includes(req.user.username.toLowerCase())) {
         const err = new Error()
