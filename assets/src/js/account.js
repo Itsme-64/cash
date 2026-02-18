@@ -26,21 +26,6 @@ cancelBtn.addEventListener("click", () => {
     cancelBtn.disabled = !enabled;
 });
 
-// PayoutMethod
-const payoutSelect = document.getElementById('payoutMethod');
-const paypalGroup = document.getElementById('paypalFormGroup');
-const btcGroup = document.getElementById('btcFormGroup');
-
-function updatePayoutInputs() {
-    const value = payoutSelect.value;
-    paypalGroup.style.display = value === 'PayPal' ? 'block' : 'none';
-    btcGroup.style.display = value === 'Bitcoin' ? 'block' : 'none';
-}
-
-payoutSelect.addEventListener('change', updatePayoutInputs);
-
-updatePayoutInputs();
-
 // Account Deletion
 const deleteButton = document.getElementById('deleteButton');
 const deletionCard = document.getElementById('deletionCard');

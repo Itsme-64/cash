@@ -21,7 +21,7 @@ const payoutMethodSchema = new mongoose.Schema({
             immutable: true
         },
     },
-});
+}, { timestamps: true });
 
 payoutMethodSchema.index(
     { user: 1 }

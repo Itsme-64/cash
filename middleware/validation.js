@@ -163,7 +163,7 @@ export const accountUpdateValidation = [
 export const accountPayoutValidation = [
     body('payoutMethod')
         .custom((payoutMethod) => {
-            if (payoutMethod != "PayPal" && payoutMethod != "Bitcoin") {
+            if (payoutMethod.toLowerCase() != "paypal" && payoutMethod.toLowerCase() != "btc") {
                 throw new Error('Payout method is invalid');
             } else {
                 return true;

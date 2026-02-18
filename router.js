@@ -153,6 +153,7 @@ router.get('/ticket', async (req, res, next) => {
 router.get('/you', checkAuthenticated, async (req, res) => {
     try {
         const data = await getYouData(req)
+
         return res.status(200).render('account', { ...data })
     } catch(err) {
         err.status = 500
@@ -573,25 +574,16 @@ router.post('/you/payout', checkAuthenticated, accountPayoutValidation, async (r
     }
     
     try {
-        const userPayoutMethod = PayoutMethod.findOne({ user: user._id })
+        const method = req.body.payoutMethod.toLowerCase()
 
-        if (userPayoutMethod.details !== 'undefined') {
-            await PayoutMethod.create({
-                user: user._id,
-                type: req.body.payoutMethod,
-                details:
-                    req.body.payoutMethod === "paypal"
-                    ? { email: req.body.paypalEmail }
-                    : { btcAddress: req.body.btcAddress }
-            })
-        } else {
-            userPayoutMethod.type = req.body.payoutMethod
-            req.body.payoutMethod === "paypal"
-                    ? userPayoutMethod.details.email = req.body.paypalEmail
-                    : userPayoutMethod.details.email = req.body.btcAddress
-
-            await userPayoutMethod.save()
-        }
+        await PayoutMethod.create({
+            user: user._id,
+            type: method,
+            details:
+                method === "paypal"
+                ? { email: req.body.paypalEmail }
+                : { btcAddress: req.body.btcAddress }
+        })
 
         return res.status(201).redirect('/you')
     } catch (err) {
