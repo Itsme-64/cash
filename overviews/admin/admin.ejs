@@ -36,7 +36,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Create a new Revenue Period</h4>
-                                <form action="/createRevenuePeriod" class="forms-sample" autocomplete="off" method="POST">
+                                <form action="/admin/period/create" class="forms-sample" autocomplete="off" method="POST">
                                     <div class="calendar-row">
                                         <%- include('./calendarTemplate') %>
                                         <div class="calendar-container" style="grid: none;">
@@ -62,20 +62,20 @@
                                                 <div class="form-group row" style="margin: 0px;">
                                                     <label class="col-sm-4 col-form-label" for="paid">Paid Amount</label>
                                                     <div class="col-sm-7">
-                                                        <input class="form-control" id="paid" name="paid" placeholder="<%= period.paidAmount %>" readonly disabled>
+                                                        <input class="form-control" id="paid" name="paid" placeholder="<%= (period.paidAmount / 10000).toFixed(4) %>" readonly disabled>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row" style="margin: 0px;">
                                                     <label class="col-sm-4 col-form-label" for="referral">Referral Amount</label>
                                                     <div class="col-sm-7">
                                                         <input class="form-control" id="referral" name="referral" 
-                                                            placeholder="<%= period.referralAmount %>" readonly disabled>
+                                                            placeholder="<%= (period.referralAmount / 10000).toFixed(4) %>" readonly disabled>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row" style="margin: 0px;">
                                                     <label class="col-sm-4 col-form-label" for="admin">Admin Amount</label>
                                                     <div class="col-sm-7">
-                                                        <input class="form-control" id="admin" name="admin" placeholder="<%= period.adminAmount %>" readonly disabled>
+                                                        <input class="form-control" id="admin" name="admin" placeholder="<%= (period.adminAmount / 10000).toFixed(4) %>" readonly disabled>
                                                     </div>
                                                 </div>
                                             <% } else { %>

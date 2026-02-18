@@ -51,7 +51,7 @@ const linkSchema = new mongoose.Schema({
      toJSON: { virtuals: true },
      toObject: { virtuals: true } });
 
-linkSchema.virtual('weight').get(() => {
+linkSchema.virtual('weight').get(function () {
     if (this.monetization == false) return 0;
 
     let weight = 1000 * Math.pow((this.duration / 10000), 0.25);

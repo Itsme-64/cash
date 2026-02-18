@@ -9,7 +9,8 @@ const prevButton = document.getElementById('prevButton');
 const nextButton = document.getElementById('nextButton');
 const selectionElement = document.getElementById('dateSelection');
 
-const doneDates = document.body.dataset.doneDates;
+const doneDates = document.body.dataset.doneDates.split(',');
+const formattedDoneDates = doneDates.map(date => new Date(date).getTime());
 
 let start = null;
 let end = null;
@@ -89,13 +90,23 @@ const applyHighlighting = () => {
         }
     }
 
-    if (Array.isArray(doneDates) && doneDates.length > 0) {
+    if (Array.isArray(formattedDoneDates) && formattedDoneDates.length > 0) {
         for (const dateElement of dateElements) {
             const date = new Date(dateElement.dataset.date);
             date.setHours(0, 0, 0, 0);
 
-            if (doneDates.includes(date)) dateElement.classList.add('done');
+            if (formattedDoneDates.includes(date.getTime())) dateElement.classList.add('done', 'disabled');
         }
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    for (const dateElement of dateElements) {
+        const date = new Date(dateElement.dataset.date);
+        date.setHours(0, 0, 0, 0);
+
+        if (date >= today) dateElement.classList.add('soft-disabled')
     }
 }
 

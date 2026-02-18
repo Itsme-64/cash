@@ -45,7 +45,7 @@ adminRouter.get('/tickets/:ticket', async (req, res, next) => {
 });
 
 // Post
-adminRouter.post('/createRevenuePeriod', createRevenuePeriodValidation, async (req, res, next) => {
+adminRouter.post('/period/create', createRevenuePeriodValidation, async (req, res, next) => {
     try {
         const dates = req.body.dateSelection.split(' - ')
         const fromDateParts = dates[0].split('.')
@@ -61,7 +61,7 @@ adminRouter.post('/createRevenuePeriod', createRevenuePeriodValidation, async (r
 
         res.redirect('/admin/')
     } catch (err) {
-        console.err(err)
+        console.error(err)
         err.status = 500
         next(err)
     }

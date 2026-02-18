@@ -324,7 +324,7 @@ router.post('/:clickId/validate', async (req, res, next) => {
         if (!link) return res.sendStatus(404)
 
         const elapsed = Date.now() - new Date(click.createdAt).getTime()
-        if ((elapsed < link.duration * 1000) - 1000) return res.sendStatus(403)
+        if (elapsed < (link.duration - 1000)) return res.sendStatus(403)
 
         click.valid = true
         await click.save()
@@ -701,10 +701,10 @@ router.get('/:link', async (req, res, next) => {
 
         const ip = req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for']?.split(',')[0] || req.ip || 'not available'
 
-        await ClickEvent.create({
+        const click = await ClickEvent.create({
             link: url._id,
             ip: ip,
-            country: req.headers['cf-ipcountry'] || geoip.lookup(ip).country || 'not available',
+            country: req.headers['cf-ipcountry'] || geoip.lookup(ip)?.country || 'not available',
             userAgent: req.headers['user-agent']
         }).catch(console.error);    
 

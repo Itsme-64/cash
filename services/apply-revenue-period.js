@@ -62,6 +62,7 @@ export async function applyRevenuePeriod(periodID) {
 
         await session.commitTransaction();
     } catch (err) {
+        console.error(err);
         await session.abortTransaction();
         throw err;
     } finally {

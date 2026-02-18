@@ -115,4 +115,8 @@
 }
 .dates span.done {
     background-color: #00d25b80;
+    color: #e0e0e0 !important;
+}
+.dates span.soft-disabled {
+    pointer-events: none;
 }

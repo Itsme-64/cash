@@ -31,7 +31,7 @@ function redirect() {
         fetch(`/${document.body.dataset.clickId}/validate`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' }
-        }).catch(() => {});
+        }).catch((err) => { console.error(err) });
     }
 
     if (redirectInstantly) {

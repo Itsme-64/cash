@@ -21,7 +21,7 @@ const userRevenuePeriodSchema = new mongoose.Schema({
     },
 });
 
-userRevenuePeriodSchema.virtual('referrerIncome').get(() => {
+userRevenuePeriodSchema.virtual('referrerIncome').get(function () {
     Math.round(this.userIncome * 0.10)   
 });
 

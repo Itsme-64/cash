@@ -37,7 +37,7 @@ const revenuePeriodSchema = new mongoose.Schema({
      toJSON: { virtuals: true },
      toObject: { virtuals: true } });
 
-revenuePeriodSchema.virtual('payableAmount').get(() => {
+revenuePeriodSchema.virtual('payableAmount').get(function () {
     return Math.round(this.amount * 0.80);
 });
 
