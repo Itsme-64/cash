@@ -2,7 +2,9 @@ const chartElement = document.getElementById('periodChart')
 const series = JSON.parse(chartElement.dataset.chart);
 
 const total = series.reduce((a,b) => a+b, 0);
-const finalSeries = total === 0 ? [1] : series;
+const finalSeries = (total === 0 ? [1] : series).map(x => Number((x / 10000).toFixed(4)));
+
+console.log(finalSeries)
 
 const options = {
     chart: {

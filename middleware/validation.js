@@ -1,6 +1,7 @@
 import { body, query } from 'express-validator';
 import { validate as validateBtc, getAddressInfo } from 'bitcoin-address-validation';
 import User from '../models/users.js';
+import UserInfo from '../models/users-info.js';
 
 export const newLinkValidation = [
     body('singleLink')
@@ -40,9 +41,12 @@ export const payoutValidation = [
     body('amount')
         .custom(async (value, { req }) => {
             const user = req.user;
-            if (!user || !user.verified || !user.name || !user.address.line1 || !user.address.city || !user.address.zip || !user.address.country || user.balance < 10) {
+            const userInfoThis = await UserInfo.findOne({ user: user._id });
+
+            if (!user || !user.verified || !userInfoThis || !userInfoThis.name || !userInfoThis.address.line1 || !userInfoThis.address.city || !userInfoThis.address.zip || !userInfoThis.address.country || user.balance < 10) {
                 throw new Error('You do not meet all requirements to request payout');
             }
+            
             return true
         })
         .notEmpty().withMessage('Payout amount must be a number between 10 and 1000')

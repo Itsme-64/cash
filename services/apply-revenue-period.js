@@ -17,7 +17,7 @@ export async function applyRevenuePeriod(periodID) {
         if (period.applied) throw new Error('Already applied');
 
         // All calculations in hundredths of cents
-        const amount = period.payableAmount * 10000;
+        const amount = period.payableAmount * 1000;
 
         let paidAmount = 0;
         let referrerAmount = 0;
@@ -53,7 +53,7 @@ export async function applyRevenuePeriod(periodID) {
 
         period.paidAmount = paidAmount;
         period.referralAmount = referrerAmount;
-        period.adminAmount = (period.amount * 10000) - (paidAmount + referrerAmount);
+        period.adminAmount = (period.amount * 1000) - (paidAmount + referrerAmount);
         period.weightAmount = (weightValue / 100);
 
         period.applied = true;

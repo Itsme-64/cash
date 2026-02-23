@@ -226,6 +226,15 @@ router.get('/privacy', (req, res) => {
     return res.status(200).render('user/privacyPolicy')
 });
 
+router.get('/logout', checkAuthenticated, async (req, res, next) => {
+    try {
+        await new Promise((resolve, reject) => { req.logout(err => (err ? reject(err) : resolve())) });
+        return res.status(200).redirect('/login')
+    } catch (err) {
+        next(err);
+    }
+});
+
 router.get('/report', async (req, res) => {
     const url = await Link.findOne({ short: req.query.advertisement })
     let redirect = ''
@@ -376,6 +385,9 @@ router.post('/payout', checkAuthenticated, payoutValidation, async (req, res, ne
             amount: req.body.amount,
             payoutMethod: payoutMethod
         })
+
+        user.balance = user.balance - amount
+        await user.save()
 
         return res.status(201).redirect('/payout')
     } catch (err) {

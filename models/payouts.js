@@ -19,8 +19,8 @@ const payoutSchema = new mongoose.Schema({
         type: Number,
         required: true,
         immutable: true,
-        min: 1000,
-        max: 100000
+        min: 10,
+        max: 1000
     },
     status: {
         type: String,

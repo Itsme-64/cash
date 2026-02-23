@@ -77,7 +77,7 @@
                                         <div class="form-group row">
                                             <label for="amount" class="col-sm-3 col-form-label">Amount (USD)</label>
                                             <div class="col-sm-9">
-                                                <input type="number" class="form-control text-success" id="amount" name="amount" min="10" required
+                                                <input type="number" class="form-control" id="amount" name="amount" min="10" required
                                                     max="<%= Math.floor((user.balance / 10000).toFixed(4)) %>" 
                                                     value="<%= typeof payoutData !== 'undefined' ? payoutData.amount : '' %>"
                                                     <% if (!payoutsEnabled) { %>

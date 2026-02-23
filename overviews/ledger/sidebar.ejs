@@ -18,7 +18,7 @@
                         <span class="count bg-success"></span>
                     </div>
                     <div class="profile-name">
-                        <h5 class="mb-0 font-weight-normal"><%= user.username %></h5>
+                        <h5 class="mb-0 font-weight-normal"><%= user.username.substring(0, 8) %><% if (user.username.length > 8) { %>...<% } %></h5>
                         <% if (user.premium) { %>
                             <span>Premium</span>
                         <% } else { %>
