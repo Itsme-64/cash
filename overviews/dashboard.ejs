@@ -151,7 +151,7 @@
                                         <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
                                             <div class="d-flex justify-content-between align-items-center w-100">
                                                 <div>
-                                                    <h6 class="mb-1">Ticket <%= mostRecentTicket.shortID %></h6>
+                                                    <h6 class="mb-1"><a href="/tickets/<%= mostRecentTicket.shortID %>">Ticket <%= mostRecentTicket.shortID %></a></h6>
                                                     <p class="text-muted mb-0 text-truncate" style="max-width: 20ch;"><%= mostRecentTicket.title %></p>
                                                 </div>
                                                 <% if (mostRecentTicket.status == 'open') { %>

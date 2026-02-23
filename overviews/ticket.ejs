@@ -35,16 +35,14 @@
                                         <p class="text-danger">This ticket has been <%= ticket.status %>, no new messages can be sent.</p>
                                         <div class="form-group" id="message-body">
                                             <textarea class="form-control" id="messageBody" name="messageBody" placeholder="message" rows="10" 
-                                                maxlength="20000" required disabled>
-                                            </textarea>
+                                                maxlength="20000" required disabled></textarea>
                                         </div>
                                         <button disabled type="submit" class="btn btn-primary me-2">Send</button>
                                         <button disabled type="reset" class="btn btn-dark">Clear</button>
                                     <% } else { %>
                                         <div class="form-group" id="message-body">
                                             <textarea class="form-control" id="messageBody" name="messageBody" placeholder="message" rows="10" maxlength="20000" 
-                                                value="<%= typeof data !== 'undefined' ? data.messageBody : '' %>" required>
-                                            </textarea>
+                                                value="<% typeof data !== 'undefined' ? data.messageBody : '' %>" required></textarea>
                                         </div>
                                         <div class="d-flex align-items-center">
                                             <button type="submit" class="btn btn-primary me-2">Send</button>

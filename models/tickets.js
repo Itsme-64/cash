@@ -31,12 +31,6 @@ const ticketSchema = new mongoose.Schema({
         required: true,
         immutable: true
     },
-    files: {
-        type: Number,
-        default: 0,
-        min: 0,
-        max: 6
-    },
     messageHistory: {
         type: [
             {

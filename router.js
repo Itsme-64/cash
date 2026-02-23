@@ -178,7 +178,7 @@ router.get('/tickets/:link', checkAuthenticated, async (req, res, next) => {
             err.status = 404
             return next(err)
         }
-        if (ticket.user !== userId) {
+        if (String(ticket.user) !== String(userId)) {
             const err = new Error()
             err.status = 403
             return next(err)
@@ -415,7 +415,7 @@ router.post('/ticket', checkAuthenticated, ticketValidation, async (req, res, ne
 
 router.post('/tickets/:link', checkAuthenticated, ticketMessageValidation, async (req, res, next) => {
     
-    const user = await User.findById(req.user._id)
+    const userId = req.user._id
     const ticket = await Ticket.findOne({ shortID: req.params.link })
     
     if (ticket === null) {
@@ -423,7 +423,7 @@ router.post('/tickets/:link', checkAuthenticated, ticketMessageValidation, async
         err.status = 404
         return next(err)
     }
-    if (ticket.user !== user._id) {
+    if (String(ticket.user) !== String(userId)) {
         const err = new Error()
         err.status = 403
         return next(err)

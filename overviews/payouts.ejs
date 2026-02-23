@@ -31,7 +31,7 @@
                                 <div class="card-body">
                                     <h4 class="card-title" id="payout">Account Balance</h4>
                                     <div class="form-group row">
-                                        <label for="exampleInputUsername2" class="col-sm-2 col-form-label">USD</label>
+                                        <label for="balance" class="col-sm-2 col-form-label">USD</label>
                                         <div class="col-sm-10">
                                             <input type="number" class="form-control text-success" id="balance" disabled readonly
                                                 value="<%= (user.balance / 10000).toFixed(4) %>">
@@ -46,7 +46,7 @@
                                             <p class="text-danger">You must verify your account to request payouts</p>
                                         <% } else if (!payoutMethod || !(payoutMethod?.details?.email || payoutMethod?.details?.btcAddress)) { %>
                                             <p class="text-danger">You must have added a valid Payout Method to request payouts</p>
-                                        <% } else if (!user.name || !user.address.line1 || !user.address.city || !user.address.zip || !user.address.country) { %>
+                                        <% } else if (!userInfo.name || !userInfo.address.line1 || !userInfo.address.city || !userInfo.address.zip || !userInfo.address.country) { %>
                                             <p class="text-danger">Account information is incomplete</p>
                                         <% } else if ((user.balance / 10000).toFixed(4) < 10) { %>
                                             <p class="text-danger">Minimum payout threshold is $10.-</p>

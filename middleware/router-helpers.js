@@ -102,7 +102,7 @@ export async function getPayoutsData(user) {
         userInfoThis.address.country &&
         (user.balance / 10000).toFixed(4) >= 10;
 
-    return { payouts, payoutsEnabled, payoutMethod }
+    return { userInfo: userInfoThis, payouts, payoutsEnabled, payoutMethod }
 }
 
 export async function getLinkData(req, page) {

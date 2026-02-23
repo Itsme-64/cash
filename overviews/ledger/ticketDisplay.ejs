@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title text-muted">Ticket <%= ticket.shortID %></h4>
-                <h3><%= ticket.title %></h3><br>
+                <h3><%- ticket.title %></h3><br>
                 <div class="d-flex align-items-center">
                     <label class="text-primary" for="ticket-body"><%= username %></label>
                     <p class="text-muted mb-0" style="margin-left: 1rem">
@@ -13,9 +13,9 @@
                             year: "numeric"
                         }) %>
                     </p>
-                    <p class="text-muted mb-0" style="margin-left: 1rem">files: <%= ticket.files %></p>
+                    <p class="text-muted mb-0" style="margin-left: 1rem">files: <%= 'none' %></p>
                 </div>
-                <textarea class="form-control" name="ticket-body" style="width: 75%" readonly><%= ticket.body %></textarea>
+                <textarea class="form-control" name="ticket-body" style="width: 75%" readonly><%- ticket.body %></textarea>
                 <% if (Array.isArray(ticket.messageHistory) && ticket.messageHistory.length > 0) { %>
                     <% ticket.messageHistory.forEach(ticketMessage => { %>
                         <br><div class="d-flex align-items-center">
@@ -32,7 +32,7 @@
                                 }) %>
                             </p>
                         </div>
-                        <textarea class="form-control" name="message-body" style="width: 75%" readonly><%= ticketMessage.message %></textarea>
+                        <textarea class="form-control" name="message-body" style="width: 75%" readonly><%- ticketMessage.message %></textarea>
                     <% }); %>
                 <% } %>
             </div>
