@@ -51,10 +51,14 @@ adminRouter.post('/period/create', createRevenuePeriodValidation, async (req, re
         const fromDateParts = dates[0].split('.')
         const toDateParts = dates[1].split('.')
 
+        const fromDate = new Date(fromDateParts[2], fromDateParts[1] - 1, fromDateParts[0])
+        const toDate = new Date(toDateParts[2], toDateParts[1] - 1, toDateParts[0])
+        toDate.setDate(toDate.getDate() + 1);
+
         const period = await RevenuePeriod.create({
             amount: req.body.amount,
-            fromDate: new Date(fromDateParts[2], fromDateParts[1] - 1, fromDateParts[0]),
-            toDate: new Date(toDateParts[2], toDateParts[1] - 1, toDateParts[0])
+            fromDate: fromDate,
+            toDate: toDate
         })
 
         await applyRevenuePeriod(period._id)

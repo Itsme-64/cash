@@ -14,6 +14,8 @@ export async function getDoneDates() {
         fromDate.setHours(0, 0, 0, 0);
         toDate.setHours(0, 0, 0, 0);
 
+        toDate.setDate(toDate.getDate() - 1);
+
         while (fromDate <= toDate) {
             dates.push(new Date(fromDate));
             fromDate.setDate(fromDate.getDate() + 1);

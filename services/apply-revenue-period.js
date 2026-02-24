@@ -17,7 +17,7 @@ export async function applyRevenuePeriod(periodID) {
         if (period.applied) throw new Error('Already applied');
 
         // All calculations in hundredths of cents
-        const amount = period.payableAmount * 1000;
+        const amount = period.payableAmount * 10000;
 
         let paidAmount = 0;
         let referrerAmount = 0;
@@ -53,7 +53,7 @@ export async function applyRevenuePeriod(periodID) {
 
         period.paidAmount = paidAmount;
         period.referralAmount = referrerAmount;
-        period.adminAmount = (period.amount * 1000) - (paidAmount + referrerAmount);
+        period.adminAmount = (period.amount * 10000) - (paidAmount + referrerAmount);
         period.weightAmount = (weightValue / 100);
 
         period.applied = true;
@@ -74,12 +74,12 @@ async function calculateWeightValue(session, amount, fromDate, toDate) {
     const links = await Link.find().session(session);
 
     const weights = await Promise.all(
-        links.map(link => calculateLinkTotalWeight(session, link, fromDate, toDate))
+        links.map(link => calculateLinkTotalWeight(session, link, fromDate, toDate)),
     );
     const totalWeight = weights.reduce((a, b) => a + b, 0);
 
     if (totalWeight === 0) return 0;
-    return Math.round((amount * 1000) / totalWeight);
+    return Math.round((amount * 100) / totalWeight);
 }
 
 async function calculateUserIncome(session, user, weightValue, fromDate, toDate) {
@@ -103,7 +103,7 @@ async function calculateLinkTotalWeight(session, link, fromDate, toDate) {
     if (baseWeight === 0) return 0;
     
     const stats = await ClickEvent.aggregate([
-        { $match: { link: link._id, valid: true, createdAt: { $gte: fromDate, $lte: toDate } } },
+        { $match: { link: link._id, valid: true, createdAt: { $gte: fromDate, $lt: toDate } } },
         { $group: { _id: "$country", clicks: { $sum: 1 }, ips: { $addToSet: "$ip" } } }
     ]).session(session);
 
