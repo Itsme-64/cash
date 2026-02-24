@@ -125,9 +125,9 @@
                                                 <tbody>
                                                     <tr>
                                                         <td>
-                                                            <form action="/admin/<%= payout.payoutID %>/complete" autocomplete="off" method="POST">
+                                                            <form action="/admin/<%= payout.short %>/complete" autocomplete="off" method="POST">
                                                                 <button type="submit" title="mark complete" class="btn btn-info me-2">
-                                                                    # <%= payout.payoutID %>
+                                                                    # <%= payout.short %>
                                                                 </button>
                                                             </form>
                                                         </td>
@@ -169,9 +169,9 @@
                                                 <tbody>
                                                     <tr>
                                                         <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                                            <a href="/admin/tickets/<%= ticket.shortID %>" target="_blank"><%= ticket.title %></a>
+                                                            <a href="/admin/tickets/<%= ticket.short %>" target="_blank"><%= ticket.title %></a>
                                                         </td>
-                                                        <td># <%= ticket.shortID %></td>
+                                                        <td># <%= ticket.short %></td>
                                                         <td>
                                                             <%= new Date(ticket.updatedAt).toLocaleDateString("en-UK", { 
                                                                 day: "numeric", 
@@ -181,12 +181,12 @@
                                                         </td>
                                                         <td>
                                                             <div style="display: flex; flex-direction: row;">
-                                                                <form action="/admin/<%= ticket.shortID %>/resolve" autocomplete="off" method="POST">
+                                                                <form action="/admin/<%= ticket.short %>/resolve" autocomplete="off" method="POST">
                                                                     <button type="submit" title="resolve ticket" class="btn btn-success me-2">
                                                                         <i class="mdi mdi-check-circle-outline"></i>
                                                                     </button>
                                                                 </form>
-                                                                <form action="/admin/<%= ticket.shortID %>/close" autocomplete="off" method="POST">
+                                                                <form action="/admin/<%= ticket.short %>/close" autocomplete="off" method="POST">
                                                                     <button type="submit" title="close ticket" class="btn btn-danger me-2">
                                                                         <i class="mdi mdi-cancel"></i>
                                                                     </button>

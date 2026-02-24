@@ -8,12 +8,12 @@ const payoutSchema = new mongoose.Schema({
         required: true,
         immutable: true
     },
-    payoutID: {
+    short: {
         type: String,
+        default: shortId.generate,
         required: true,
-        default: shortId.generate(),
-        unique: true,
-        immutable: true
+        immutable: true,
+        unique: true
     },
     amount: {
         type: Number,

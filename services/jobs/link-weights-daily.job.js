@@ -21,7 +21,7 @@ export async function linkWeightsDaily() {
 
     const links = await Link.find({
         _id: { $in: linkStatsAgg.map(a => a._id) }
-    }).lean();
+    })
 
     for (const link of links) {
         const agg = linkStatsAgg.find(a => String(a._id) === String(link._id));
@@ -35,9 +35,10 @@ export async function linkWeightsDaily() {
 
         let weightedSum = 0;
         agg.countries.forEach(country => {
-            weightedSum += calculateCountryMultiplier(country);
+            weightedSum += Number(calculateCountryMultiplier(country)) || 0;
         });
 
+        if (totalClicks == 0) continue;
         const clickWeight = Math.round(link.weight * ipFactor * weightedSum / totalClicks);
 
         const stat = linkMap[String(link._id)];

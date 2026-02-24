@@ -8,7 +8,7 @@ const ticketSchema = new mongoose.Schema({
         required: true,
         immutable: true
     },
-    shortID: {
+    short: {
         type: String,
         default: shortId.generate,
         required: true,

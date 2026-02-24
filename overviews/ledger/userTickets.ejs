@@ -17,7 +17,7 @@
                             <tbody>
                                 <tr>
                                     <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                        <a href="tickets/<%= ticket.shortID %>" target="_blank"><%= ticket.title %></a>
+                                        <a href="tickets/<%= ticket.short %>" target="_blank"><%= ticket.title %></a>
                                     </td>
                                     <td><%= new Date(ticket.updatedAt).toLocaleDateString("en-US", {
                                             month: "long",
@@ -25,7 +25,7 @@
                                             year: "numeric"
                                         }) %>
                                     </td>
-                                    <td># <%= ticket.shortID %></td>
+                                    <td># <%= ticket.short %></td>
                                     <td>
                                         <% if (ticket.status == 'open') { %>
                                             <label class="badge badge-info">Open</label>

@@ -9,6 +9,9 @@ import LinkStatsDaily from '../models/link-stats-daily.js';
 import LinkStatsMonthly from '../models/link-stats-monthly.js';
 import UserRevenuePeriod from '../models/user-revenue-period.js';
 
+// Temp
+import { linkWeightsDaily } from '../services/jobs/link-weights-daily.job.js';
+
 export async function getAdvertiseData() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -315,6 +318,9 @@ export async function getDashboardData(user) {
 }
 
 export async function getAnalyticsData(user) {
+    // Temp cron job calling
+    // await linkWeightsDaily();
+
     const links = await Link.find({ user: user._id });
     const linkIds = links.map(l => l._id);
     
@@ -329,7 +335,7 @@ export async function getAnalyticsData(user) {
     
     const pendingAgg = await LinkStatsDaily.aggregate([
         { $match: { link: { $in: linkIds }, date: { $gte: toDate, $lt: today } } },
-        { $addFields: { pendingValue: { $multiply: [ { $divide: [{ $ifNull: ['$clickWeight', 0] }, 85] }, { $ifNull: ['$clicks', 0] } ] } } },
+        { $addFields: { pendingValue: { $multiply: [ { $divide: [{ $ifNull: ['$clickWeight', 0] }, 85.0] }, { $ifNull: ['$clicks', 0] } ] } } },
         { $facet: { 
             dailyPending: [ 
                 { $match: { date: { $gte: twoWeeks } } }, 

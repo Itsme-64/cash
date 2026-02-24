@@ -29,7 +29,7 @@ adminRouter.get('/', async (req, res, next) => {
 
 adminRouter.get('/tickets/:ticket', async (req, res, next) => {
     try {
-        const ticket = await Ticket.findOne({ shortID: req.params.ticket })
+        const ticket = await Ticket.findOne({ short: req.params.ticket })
 
         if (ticket === null) {
             const err = new Error()
@@ -69,7 +69,7 @@ adminRouter.post('/period/create', createRevenuePeriodValidation, async (req, re
 
 adminRouter.post('/:payout/complete', async (req, res, next) => {
     try {
-        const payout = await Payout.findOne({ payoutID: req.params.payout })
+        const payout = await Payout.findOne({ short: req.params.payout })
 
         if (!payout) {
             const err = new Error()
@@ -90,7 +90,7 @@ adminRouter.post('/:payout/complete', async (req, res, next) => {
 
 adminRouter.post('/:payout/reject', async (req, res, next) => {
     try {
-        const payout = await Payout.findOne({ payoutID: req.params.payout })
+        const payout = await Payout.findOne({ short: req.params.payout })
 
         if (!payout) {
             const err = new Error()
@@ -111,7 +111,7 @@ adminRouter.post('/:payout/reject', async (req, res, next) => {
 
 adminRouter.post('/tickets/:ticket', async (req, res, next) => {
     try {
-        const ticket = await Ticket.findOne({ shortID: req.params.ticket })
+        const ticket = await Ticket.findOne({ short: req.params.ticket })
 
         if (!ticket) {
             const err = new Error()
@@ -126,7 +126,7 @@ adminRouter.post('/tickets/:ticket', async (req, res, next) => {
 
         await ticket.save()
 
-        res.redirect(`/admin/tickets/${ticket.shortID}`)
+        res.redirect(`/admin/tickets/${ticket.short}`)
     } catch (err) {
         console.err(err)
         err.status = 500
@@ -136,7 +136,7 @@ adminRouter.post('/tickets/:ticket', async (req, res, next) => {
 
 adminRouter.post('/:ticket/resolve', async (req, res, next) => {
     try {
-        const ticket = await Ticket.findOne({ shortID: req.params.ticket })
+        const ticket = await Ticket.findOne({ short: req.params.ticket })
 
         if (!ticket) {
             const err = new Error()
@@ -157,7 +157,7 @@ adminRouter.post('/:ticket/resolve', async (req, res, next) => {
 
 adminRouter.post('/:ticket/close', async (req, res, next) => {
     try {
-        const ticket = await Ticket.findOne({ shortID: req.params.ticket })
+        const ticket = await Ticket.findOne({ short: req.params.ticket })
 
         if (!ticket) {
             const err = new Error()

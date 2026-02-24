@@ -8,7 +8,7 @@ const campaignSchema = new mongoose.Schema({
         required: true,
         immutable: true
     },
-    PID: {
+    short: {
         type: String,
         default: shortId.generate,
         required: true,

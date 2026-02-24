@@ -13,7 +13,8 @@ const formattedClicks = clickSeries.flat();
 const formattedDates = dateSeries
     .flat()
     .map(d => new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric" }));
-    
+
+const maxRevenue = Math.max(...formattedRevenue.map(Number));
 
 const options = {
     series: [{
@@ -50,12 +51,13 @@ const options = {
     },
     yaxis: [{
         min: 0,
+        max: 0.0005 + (maxRevenue * 2),
         title: {
             text: 'Earnings'
         },
         labels: {
             formatter: (value) => {
-                return '$' + value.toFixed(2);
+                return '$' + value.toFixed(4);
             }
         }
     }, {
@@ -63,6 +65,11 @@ const options = {
         opposite: true,
         title: {
             text: 'Clicks'
+        },
+        labels: {
+            formatter: (value) => {
+                return value.toFixed(0);
+            }
         }
     }],
     tooltip: {
@@ -76,7 +83,7 @@ const options = {
                 const seriesName = w.config.series[seriesIndex].name;
 
                 if (seriesName === 'Earnings') {
-                    return '≈ $' + value.toFixed(0);
+                    return '≈ $' + value.toFixed(4);
                 }
 
                 if (seriesName === 'Clicks') {

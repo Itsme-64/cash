@@ -171,7 +171,7 @@ async function getYouData(req) {
 router.get('/tickets/:link', checkAuthenticated, async (req, res, next) => {
     try {
         const userId = req.user._id
-        const ticket = await Ticket.findOne({ shortID: req.params.link })
+        const ticket = await Ticket.findOne({ short: req.params.link })
 
         if (ticket === null) {
             const err = new Error()
@@ -379,15 +379,16 @@ router.post('/payout', checkAuthenticated, payoutValidation, async (req, res, ne
     
     try {
         const payoutMethod = await getPayoutMethod(user._id)
+        const amount = req.body.amount
+
+        user.balance = user.balance - (amount * 10000)
+        await user.save()
 
         await Payout.create({
             user: user._id,
-            amount: req.body.amount,
+            amount: amount,
             payoutMethod: payoutMethod
         })
-
-        user.balance = user.balance - amount
-        await user.save()
 
         return res.status(201).redirect('/payout')
     } catch (err) {
@@ -428,7 +429,7 @@ router.post('/ticket', checkAuthenticated, ticketValidation, async (req, res, ne
 router.post('/tickets/:link', checkAuthenticated, ticketMessageValidation, async (req, res, next) => {
     
     const userId = req.user._id
-    const ticket = await Ticket.findOne({ shortID: req.params.link })
+    const ticket = await Ticket.findOne({ short: req.params.link })
     
     if (ticket === null) {
         const err = new Error()
@@ -454,7 +455,7 @@ router.post('/tickets/:link', checkAuthenticated, ticketMessageValidation, async
 
         await ticket.save()
 
-        return res.status(200).redirect(`/tickets/${ticket.shortID}`)
+        return res.status(200).redirect(`/tickets/${ticket.short}`)
     } catch (err) {
         err.status = 500
         next(err)
