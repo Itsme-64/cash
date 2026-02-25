@@ -321,6 +321,7 @@ export async function getAnalyticsData(user) {
     // Temp cron job calling
     // await linkWeightsDaily();
 
+    // Dates
     const links = await Link.find({ user: user._id });
     const linkIds = links.map(l => l._id);
     
@@ -333,6 +334,7 @@ export async function getAnalyticsData(user) {
     const twoWeeks = new Date(today);
     twoWeeks.setDate(twoWeeks.getDate() - 14);
     
+    // Shared
     const pendingAgg = await LinkStatsDaily.aggregate([
         { $match: { link: { $in: linkIds }, date: { $gte: toDate, $lt: today } } },
         { $addFields: { pendingValue: { $multiply: [ { $divide: [{ $ifNull: ['$clickWeight', 0] }, 85.0] }, { $ifNull: ['$clicks', 0] } ] } } },
@@ -389,7 +391,7 @@ export async function getAnalyticsData(user) {
     const periodPaid = [];
 
     for (const period of periods) {
-        const urp = await UserRevenuePeriod.findOne({ period: period._id }).select('userIncome');
+        const urp = await UserRevenuePeriod.findOne({ user: user._id, period: period._id }).select('userIncome');
         if (!urp) continue;
 
         let start = new Date(period.fromDate);
@@ -412,6 +414,8 @@ export async function getAnalyticsData(user) {
     const pendingByDate = Object.fromEntries(dailyPending.map(d => [d._id.toISOString().slice(0, 10), d.dailyPending]));
     const paidByDate = Object.fromEntries(periodPaid.map(d => [new Date(d.date).toISOString().slice(0, 10), d.amount]));
 
+    // console.log(paidByDate);
+
     const revenueByDate = Array.from({ length: 14 }, (_, i) => {
         const d = new Date(today);
         d.setDate(d.getDate() - (13 - i));
@@ -429,6 +433,8 @@ export async function getAnalyticsData(user) {
 
         return 0;
     });
+
+    // console.log(revenueByDate);
 
     return {
         pending, referrerIncome,

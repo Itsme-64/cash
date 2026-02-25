@@ -1,8 +1,18 @@
 const chartElement = document.getElementById('periodChart')
 const series = JSON.parse(chartElement.dataset.chart);
 
-const total = series.reduce((a,b) => a+b, 0);
+const total = (series.reduce((a,b) => a+b, 0)) / 1000000;
 const finalSeries = (total === 0 ? [1] : series).map(x => Number((x / 10000).toFixed(4)));
+
+let pendingLabel = '0';
+let userIncomeLabel = '0';
+let referralLabel = '0';
+
+if (total !== 0) {
+    pendingLabel = String((finalSeries[0] / total).toFixed(0));
+    userIncomeLabel = String((finalSeries[1] / total).toFixed(0));
+    referralLabel = String((finalSeries[2] / total).toFixed(0));
+}
 
 console.log(finalSeries)
 
@@ -30,6 +40,14 @@ const options = {
         },
         markers: {
             strokeWidth: 0
+        },
+        formatter: function(seriesName, opts) {
+            let value = '';
+            if (seriesName == 'Pending') value = pendingLabel;
+            else if (seriesName == 'User Income') value = userIncomeLabel;
+            else if (seriesName == 'Referral') value = referralLabel;
+            
+            return `${seriesName} (${value}%)`;
         }
     },
     dataLabels: {

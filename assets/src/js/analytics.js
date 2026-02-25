@@ -4,17 +4,21 @@ const revenueSeries = JSON.parse(mainChartElement.dataset.revenue);
 const clickSeries = JSON.parse(mainChartElement.dataset.clicks);
 const dateSeries = JSON.parse(mainChartElement.dataset.dates);
 
-const formattedRevenue = revenueSeries
-    .flat()
-    .map(n => (n / 10000).toFixed(4));
-
+let formattedRevenue = revenueSeries.flat();
 const formattedClicks = clickSeries.flat();
 
 const formattedDates = dateSeries
     .flat()
     .map(d => new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric" }));
 
-const maxRevenue = Math.max(...formattedRevenue.map(Number));
+const maxRevenue = (Math.max(...formattedRevenue.map(Number))) / 10000;
+let decimals = 4;
+
+if (maxRevenue > 5.1) decimals = 2;
+else if (maxRevenue > 50.1) decimals = 1;
+else if (maxRevenue > 500.1) decimals = 0;
+
+formattedRevenue = formattedRevenue.map(n => (n / 10000).toFixed(decimals))
 
 const options = {
     series: [{
@@ -57,7 +61,7 @@ const options = {
         },
         labels: {
             formatter: (value) => {
-                return '$' + value.toFixed(4);
+                return '$' + value.toFixed(decimals);
             }
         }
     }, {
@@ -83,7 +87,7 @@ const options = {
                 const seriesName = w.config.series[seriesIndex].name;
 
                 if (seriesName === 'Earnings') {
-                    return '≈ $' + value.toFixed(4);
+                    return '≈ $' + value.toFixed(decimals);
                 }
 
                 if (seriesName === 'Clicks') {

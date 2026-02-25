@@ -110,7 +110,7 @@
                         <div class="col-md-4 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title" style="margin-bottom: 0px;">Income Statistics</h4>
+                                    <h4 class="card-title" style="margin-bottom: 0px;">Income Distribution</h4>
                                     <small class="text-muted" style="margin-bottom: 18px;">
                                         Period: <%= fromDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) %> - Today
                                     </small>
@@ -123,7 +123,7 @@
                                         <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3 border-bottom">
                                             <div class="d-flex justify-content-between align-items-center w-100">
                                                 <div>
-                                                    <h6 class="mb-1">Payout <%= mostRecentPayoutRequest.short %></h6>
+                                                    <h6 class="mb-1"><a href="/payout" target="_self">Payout <%= mostRecentPayoutRequest.short %></a></h6>
                                                     <p class="text-muted mb-0">
                                                         Requested At
                                                         <%= mostRecentPayoutRequest.createdAt.toLocaleDateString("en-US", { 
