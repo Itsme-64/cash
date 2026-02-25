@@ -2,6 +2,7 @@ import express from 'express';
 import bcrypt from 'bcrypt';
 import passport from 'passport';
 import geoip from 'geoip-lite'
+import mongoose from 'mongoose';
 import Link from './models/links.js';
 import User from './models/users.js';
 import Payout from './models/payouts.js';
@@ -376,22 +377,28 @@ router.post('/payout', checkAuthenticated, payoutValidation, async (req, res, ne
             next(err)
         }
     }
+
+    const session = await mongoose.startSession();
     
     try {
+        session.startTransaction()
+
         const payoutMethod = await getPayoutMethod(user._id)
         const amount = req.body.amount
 
         user.balance = user.balance - (amount * 10000)
-        await user.save()
+        await user.save({ session })
 
-        await Payout.create({
+        await Payout.create([{
             user: user._id,
             amount: amount,
             payoutMethod: payoutMethod
-        })
+        }], { session })
 
+        await session.commitTransaction();
         return res.status(201).redirect('/payout')
     } catch (err) {
+        await session.abortTransaction()
         err.status = 500
         next(err)
     }
@@ -480,8 +487,12 @@ router.post('/register', checkNotAuthenticated, registerValidation, async (req, 
     if (!errors.isEmpty()) {
         return res.render('user/register', { errors: errors.array(), data: req.body })
     }
+
+    const session = await mongoose.startSession();
     
     try {
+        session.startTransaction();
+
         const referralCookie = req.cookies.referral
         let referrer = null
 
@@ -490,14 +501,14 @@ router.post('/register', checkNotAuthenticated, registerValidation, async (req, 
         }
 
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
-        const newUser = await User.create({
+        const newUser = await User.create([{
             username: req.body.username,
             email: req.body.email,
             password: hashedPassword,
             referrer: referrer
-        })
+        }], { session })
 
-        await UserInfo.create({
+        await UserInfo.create([{
             user: newUser._id,
             name: req.body.name,
             address: {
@@ -507,14 +518,16 @@ router.post('/register', checkNotAuthenticated, registerValidation, async (req, 
                 zip: req.body.zip,
                 country: req.body.country
             }
-        })
+        }], { session })
 
-        await PayoutMethod.create({
+        await PayoutMethod.create([{
             user: newUser._id
-        })
+        }], { session })
 
+        await session.commitTransaction();
         return res.status(201).redirect('/login')
     } catch {
+        await session.abortTransaction();
         console.error(err)
         res.status(400).redirect('/register')
     }
@@ -544,9 +557,9 @@ router.post('/you/update', accountUpdateValidation, async (req, res, next) => {
         }
     }
 
-    const userInfoThis = await UserInfo.findOne({ user: user._id })
-
     try {
+        const userInfoThis = await UserInfo.findOne({ user: user._id })
+
         userInfoThis.name = req.body.name
         userInfoThis.address = {
             line1: req.body.line1,
