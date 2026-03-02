@@ -31,7 +31,7 @@ const campaignSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['pending', 'active', 'deactivated', 'removed'],
+        enum: ['draft', 'pending', 'active', 'deactivated', 'removed'],
         required: true,
         default: false
     },
@@ -52,4 +52,4 @@ const campaignSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-export default mongoose.Model('Campaign', campaignSchema);
+export default mongoose.model('Campaign', campaignSchema);

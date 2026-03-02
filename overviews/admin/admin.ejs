@@ -40,42 +40,44 @@
                                     <div class="calendar-row">
                                         <%- include('./calendarTemplate') %>
                                         <div class="calendar-container" style="grid: none;">
-                                            <% if (period) { %>
+                                            <% const selectedPeriod = mostRecentPeriod %>
+                                            <% if (selectedPeriod) { %>
                                                 <div class="controls">
                                                     <strong class="label">
                                                         Period: 
-                                                        <%= period?.fromDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) %>
+                                                        <%= selectedPeriod?.fromDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) %>
                                                         &nbsp;-&nbsp;
-                                                        <%= period?.toDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) %>
+                                                        <% selectedPeriod.toDate.setDate(selectedPeriod.toDate.getDate() - 1) %>
+                                                        <%= selectedPeriod?.toDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) %>
                                                     </strong>
                                                     <p class="text-muted">
                                                         Applied:
-                                                        <% if (period.applied) { %>
+                                                        <% if (selectedPeriod.applied) { %>
                                                             <span class="text-success">Yes</span>
                                                         <% } else { %>
                                                             <span class="text-danger">No</span>
                                                         <% } %>
                                                         | Amount: 
-                                                        <span class="text-success"><%= period.amount %></span>
+                                                        <span class="text-success"><%= selectedPeriod.amount %></span>
                                                     </p>
                                                 </div>
                                                 <div class="form-group row" style="margin: 0px;">
                                                     <label class="col-sm-4 col-form-label" for="paid">Paid Amount</label>
                                                     <div class="col-sm-7">
-                                                        <input class="form-control" id="paid" name="paid" placeholder="<%= (period.paidAmount / 10000).toFixed(4) %>" readonly disabled>
+                                                        <input class="form-control" id="paid" name="paid" placeholder="<%= (selectedPeriod.paidAmount / 10000).toFixed(4) %>" readonly disabled>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row" style="margin: 0px;">
                                                     <label class="col-sm-4 col-form-label" for="referral">Referral Amount</label>
                                                     <div class="col-sm-7">
                                                         <input class="form-control" id="referral" name="referral" 
-                                                            placeholder="<%= (period.referralAmount / 10000).toFixed(4) %>" readonly disabled>
+                                                            placeholder="<%= (selectedPeriod.referralAmount / 10000).toFixed(4) %>" readonly disabled>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row" style="margin: 0px;">
                                                     <label class="col-sm-4 col-form-label" for="admin">Admin Amount</label>
                                                     <div class="col-sm-7">
-                                                        <input class="form-control" id="admin" name="admin" placeholder="<%= (period.adminAmount / 10000).toFixed(4) %>" readonly disabled>
+                                                        <input class="form-control" id="admin" name="admin" placeholder="<%= (selectedPeriod.adminAmount / 10000).toFixed(4) %>" readonly disabled>
                                                     </div>
                                                 </div>
                                             <% } else { %>
@@ -132,7 +134,12 @@
                                                             </form>
                                                         </td>
                                                         <td>$ <span class="text-success"><%= payout.amount.toFixed(2) %></span></td>
-                                                        <td><%= payout.method %></td>
+                                                        <td>
+                                                            <%= payout.payoutMethod.type == 'paypal' ? 
+                                                                payout.payoutMethod.details?.email : 
+                                                                payout.payoutMethod.details.btcAddress 
+                                                            %>
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             <% }); %>
@@ -169,9 +176,9 @@
                                                 <tbody>
                                                     <tr>
                                                         <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                                            <a href="/admin/tickets/<%= ticket.short %>" target="_blank"><%= ticket.title %></a>
+                                                            <a href="/admin/tickets/<%= ticket.short %>" target="_blank"># <%= ticket.short %></a>
                                                         </td>
-                                                        <td># <%= ticket.short %></td>
+                                                        <td style="max-width: 20ch;"><%= ticket.title %></td>
                                                         <td>
                                                             <%= new Date(ticket.updatedAt).toLocaleDateString("en-UK", { 
                                                                 day: "numeric", 
@@ -212,12 +219,136 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-lg-6 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Past Revenue Periods</h4>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Period</th>
+                                                <th>Applied</th>
+                                            </tr>
+                                        </thead>
+                                        <% if (Array.isArray(periods) && periods.length > 0) { %>
+                                            <% periods.slice().forEach(period => { %>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            Period: 
+                                                            <%= period?.fromDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) %>
+                                                            &nbsp;-&nbsp;
+                                                            <% period.toDate.setDate(period.toDate.getDate() - 1) %>
+                                                            <%= period?.toDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) %>
+                                                        </td>
+                                                        <td>
+                                                            <% if (period.applied) { %>
+                                                                <label class="badge badge-success">Applied</label>
+                                                            <% } else { %>
+                                                                <label class="badge badge-danger">Not Appl.</label>
+                                                            <% } %>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            <% }); %>
+                                        <% } else { %>
+                                            <tbody>
+                                                <tr>
+                                                    <td>There are currently no recent periods</td>
+                                                    <td>#</td>
+                                                </tr>
+                                            </tbody>
+                                        <% } %>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Weight Values</h4>
+                                <div class="chart-container" style="margin: 20px">
+                                    <div id="weightsChart" 
+                                        data-weights="<%= JSON.stringify([ weightValues ]) %>"
+                                        data-dates="<%= JSON.stringify([ weightDates ]) %>">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Advertising Campaigns</h4>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Title</th>
+                                                <th>Status</th>
+                                                <th>Options</th>
+                                            </tr>
+                                        </thead>
+                                        <% if (Array.isArray(campaigns) && campaigns.length > 0) { %>
+                                            <% campaigns.slice().forEach(campaign => { %>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="max-width: 12ch;"><%= campaign.title %></td> <!-- this should become a link to go to the advertisement view -->
+                                                        <td>
+                                                            <% if (campaign.status == 'pending') { %>
+                                                                <label class="badge badge-info">Pending</label>
+                                                            <% } else if (campaign.status == 'active') { %>
+                                                                <label class="badge badge-success">Active</label>
+                                                            <% } else if (campaign.status == 'deactivated') { %>
+                                                                <label class="badge badge-warning">Deactivated</label>
+                                                            <% } %>
+                                                        </td>
+                                                        <td>
+                                                            <div style="display: flex; flex-direction: row;">
+                                                                <form action="/admin/<%= campaign.short %>/approve" autocomplete="off" method="POST">
+                                                                    <button type="submit" title="approve campaign" class="btn btn-success me-2">
+                                                                        <i class="mdi mdi-check-circle-outline"></i>
+                                                                    </button>
+                                                                </form>
+                                                                <form action="/admin/<%= campaign.short %>/remove" autocomplete="off" method="POST">
+                                                                    <button type="submit" title="remove campaign" class="btn btn-danger me-2">
+                                                                        <i class="mdi mdi-cancel"></i>
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            <% }); %>
+                                        <% } else { %>
+                                            <tbody>
+                                                <tr>
+                                                    <td style="max-width: 20ch;">There are no current pending, active, or deactivated advertising campaigns.</td>
+                                                    <td>#</td>
+                                                    <td>#</td>
+                                                </tr>
+                                            </tbody>
+                                        <% } %>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Space to add something! -->
+                </div>
             </div>
             <%- include('../ledger/footer') %>
         </div>
     </div>
     <script src="/public/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/public/apexcharts/dist/apexcharts.min.js"></script>
     <script src="/src/js/admin.js"></script>
+    <script src="/src/js/calendar.js"></script>
     <script src="/src/js/main.js"></script>
 </body>
 

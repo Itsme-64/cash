@@ -2,7 +2,7 @@ import express from 'express';
 import Ticket from './models/tickets.js';
 import Payout from './models/payouts.js'
 import RevenuePeriod from './models/revenue-period.js';
-import { getDoneDates, getPeriodData, getPayoutData, getTicketData } from './middleware/router-helpers.admin.js';
+import { getDoneDates, getPeriodData, getPayoutData, getTicketData, getCampaignData } from './middleware/router-helpers.admin.js';
 import { checkAuthenticated, requireAdmin } from './middleware/auth.js';
 import { createRevenuePeriodValidation } from './middleware/validation.admin.js';
 import { applyRevenuePeriod } from './services/apply-revenue-period.js';
@@ -16,11 +16,12 @@ adminRouter.use(requireAdmin);
 adminRouter.get('/', async (req, res, next) => {
     try {
         const doneDates = await getDoneDates()
-        const { period } = await getPeriodData()
+        const { periods, mostRecentPeriod, weightValues, weightDates } = await getPeriodData()
         const payouts = await getPayoutData()
         const tickets = await getTicketData()
+        const campaigns = await getCampaignData()
 
-        res.render('admin/admin', { doneDates, period, payouts, tickets })
+        res.render('admin/admin', { doneDates, periods, mostRecentPeriod, weightValues, weightDates, payouts, tickets, campaigns })
     } catch (err) {
         err.status = 500
         next(err)
