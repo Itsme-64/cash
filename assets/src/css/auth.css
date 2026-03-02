@@ -1,17 +1,21 @@
 .auth.login-bg {
-  background: url("../images/auth/Login_bg.jpg");
+  background: url("../images/auth/login_bg_dashboard.webp");
   background-size: cover;
 }
 .auth .login-half-bg {
-  background: url("../images/auth/login-bg.jpg");
+  background: url("../images/auth/login_bg_dashboard_slim.webp");
+  background-size: cover;
+}
+.auth.register-bg {
+  background: url("../images/auth/register_bg_index.webp");
   background-size: cover;
 }
 .auth.register-half-bg {
-  background: url("../images/auth/Login_bg2.jpg");
+  background: url("../images/auth/register_bg_index_slim.webp");
   background-size: cover;
 }
 .auth.lock-full-bg {
-  background: url("../images/auth/lockscreen-bg.jpg");
+  background: url("../images/auth/register_bg_index.webp");
   background-size: cover;
 }
 .auth .lock-profile-img {

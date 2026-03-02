@@ -303,7 +303,7 @@ export async function getDashboardData(user) {
     const mostRecentTicket = await Ticket
         .findOne({ user: user._id })
         .sort({ createdAt: -1 })
-        .select('shortID title status');
+        .select('shortID title status'); 
 
     return { 
         clicksToday, clicksTodayChange, pendingYesterday, pendingYesterdayChange, clicksTwoWeeks, clicksTwoWeeksChange,
@@ -414,8 +414,6 @@ export async function getAnalyticsData(user) {
     const pendingByDate = Object.fromEntries(dailyPending.map(d => [d._id.toISOString().slice(0, 10), d.dailyPending]));
     const paidByDate = Object.fromEntries(periodPaid.map(d => [new Date(d.date).toISOString().slice(0, 10), d.amount]));
 
-    // console.log(paidByDate);
-
     const revenueByDate = Array.from({ length: 14 }, (_, i) => {
         const d = new Date(today);
         d.setDate(d.getDate() - (13 - i));
@@ -433,8 +431,6 @@ export async function getAnalyticsData(user) {
 
         return 0;
     });
-
-    // console.log(revenueByDate);
 
     return {
         pending, referrerIncome,
