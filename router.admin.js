@@ -1,6 +1,7 @@
 import express from 'express';
 import Ticket from './models/tickets.js';
-import Payout from './models/payouts.js'
+import Payout from './models/payouts.js';
+import Campaign from './models/campaigns.js';
 import RevenuePeriod from './models/revenue-period.js';
 import { getDoneDates, getPeriodData, getPayoutData, getTicketData, getCampaignData } from './middleware/router-helpers.admin.js';
 import { checkAuthenticated, requireAdmin } from './middleware/auth.js';
@@ -172,6 +173,48 @@ adminRouter.post('/:ticket/close', async (req, res, next) => {
 
         ticket.status = 'closed'
         await ticket.save()
+
+        res.redirect('/admin/')
+    } catch (err) {
+        console.err(err)
+        err.status = 500
+        next(err)
+    }
+});
+
+adminRouter.post('/:campaign/approve', async (req, res, next) => {
+    try {
+        const campaign = await Campaign.findOne({ short: req.params.campaign })
+
+        if (!campaign) {
+            const err = new Error()
+            err.status = 404
+            return next(err)
+        }
+
+        campaign.status = 'deactivated'
+        await campaign.save()
+
+        res.redirect('/admin/')
+    } catch (err) {
+        console.err(err)
+        err.status = 500
+        next(err)
+    }
+});
+
+adminRouter.post('/:campaign/remove', async (req, res, next) => {
+    try {
+        const campaign = await Campaign.findOne({ short: req.params.campaign })
+
+        if (!campaign) {
+            const err = new Error()
+            err.status = 404
+            return next(err)
+        }
+
+        campaign.status = 'removed'
+        await campaign.save()
 
         res.redirect('/admin/')
     } catch (err) {

@@ -7,7 +7,7 @@
   background-size: cover;
 }
 .auth.register-bg {
-  background: url("../images/auth/register_bg_index.webp");
+  background: url("../images/auth/register_bg_index_slim.webp");
   background-size: cover;
 }
 .auth.register-half-bg {
@@ -147,4 +147,9 @@
 }
 .auth .terms a {
   text-decoration: underline;
+}
+
+.auth-card {
+  box-shadow: -1rem 1rem #00000090;
+  border: 2px solid #000000;
 }

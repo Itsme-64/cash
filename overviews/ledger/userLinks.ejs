@@ -44,7 +44,10 @@
                                                 <% if (source == "new") { %>
                                                     <span>&nbsp;|&nbsp;</span> 
                                                     <span
-                                                        class="text-warning" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" 
+                                                        <% if (Number((link.pending / 10000).toFixed(4)) > 0) { %>
+                                                            class="text-warning"
+                                                        <% } %>
+                                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" 
                                                         title="Total earnings from this link" 
                                                         data-bs-title="    
                                                             <div class='text-start'>
@@ -55,7 +58,7 @@
                                                                 <small class='text-muted'>All time</small>
                                                             </div>
                                                         ">
-                                                        $<%= Number((link.earned / 10000).toFixed(4) + (link.pending / 10000).toFixed(4)) || '0' %>
+                                                        $<%= (Number((link.earned / 10000).toFixed(4)) + Number((link.pending / 10000).toFixed(4))) || '0' %>
                                                     </span>
                                                 <% } %>
                                             </p>
