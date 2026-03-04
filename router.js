@@ -21,7 +21,8 @@ import { getAdvertiseData,
          monthlyMonetization,
          getPayoutMethod,
          getDashboardData, 
-         getAnalyticsData } from './middleware/router-helpers.js';
+         getAnalyticsData, 
+         getUA } from './middleware/router-helpers.js';
 import { newLinkValidation, 
          payoutValidation, 
          ticketValidation, 
@@ -337,7 +338,21 @@ router.post('/:clickId/validate', async (req, res, next) => {
         const elapsed = Date.now() - new Date(click.createdAt).getTime()
         if (elapsed < (link.duration - 1000)) return res.sendStatus(403)
 
+        const ip = req.ip || 'not available';
+        const country = geoip.lookup(ip)?.country || 'not available';
+        const lang = req.get('Accept-Language')?.split(',')[0] || 'not available';
+
+        const ua = req.get('User-Agent');
+        const { os, browser } = getUA(ua);
+
+        click.ip = ip
+        click.country = country
+        click.language = lang
+        click.os = os
+        click.browser = browser
+
         click.valid = true
+
         await click.save()
 
         const today = new Date()
@@ -717,13 +732,8 @@ router.get('/:link', async (req, res, next) => {
             return next(err)
         }
 
-        const ip = req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for']?.split(',')[0] || req.ip || 'not available'
-
         const click = await ClickEvent.create({
             link: url._id,
-            ip: ip,
-            country: req.headers['cf-ipcountry'] || geoip.lookup(ip)?.country || 'not available',
-            userAgent: req.headers['user-agent']
         }).catch(console.error);    
 
         return url.monetization ? res.status(200).render('ads/adPage', { url, clickId: click._id }) : res.status(200).redirect(url.full)

@@ -41,14 +41,61 @@ const campaignSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ['recurring', 'one-time'],
+        enum: ['recurring', 'one-time', 'personal'],
         required: true,
     },
-    specifications: { // Geolocation, language, categories, device, operating system, time scheduling, returning users value (<- enums) 
-        
+    specifications: {
+        countries: {
+            type: String,
+            enum: [],
+            default: 'all'
+        },
+        languages: {
+            type: String,
+            enum: [],
+            default: 'all'
+        },
+        categories: {
+            type: String,
+            enum: [],
+            default: 'all'
+        },
+        browser: {
+            type: String,
+            enum: [],
+            default: 'all'
+        },
+        oss: {
+            type: String,
+            enum: [],
+            default: 'all'
+        },
+        returning: {
+            type: Number,
+            default: -1,
+        }
     },
-    budget: { // Active balance (ready to spend), set balance (target amount (per ?week, ?month, etc)), timespan (set of dates), target cpm / cost per click, 
-
+    budget: {
+        active: {
+            type: Number,
+            default: 0
+        },
+        dates: {
+            type: String,
+            default: new Date
+        },
+        times: {
+            type: String,
+            default: "all day"
+        },
+        daily: {
+            type: Number,
+            default: 0,
+        },
+        targetCpm: {
+            type: Number,
+            default: 1,
+        }
     }
 }, { timestamps: true });
 

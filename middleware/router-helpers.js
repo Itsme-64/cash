@@ -423,7 +423,7 @@ export async function getAnalyticsData(user) {
             return paidByDate[key];
         }
 
-        pendingDates.push(d);
+        if (d.getDate() != today.getDate()) pendingDates.push(d);
 
         if (pendingByDate[key] != null) {
             return pendingByDate[key];
@@ -436,4 +436,27 @@ export async function getAnalyticsData(user) {
         pending, referrerIncome,
         revenueByDate, pendingDates, dailyClicks, dates
     };
+}
+
+export function getUA(ua) {
+    let os = ""
+    let browser = ""
+
+    if (ua.includes("Windows NT")) os = "Windows"
+    else if (ua.includes("Mac OS X")) os = "macOS"
+    else if (ua.includes("Android")) os = "Android"
+    else if (ua.includes("iPhone")) os = "iOS"
+    else if (ua.includes("iPad")) os = "iPadOS"
+    else if (ua.includes("Linux")) os = "Linux"
+    else os = "Unknown"
+
+    if (ua.includes("Edg/")) browser = "Edge"
+    else if (ua.includes("OPR") || ua.includes("Opera")) browser = "Opera"
+    else if (ua.includes("Chrome") && !ua.includes("Edg/")) browser = "Chrome"
+    else if (ua.includes("Safari") && !ua.includes("Chrome")) browser = "Safari"
+    else if (ua.includes("Firefox")) browser = "Firefox"
+    else if (ua.includes("MSIE") || ua.includes("Trident")) browser = "Internet Explorer"
+    else browser = "Unknown"
+
+    return { os, browser };
 }

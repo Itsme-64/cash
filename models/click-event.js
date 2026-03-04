@@ -17,7 +17,17 @@ const clickEventSchema = new mongoose.Schema({
         required: false,
         immutable: true
     },
-    userAgent: {
+    language: {
+        type: String,
+        required: false,
+        immutable: true
+    },
+    browser: {
+        type: String,
+        required: false,
+        immutable: true
+    },
+    os: {
         type: String,
         required: false,
         immutable: true
