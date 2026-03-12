@@ -15,7 +15,7 @@ const campaignSchema = new mongoose.Schema({
         unique: true,
         immutable: true
     },
-    name: {
+    title: {
         type: String,
         required: true,
         immutable: true
@@ -36,8 +36,9 @@ const campaignSchema = new mongoose.Schema({
         default: false
     },
     business: {
-        type: String,
-        required: true
+        type: Boolean,
+        required: true,
+        immutable: true
     },
     type: {
         type: String,

@@ -1,9 +1,225 @@
-<div class="row">
+<% const status = 'removed' %>
+
+<div class="col-12 grid-margin stretch-card">
+    <div class="card 
+        <% if (status == 'removed') { %>
+            border-danger-subtle2
+        <% } else if (status == 'draft' || status == 'deactivated' || status == 'pending') { %>
+            border-warning-subtle2
+        <% } else if (status == 'active') { %>
+            border-success-subtle2
+        <% } %>">
+        <div class="card-body">
+            <!-- create new campaign popup on main advertising page, fill in the small details and then be redirected here to make the rest and saved as draft. -->
+            <div class="badge-row">
+                <h2><%= 'campaign.title' %></h2>
+                <% if (status == 'pending') { %>
+                    <span class="badge badge-info">Pending</span>
+                <% } else if (status == 'active') { %>
+                    <label class="badge badge-success">Active</label>
+                <% } else if (status == 'deactivated') { %>
+                    <label class="badge badge-warning">Deactivated</label>
+                <% } else if (status == 'draft') { %>
+                    <label class="badge badge-warning">Draft</label>
+                <% } else if (status == 'removed') { %>
+                    <label class="badge badge-danger">Removed</label>
+                <% } %>
+            </div>
+            <div class="badge-row">
+                <h4 class="mb-0"><%= 'campaign.header' %></h4>
+                <% if (status == 'removed') { %>
+                    <a class="btn btn-info">Appeal Removal</a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+<form class="forms-sample" action="/campaign/<%= campaign.short %>/update" method="post">
     <div class="col-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <!-- create new campaign popup on main advertising page, fill in the small details and then be redirected here to make the rest and saved as draft. -->
+                <div class="form-group row">
+                    <label for="userEmail" class="col-sm-2 col-form-label">Campaign Endpoint:</label>
+                    <div class="col-sm-10 d-flex align-items-center gap-2">
+                        <input type="email" class="form-control" id="userEmail" value="<%= campaign.endpoint %>" disabled readonly>
+                        <% if (campaign.business == true) { %>
+                            <p class="text-muted mb-0 d-flex align-items-center gap-1">
+                                <i class="icon-sm mdi mdi-domain text-info ml-auto"></i>&nbsp;&nbsp;Business
+                            </p>
+                        <% } else { %>
+                            <p class="text-muted mb-0 d-flex align-items-center gap-1">
+                                <i class="icon-sm mdi mdi-account text-info ml-auto"></i>&nbsp;Personal
+                            </p>
+                        <% } %>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+
+    <!-- LEFT SIDE: SPECIFICATIONS -->
+    <div class="col-md-6">
+        <h4 class="mb-3">Specifications</h4>
+
+        <!-- Countries -->
+        <div class="form-group row">
+            <label for="countries" class="col-sm-4 col-form-label">Countries</label>
+            <div class="col-sm-8">
+                <select class="form-select" id="countries" name="specifications[countries]">
+                    <option value="all" <%= data?.specifications?.countries === 'all' ? 'selected' : '' %>>All</option>
+                    <option value="nl" <%= data?.specifications?.countries === 'nl' ? 'selected' : '' %>>Netherlands</option>
+                    <option value="us" <%= data?.specifications?.countries === 'us' ? 'selected' : '' %>>United States</option>
+                </select>
             </div>
+        </div>
+
+        <!-- Languages -->
+        <div class="form-group row">
+            <label for="languages" class="col-sm-4 col-form-label">Languages</label>
+            <div class="col-sm-8">
+                <select class="form-select" id="languages" name="specifications[languages]">
+                    <option value="all">All</option>
+                    <option value="en">English</option>
+                    <option value="nl">Dutch</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="form-group row">
+            <label for="categories" class="col-sm-4 col-form-label">Categories</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control"
+                    id="categories"
+                    name="specifications[categories]"
+                    value="<%= data?.specifications?.categories ?? 'all' %>">
+            </div>
+        </div>
+
+        <!-- Browser -->
+        <div class="form-group row">
+            <label for="browser" class="col-sm-4 col-form-label">Browser</label>
+            <div class="col-sm-8">
+                <select class="form-select" id="browser" name="specifications[browser]">
+                    <option value="all">All</option>
+                    <option value="chromium">Chromium</option>
+                    <option value="firefox">Firefox</option>
+                    <option value="safari">Safari</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- OS -->
+        <div class="form-group row">
+            <label for="oss" class="col-sm-4 col-form-label">Operating System</label>
+            <div class="col-sm-8">
+                <select class="form-select" id="oss" name="specifications[oss]">
+                    <option value="all">All</option>
+                    <option value="windows">Windows</option>
+                    <option value="macos">macOS</option>
+                    <option value="linux">Linux</option>
+                    <option value="android">Android</option>
+                    <option value="ios">iOS</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Returning -->
+        <div class="form-group row">
+            <label for="returning" class="col-sm-4 col-form-label">Returning Users</label>
+            <div class="col-sm-8">
+                <select class="form-select" id="returning" name="specifications[returning]">
+                    <option value="-1">All</option>
+                    <option value="0">New Only</option>
+                    <option value="1">Returning Only</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE: BUDGET -->
+    <div class="col-md-6">
+        <h4 class="mb-3">Budget</h4>
+
+        <!-- Active Budget -->
+        <div class="form-group row">
+            <label for="active" class="col-sm-4 col-form-label">Active Budget</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control"
+                    id="active"
+                    name="budget[active]"
+                    value="<%= data?.budget?.active ?? 0 %>">
+            </div>
+        </div>
+
+        <!-- Dates -->
+        <div class="form-group row">
+            <label for="dates" class="col-sm-4 col-form-label">Dates</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control"
+                    id="dates"
+                    name="budget[dates]"
+                    value="<%= data?.budget?.dates ?? '' %>">
+            </div>
+        </div>
+
+        <!-- Times -->
+        <div class="form-group row">
+            <label for="times" class="col-sm-4 col-form-label">Times</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control"
+                    id="times"
+                    name="budget[times]"
+                    value="<%= data?.budget?.times ?? 'all day' %>">
+            </div>
+        </div>
+
+        <!-- Daily Budget -->
+        <div class="form-group row">
+            <label for="daily" class="col-sm-4 col-form-label">Daily Budget</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control"
+                    id="daily"
+                    name="budget[daily]"
+                    value="<%= data?.budget?.daily ?? 0 %>">
+            </div>
+        </div>
+
+        <!-- Target CPM -->
+        <div class="form-group row">
+            <label for="targetCpm" class="col-sm-4 col-form-label">Target CPM</label>
+            <div class="col-sm-8">
+                <input type="number" step="0.01" class="form-control"
+                    id="targetCpm"
+                    name="budget[targetCpm]"
+                    value="<%= data?.budget?.targetCpm ?? 1 %>">
+            </div>
+        </div>
+
+    </div>
+
+</div>
+                <!-- set specifications and budget here -->
+                
+            </div>
+        </div>
+    </div>
+    <div class="d-flex align-items-center">
+        <button type="submit" id="submitBtn" class="btn btn-primary me-2">Update</button>
+        <a href="/advertise" class="btn border-danger me-2" style="margin-left: 0.15rem">Cancel</a>
+        <button type="submit" id="submitBtn" class="btn border-warning me-2" style="margin-left: 0.15rem">Save as draft</button>
+        <p class="text-danger mb-0" style="margin-left: 1rem">
+            <% if (typeof errors !== 'undefined') { %>
+                <%= errors[0].msg %>
+            <% } %>
+        </p>
+    </div>
+</form>
+
+<!-- campaign analytics -->
+<div class="col-12 grid-margin stretch-card" style="margin-top: 4rem;">
+    <div class="card">
+        <div class="card-body">
+
         </div>
     </div>
 </div>

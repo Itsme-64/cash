@@ -319,7 +319,7 @@ export async function getDashboardData(user) {
 
 export async function getAnalyticsData(user) {
     // Temp cron job calling
-    // await linkWeightsDaily();
+    await linkWeightsDaily();
 
     // Dates
     const links = await Link.find({ user: user._id });
@@ -351,6 +351,9 @@ export async function getAnalyticsData(user) {
 
     // Top cards
     const pending = pendingAgg[0]?.totalPending[0]?.pending ?? 0;
+
+    console.log(pendingAgg[0])
+
     let referrerIncome = 0
 
     if (period) {

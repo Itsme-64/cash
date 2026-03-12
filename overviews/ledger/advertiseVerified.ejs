@@ -1,4 +1,37 @@
 <div class="row">
     <!-- here users can choose to create a new advertising campaign -->
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title" id="updatePassword">Create New Campaign</h4>
+                <p class="card-description">Additional details can be filled out once the campaign has been created.</p>
+                <form class="forms-sample" action="/advertise" method="post"> <!-- implement router functionality -->
+                    <!-- add here: title, header, endpoint, business vs personal -->
+                    <div class="form-group row">
+                        <label for="title">Title</label>
+                        <input type="text" class="form-control" id="title" minlength="0" name="title" placeholder="campaign title..." required>
+                    </div>
+                    <div class="form-group position-relative">
+                        <label for="header">Header / Splash text</label>
+                        <input type="text" class="form-control" id="header" minlength="12" name="header" placeholder="campaign header..." required>
+                    </div>
+                    <div class="form-group position-relative"> <!-- create an i icon for the endpoint containing data like mailto: etc details -->
+                        <label for="endpoint">Endpoint</label>
+                        <input type="url" class="form-controL" id="endpoint" name="endpoint" placeholder="campaign endpoint..." required>
+                    </div>
+                    <!-- checkbox for business vs personal -->
+                    <div class="d-flex align-items-center">
+                        <button type="submit" class="btn btn-primary me-2">Create</button>
+                        <button type="reset" class="btn btn-dark" style="margin-left: 0.15rem">Cancel</button> <!-- allow users to edit some of these, however the campaign will be set to drafty again, create into hover abt that too. -->
+                        <p class="text-danger mb-0" style="margin-left: 1rem">
+                            <% if (typeof errors != 'undefined' && typeof form !== 'undefined' && form == 'password') { %>
+                                <%= errors[0].msg %>
+                            <% } %>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 <!-- existing campaigns (userList) -->

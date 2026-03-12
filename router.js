@@ -7,6 +7,7 @@ import Link from './models/links.js';
 import User from './models/users.js';
 import Payout from './models/payouts.js';
 import Ticket from './models/tickets.js';
+import Campaign from './models/campaigns.js';
 import UserInfo from './models/users-info.js';
 import ClickEvent from './models/click-event.js';
 import PayoutMethod from './models/payout-method.js';
@@ -169,7 +170,7 @@ async function getYouData(req) {
     return { userInfo, payoutMethod };
 }
 
-// Tickets
+// Dynamic
 router.get('/tickets/:link', checkAuthenticated, async (req, res, next) => {
     try {
         const userId = req.user._id
@@ -209,6 +210,34 @@ router.get('/advertise/apply', checkAuthenticated, async (req, res) => {
         err.status = 500
         next(err) 
     }
+});
+
+router.get('/campaigns/:link', checkAuthenticated, async (req, res, next) => {
+    try {
+        const userId = req.user._id
+        const campaign = await Campaign.findOne({ short: req.params.link })
+
+        if (campaign === null) {
+            const err = new Error()
+            err.status = 404
+            return next(err)
+        }
+        if (String(campaign.user) !== String(userId)) {
+            const err = new Error()
+            err.status = 403
+            return next(err)
+        }
+
+        return res.status(200).render('campaign', { campaign })
+    } catch (err) {
+        err.status = 500
+        next(err)
+    } 
+});
+
+router.get('/campaigns', checkAuthenticated, async (req, res, next) => {
+    // TEMP
+    return res.status(200).render('campaign')
 });
 
 // User
@@ -483,6 +512,39 @@ router.post('/tickets/:link', checkAuthenticated, ticketMessageValidation, async
         next(err)
     }
 });
+
+router.post('/campaign/:link/update', checkAuthenticated, async (req, res, next) => { // create campaignUpdateValidation
+    
+    const userId = req.user._id
+    const campaign = await Campaign.findOne({ short: req.params.link })
+    
+    if (campaign === null) {
+        const err = new Error()
+        err.status = 404
+        return next(err)
+    }
+    if (String(campaign.user) !== String(userId)) {
+        const err = new Error()
+        err.status = 403
+        return next(err)
+    }
+
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.render('ticket', { campaign, errors: errors.array(), data: req.body })
+    }
+    
+    try {
+        // TODO
+
+        return res.status(200).redirect(`/campaigns/${campaign.short}`)
+    } catch (err) {
+        err.status = 500
+        next(err)
+    }
+});
+
+// More campaign methods too
 
 router.post('/login', checkNotAuthenticated, loginValidation, async (req, res, next) => {
     const errors = validationResult(req)
