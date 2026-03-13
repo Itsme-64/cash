@@ -433,11 +433,12 @@ router.post('/payout', checkAuthenticated, payoutValidation, async (req, res, ne
         user.balance = user.balance - (amount * 10000)
         await user.save({ session })
 
-        await Payout.create([{
+        const userPayout = await Payout.create({
             user: user._id,
             amount: amount,
             payoutMethod: payoutMethod
-        }], { session })
+        })
+        await userPayout.save({ session });
 
         await session.commitTransaction();
         return res.status(201).redirect('/payout')
@@ -578,14 +579,15 @@ router.post('/register', checkNotAuthenticated, registerValidation, async (req, 
         }
 
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
-        const newUser = await User.create([{
+        const newUser = await User.create({
             username: req.body.username,
             email: req.body.email,
             password: hashedPassword,
             referrer: referrer
-        }], { session })
+        })
+        await newUser.save({ session })
 
-        await UserInfo.create([{
+        const newUserInfo = await UserInfo.create({
             user: newUser._id,
             name: req.body.name,
             address: {
@@ -595,11 +597,13 @@ router.post('/register', checkNotAuthenticated, registerValidation, async (req, 
                 zip: req.body.zip,
                 country: req.body.country
             }
-        }], { session })
+        })
+        await newUserInfo.save({ session })
 
-        await PayoutMethod.create([{
+        const newPayoutMethod = await PayoutMethod.create({
             user: newUser._id
-        }], { session })
+        })
+        await newPayoutMethod.save({ session })
 
         await session.commitTransaction();
         return res.status(201).redirect('/login')

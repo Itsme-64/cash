@@ -44,11 +44,12 @@ export async function applyRevenuePeriod(periodID) {
                 }
             }
 
-            await UserRevenuePeriod.create([{
+            const newPeriod = await UserRevenuePeriod.create({
                 user: user._id,
                 period: period._id,
                 userIncome: userIncome,
-            }], { session });
+            });
+            await newPeriod.save({ session })
         }
 
         period.paidAmount = paidAmount;
