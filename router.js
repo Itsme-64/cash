@@ -433,7 +433,7 @@ router.post('/payout', checkAuthenticated, payoutValidation, async (req, res, ne
         user.balance = user.balance - (amount * 10000)
         await user.save({ session })
 
-        const userPayout = await Payout.create({
+        const userPayout = new Payout({
             user: user._id,
             amount: amount,
             payoutMethod: payoutMethod
@@ -446,6 +446,8 @@ router.post('/payout', checkAuthenticated, payoutValidation, async (req, res, ne
         await session.abortTransaction()
         err.status = 500
         next(err)
+    } finally {
+        session.endSession()
     }
 });
 
@@ -579,15 +581,15 @@ router.post('/register', checkNotAuthenticated, registerValidation, async (req, 
         }
 
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
-        const newUser = await User.create({
+        const newUser = new User({
             username: req.body.username,
             email: req.body.email,
             password: hashedPassword,
-            referrer: referrer
+            referrer
         })
         await newUser.save({ session })
 
-        const newUserInfo = await UserInfo.create({
+        const newUserInfo = new UserInfo({
             user: newUser._id,
             name: req.body.name,
             address: {
@@ -600,7 +602,7 @@ router.post('/register', checkNotAuthenticated, registerValidation, async (req, 
         })
         await newUserInfo.save({ session })
 
-        const newPayoutMethod = await PayoutMethod.create({
+        const newPayoutMethod = new PayoutMethod({
             user: newUser._id
         })
         await newPayoutMethod.save({ session })
@@ -611,6 +613,8 @@ router.post('/register', checkNotAuthenticated, registerValidation, async (req, 
         await session.abortTransaction();
         console.error(err)
         res.status(400).redirect('/register')
+    } finally {
+        session.endSession()
     }
 });
 

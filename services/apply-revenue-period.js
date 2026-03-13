@@ -44,7 +44,7 @@ export async function applyRevenuePeriod(periodID) {
                 }
             }
 
-            const newPeriod = await UserRevenuePeriod.create({
+            const newPeriod = new UserRevenuePeriod({
                 user: user._id,
                 period: period._id,
                 userIncome: userIncome,
