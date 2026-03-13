@@ -603,7 +603,7 @@ router.post('/register', checkNotAuthenticated, registerValidation, async (req, 
 
         await session.commitTransaction();
         return res.status(201).redirect('/login')
-    } catch {
+    } catch (err) {
         await session.abortTransaction();
         console.error(err)
         res.status(400).redirect('/register')

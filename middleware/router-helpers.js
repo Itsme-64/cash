@@ -352,8 +352,6 @@ export async function getAnalyticsData(user) {
     // Top cards
     const pending = pendingAgg[0]?.totalPending[0]?.pending ?? 0;
 
-    console.log(pendingAgg[0])
-
     let referrerIncome = 0
 
     if (period) {
