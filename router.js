@@ -802,13 +802,21 @@ router.get('/:link', async (req, res, next) => {
             return next(err)
         }
 
+        let qry = req.query.qry ?? "";
+        let dat = req.query.dat ?? "";
+        if (dat && !qry) qry = "dat";
+
+        let target = new URL(url.full);
+        if (dat) target.searchParams.set(qry, dat);
+        target = target.toString()
+
         const click = await ClickEvent.create({
             link: url._id,
-        }).catch(console.error);    
-
-        return url.monetization ? res.status(200).render('ads/adPage', { url, clickId: click._id }) : res.status(200).redirect(url.full)
+        });
+        
+        return url.monetization ? res.status(200).render('ads/adPage', { url, target, clickId: click._id }) : res.redirect(target)
     } catch (err) {
-        err.status = 500
+        if (!err.status) err.status = 500;
         next(err)
     }
 });

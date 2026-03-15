@@ -93,6 +93,21 @@
                         </div>
                     </div>
                     <%- include('ledger/userLinks', { width: 12, source: 'new' }) %>
+                    <div class="col-lg-12 col-sm-6 grid-margin stretch-card">
+                        <div class="card splash-text" style="text-align: left;">
+                            <div class="card-body">
+                                <h4 class="card-title">New: query strings</h4>
+                                <p class="">
+                                    Want to pass data through with your users? On any 159.cash link you can add two optional query strings: <br>
+                                    <code>qry</code> | the key of a query string you can pass on to your user's endpoint. 
+                                        If "qry" is not specified it will default to using "?dat" as the key <br>
+                                    <code>dat</code> | the value of the query string you want to pass on to your endpoint <br> <br>
+                                    Example: a user going through <code>https://159.cash/example?qry=cash&dat=money</code> 
+                                        will be redirected to <code>https://example.com?cash=money</code>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                     <%- include('ledger/infoCards') %>
                 </div>
                 <%- include('ledger/footer') %>
