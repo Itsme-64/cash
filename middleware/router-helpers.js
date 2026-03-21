@@ -119,7 +119,7 @@ export async function getLinkData(req, page) {
 
     // Link Data
     const links = await Link.find({ user: req.user._id })
-        .sort({ createdAt: -1 })
+        .sort({ createdAt: 1 })
         .skip(skip)
         .limit(limit);
 
