@@ -3,7 +3,7 @@ export function errorHandler(err, req, res, next) {
     const errData = {};
 
     // Development
-    console.error(err);
+    if (status != 404) console.error(err);
 
     switch(status) {
         case 400: {

@@ -784,7 +784,7 @@ router.post('/premium/subscribe', checkAuthenticated, async (req, res) => {
 router.get('/example', (req, res) => {
     const url = { full: '/', short: 'example', redirectInstantly: false, duration: 10000 }
     
-    res.status(200).render('ads/adPage', { url, clickId: 0 });
+    res.status(200).render('ads/adPage', { url, clickId: 0, target: '/' });
 });
 
 router.get('/:link', async (req, res, next) => {
