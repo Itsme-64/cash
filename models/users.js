@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
     PID: {
         type: String,
         required: true,
-        default: () => crypto.randomBytes(6).toString('hex'), 
+        default: () => crypto.randomBytes(6).toString('hex'),
         immutable: true,
         unique: true
     },

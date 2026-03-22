@@ -66,6 +66,6 @@ app.use('/', pages);
 app.use(errorHandler);
 app.use(notFound);
 
-app.listen(PORT, '0.0.0.0', () => console.log(`Server Running on port ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`Server Running on port ${PORT} at ${new Date()}`));
 
 registerJobs();
