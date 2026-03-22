@@ -1,14 +1,26 @@
 import schedule from 'node-schedule';
+import { deleteExpiredTokens } from './delete-expired-tokens.job.js'
 import { deleteInvalidClickEvents } from './delete-invalid-click-events.job.js';
 import { linkWeightsDaily } from './link-weights-daily.job.js';
 import { automaticPayouts } from './automatic-payouts.job.js';
 import { linksStatsMonthly } from './link-stats-monthly.job.js';
 
 export function registerJobs() {
+    deleteExpiredTokensJob()
     deleteInvalidClickEventsJob()
     linkWeightsDailyJob()
     automaticPayoutsJob()
     linksStatsMonthlyJob()
+}
+
+function deleteExpiredTokensJob() {
+    schedule.scheduleJob('0 0 * * * *', async () => {
+        try {
+            await deleteExpiredTokens();
+        } catch (err) {
+            console.error('Delete expired tokens job failed:', err);
+        }
+    });
 }
 
 function deleteInvalidClickEventsJob() {
