@@ -1,6 +1,7 @@
 import { body, query } from 'express-validator';
 import { validate as validateBtc, getAddressInfo } from 'bitcoin-address-validation';
 import User from '../models/users.js';
+import Token from '../models/tokens.js'
 import UserInfo from '../models/users-info.js';
 
 export const newLinkValidation = [
@@ -43,7 +44,8 @@ export const payoutValidation = [
             const user = req.user;
             const userInfoThis = await UserInfo.findOne({ user: user._id });
 
-            if (!user || !user.verified || !userInfoThis || !userInfoThis.name || !userInfoThis.address.line1 || !userInfoThis.address.city || !userInfoThis.address.zip || !userInfoThis.address.country || user.balance < 10) {
+            if (!user || !user.verified || !userInfoThis || !userInfoThis.name || !userInfoThis.address.line1 || !userInfoThis.address.city ||
+                !userInfoThis.address.zip || !userInfoThis.address.country || user.balance < 10) {
                 throw new Error('You do not meet all requirements to request payout');
             }
             
@@ -201,4 +203,93 @@ export const accountPasswordValidation = [
     body('newPasswordVerification')
         .notEmpty().withMessage('Password verification cannot be empty')
         .isLength({ min: 8 }).withMessage('Password verification must be at least 8 characters')
+        .custom((value, { req }) => {
+            if (value !== req.body.newPassword) throw new Error('Passwords do not match')
+            return true;
+        })
+];
+
+export const passwordForgottenValidation = [
+    body('email')
+        .notEmpty().withMessage('Email cannot be empty')
+        .isEmail().withMessage('Email address is invalid')
+        .normalizeEmail()
+        .custom(async (email) => {
+            const existingUser = await User.findOne({ email: email, status: true });
+            if (!existingUser) {
+                throw new Error('Email is not in use');
+            }
+            return true;
+        })
+];
+
+export const passwordResetValidation = [
+    body('newPassword')
+        .notEmpty().withMessage('New password cannot be empty')
+        .isLength({ min: 8 }).withMessage('New password must be at least 8 characters'),
+    body('newPasswordVerification')
+        .notEmpty().withMessage('Password verification cannot be empty')
+        .isLength({ min: 8 }).withMessage('Password verification must be at least 8 characters')
+        .custom((value, { req }) => {
+            if (value !== req.body.newPassword) throw new Error('Passwords do not match')
+            return true;
+        }),
+    query('token')
+        .notEmpty().withMessage('No valid token, make sure you copy the link from your password reset email correctly')
+        .custom(async (value) => {
+            const token = await Token.findOne({ token: value })
+                
+            let expirationDate = new Date()
+            expirationDate = expirationDate.setMinutes(expirationDate.getMinutes() - 15)
+
+            if (!token) throw new Error('Your token is not valid or may be outdated')
+            if (token.type !== 'password') throw new Error('This token was not made for resetting your password, silly!')
+            if (token.createdAt < expirationDate) throw new Error('Your token has expired, request a new one and make sure to complete within 15 minutes')
+
+            return true;
+        })
+];
+
+export const userVerificationValidation = [
+    query('user')
+        .notEmpty().withMessage('No valid user, make sure you copy the link from your password reset email correctly'),
+    query('token')
+        .notEmpty().withMessage('No valid token, make sure you copy the link from your password reset email correctly')
+        .custom(async (value, { req }) => {
+            const token = await Token.findOne({ token: value })
+                
+            let expirationDate = new Date()
+            expirationDate = expirationDate.setHours(expirationDate.getHours() - 2)
+
+            if (!token) throw new Error('Your token is not valid or may be outdated')
+            if (token.type !== 'verify') throw new Error('This token was not made for account verification, silly!')
+            if (token.createdAt < expirationDate) throw new Error('Your token has expired, request a new one and make sure to complete within 15 minutes')
+
+            const tokenUser = await User.findById(token.user)
+            if (!tokenUser) throw new Error('Token is not linked to a valid user account')
+            if (req.query.user.toLowerCase() != tokenUser.username.toLowerCase()) throw new Error('Token is not linked to this account')
+
+            return true;
+        })
+];
+
+export const tokenRateLimitVerification = [
+    body()
+        .custom(async (value, { req }) => {
+            const email = req.body.email
+
+            const user = email ? await User.findOne({ email: email }) : req.user
+            if (!user) throw new Error('No valid user to submit request')
+
+            let limitDate = new Date()
+            limitDate = limitDate.setMinutes(limitDate.getMinutes() - 15)
+
+            const tokens = await Token.find({ user: user._id, createdAt: { $gt: limitDate } })
+
+            if (tokens.length > 0) throw new Error(
+                'Please wait up to 15 minutes in between sending requests, if you have not recieved an email make sure to check your SPAM folder'
+            )
+
+            return true
+        })
 ];

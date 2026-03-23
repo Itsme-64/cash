@@ -19,13 +19,14 @@
                         <h3 class="card-title text-start mb-3">Login</h3>
                         <% if (typeof(errors) != 'undefined') { %>
                             <p class="text-danger"><%= errors[0].msg %></p>
-                        <% } else if (errorMessages && errorMessages.length > 0) { %>
+                        <% } else if (typeof(errorMessages) != 'undefined' && errorMessages && errorMessages.length > 0) { %>
                             <p class="text-danger"><%= errorMessages[0] %></p>
                         <% } %>
                         <form action="/login" method="POST">
                             <div class="form-group">
                                 <label for="email">Email *</label>
-                                <input type="text" class="form-control p_input" id="email" name="email" autocomplete="email" value="<%= typeof data !== 'undefined' ? data?.email ?? "" : "" %>" required>
+                                <input type="email" class="form-control p_input" id="email" name="email" autocomplete="email" required
+                                    value="<%= typeof data !== 'undefined' ? data?.email ?? "" : "" %>">
                             </div>
                             <div class="form-group">
                                 <label for="password">Password *</label>
@@ -36,7 +37,7 @@
                                     <label class="form-check-label">
                                     <input type="checkbox" class="form-check-input" checked> Remember me </label>
                                 </div>
-                                <a href="#" class="forgot-pass align-items-left">Forgot password</a>
+                                <a href="/password/forgot" class="forgot-pass align-items-left">Forgot password</a>
                             </div>
                             <div class="text-center d-grid gap-2">
                                 <button type="submit" class="btn btn-primary btn-block enter-btn">Log in</button>

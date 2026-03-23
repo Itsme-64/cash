@@ -110,21 +110,29 @@
                                         </p>
                                     </div>
                                 </form>
-                                <div class="form-group row" style="margin-top: 4rem;">
-                                    <label for="userEmail" class="col-sm-3 col-form-label">Email address:</label>
-                                    <div class="col-sm-9 d-flex align-items-center gap-2">
-                                        <input type="email" class="form-control" id="userEmail" value="<%= user.email %>" disabled readonly>
-                                        <% if (user.verified) { %>
-                                            <p class="text-muted mb-0 d-flex align-items-center gap-1">
-                                                <i class="icon-sm mdi mdi-check text-success ml-auto"></i>&nbsp;&nbsp;Verified
-                                            </p>
-                                        <% } else { %>
-                                            <p class="text-muted mb-0 d-flex align-items-center gap-1">
-                                                <i class="icon-sm mdi mdi-alert-circle-outline text-danger ml-auto"></i>&nbsp;Unverified
-                                            </p>
-                                        <% } %>
+                                <form class="forms-sample" action="/you/verify/resend" method="post">
+                                    <div class="form-group row" style="margin-top: 4rem;">
+                                        <p class="text-danger mb-0">
+                                            <% if (typeof errors !== 'undefined' && typeof form !== 'undefined' && form == 'resend') { %>
+                                                <%= errors[0].msg %>
+                                            <% } %>
+                                        </p>
+                                        <label for="userEmail" class="col-sm-3 col-form-label">Email address:</label>
+                                        <div class="col-sm-9 d-flex align-items-center gap-2">
+                                            <input type="email" class="form-control" id="userEmail" value="<%= user.email %>" disabled readonly>
+                                            <% if (user.verified) { %>
+                                                <p class="text-muted mb-0 d-flex align-items-center gap-1">
+                                                    <i class="icon-sm mdi mdi-check text-success ml-auto"></i>&nbsp;&nbsp;Verified
+                                                </p>
+                                            <% } else { %>
+                                                <p class="text-muted mb-0 d-flex align-items-center gap-1">
+                                                    <i class="icon-sm mdi mdi-alert-circle-outline text-danger ml-auto"></i>&nbsp;Unverified
+                                                </p>
+                                                <button type="submit" class="btn btn-dark me-2">Resend Email</button>
+                                            <% } %>
+                                        </div>
                                     </div>
-                                </div>
+                                </form>
                                 <div class="form-group row">
                                     <label for="username" class="col-sm-3 col-form-label">Username:</label>
                                     <div class="col-sm-9">

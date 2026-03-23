@@ -25,4 +25,8 @@ tokenSchema.index(
     { type: 1, createdAt: 1 }
 );
 
+tokenSchema.index(
+    { user: 1 }
+)
+
 export default mongoose.model('Token', tokenSchema);

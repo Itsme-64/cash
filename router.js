@@ -5,6 +5,7 @@ import geoip from 'geoip-lite'
 import mongoose from 'mongoose';
 import Link from './models/links.js';
 import User from './models/users.js';
+import Token from './models/tokens.js';
 import Payout from './models/payouts.js';
 import Ticket from './models/tickets.js';
 import Campaign from './models/campaigns.js';
@@ -13,6 +14,7 @@ import ClickEvent from './models/click-event.js';
 import PayoutMethod from './models/payout-method.js';
 import LinkStatsDaily from './models/link-stats-daily.js';
 import { validationResult } from 'express-validator';
+import { transporter, getPasswordMailOptions, getVerifyMailOptions } from './services/email.js';
 import { shortIdValidation } from './middleware/shortId-config.js';
 import { checkAuthenticated, checkNotAuthenticated } from './middleware/auth.js';
 import { getAdvertiseData,
@@ -33,7 +35,11 @@ import { newLinkValidation,
          ticketSendValidation, 
          accountUpdateValidation, 
          accountPayoutValidation, 
-         accountPasswordValidation } from './middleware/validation.js';
+         accountPasswordValidation,
+         passwordForgottenValidation,
+         passwordResetValidation,
+         userVerificationValidation,
+         tokenRateLimitVerification } from './middleware/validation.js';
 
 const router = express.Router();
 
@@ -235,10 +241,10 @@ router.get('/campaigns/:link', checkAuthenticated, async (req, res, next) => {
     } 
 });
 
-router.get('/campaigns', checkAuthenticated, async (req, res, next) => {
-    // TEMP
-    return res.status(200).render('campaign')
-});
+// router.get('/campaigns', checkAuthenticated, async (req, res, next) => {
+//     // TEMP
+//     return res.status(200).render('campaign')
+// });
 
 // User
 router.get('/login', checkNotAuthenticated, (req, res) => {
@@ -275,6 +281,18 @@ router.get('/report', async (req, res) => {
                   + "We appreciate your efforts to help make 159.cash a better place!"
 
     return res.status(202).render('user/error', { number: 'Rep.', redirect , message })
+});
+
+router.get('/you/verify', (req, res) => {
+    return res.status(200).render('user/verify', { query: req.query })
+})
+
+router.get('/password/forgot', checkNotAuthenticated, (req, res) => {
+    return res.status(200).render('user/passwordForgotten')
+});
+
+router.get('/password/reset', checkNotAuthenticated, (req, res) => {
+    return res.status(200).render('user/passwordReset', { query: req.query })
 });
 
 // Redirect
@@ -608,6 +626,18 @@ router.post('/register', checkNotAuthenticated, registerValidation, async (req, 
         await newPayoutMethod.save({ session })
 
         await session.commitTransaction();
+
+        const token = await Token.create({
+            user: newUser._id,
+            type: 'verify'
+        })
+
+        const mailOptions = getVerifyMailOptions(newUser, token)
+
+        transporter.sendMail(mailOptions, (error) => {
+            if (error) console.error(error)
+        })
+
         return res.status(201).redirect('/login')
     } catch (err) {
         await session.abortTransaction();
@@ -627,8 +657,6 @@ router.post('/ticket/send', checkNotAuthenticated, ticketSendValidation, async (
 });
 
 router.post('/you/update', accountUpdateValidation, async (req, res, next) => {
-    // use fileUpload() middleware
-  
     const user = req.user
 
     const errors = validationResult(req)
@@ -774,10 +802,154 @@ router.post('/you/delete', checkAuthenticated, async (req, res, next) => {
     return res.status(200).redirect('/logout')
 });
 
-router.post('/premium/subscribe', checkAuthenticated, async (req, res) => {
+router.post('/you/verify', userVerificationValidation, async (req, res, next) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        try {
+            return res.render('user/verify', { errors: errors.array(), query: req.query })
+        } catch (err) {
+            if (!err.status) err.status = 500
+            return next(err)
+        }
+    }
+
+    try {
+        const user = await User.findOne({ username: req.query.user })
+        await Token.deleteOne({ token: req.query.token })
+
+        if (!user || !user.status) {
+            const err = new Error()
+            err.status = 400
+            return next(err)
+        }
+
+        user.verified = true
+        await user.save()
+
+        return res.status(200).redirect('/you')
+    } catch (err) {
+        if (!err.status) err.status = 500
+        return next(err)
+    }
+});
+
+router.post('/you/verify/resend', checkAuthenticated, tokenRateLimitVerification, async (req, res, next) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        try {
+            const data = await getYouData(req)
+            return res.render('account', { ...data, errors: errors.array(), form: 'resend' })
+        } catch (err) {
+            if (!err.status) err.status = 500
+            return next(err)
+        }
+    }
+
+    const user = req.user
+
+    try {
+        const token = await Token.create({
+            user: user._id,
+            type: 'verify'
+        })
+
+        const mailOptions = getVerifyMailOptions(user, token)
+
+        transporter.sendMail(mailOptions, (error) => {
+            if (error) console.error(error)
+        })
+
+        return res.status(200).redirect('/you')
+    } catch (err) {
+        if (!err.status) err.status = 500
+        return next(err)
+    }
+})
+
+router.post('/premium/subscribe', checkAuthenticated, async (req, res, next) => {
     const err = new Error()
     err.status = 501
     return next(err)
+});
+
+router.post('/password/forgot', checkNotAuthenticated, tokenRateLimitVerification, passwordForgottenValidation, async (req, res, next) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        try {
+            return res.render('user/passwordForgotten', { errors: errors.array() })
+        } catch (err) {
+            if (!err.status) err.status = 500
+            return next(err)
+        }
+    }
+
+    try {
+        const email = req.body.email;
+        const user = await User.findOne({ email })
+
+        if (!user) {
+            const err = new Error()
+            err.status = 400
+            return next(err)
+        }
+
+        const token = await Token.create({
+            user: user._id,
+            type: 'password'
+        })
+
+        const mailOptions = getPasswordMailOptions(user, token)
+
+        transporter.sendMail(mailOptions, (error) => {
+            if (error) console.error(error)
+        })
+
+        return res.status(201).render('user/passwordForgotten', { success: 'recovery email sent successfully' })
+    } catch (err) {
+        if (!err.status) err.status = 500
+        return next(err)
+    }
+});
+
+router.post('/password/reset', checkNotAuthenticated, passwordResetValidation, async (req, res, next) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        try {
+            return res.render('user/passwordReset', { errors: errors.array(), query: req.query })
+        } catch (err) {
+            if (!err.status) err.status = 500
+            return next(err)
+        }
+    }
+
+    try {
+        const token = await Token.findOne({ token: req.query.token })
+
+        if (!token) {
+            const err = new Error()
+            err.status = 400
+            return next(err) 
+        }
+
+        const user = await User.findById(token.user)
+        await Token.findByIdAndDelete(token._id);
+
+        if (!user.status) {
+            const err = new Error()
+            err.status = 403
+            return next(err)      
+        }
+
+        const newHashedPassword = await bcrypt.hash(req.body.newPassword, 10)
+        user.password = newHashedPassword
+
+        await user.save()
+
+        return res.status(200).redirect('user/login')
+    } catch (err) {
+        if (!err.status) err.status = 500
+        return next(err)
+    }
 });
 
 // Ads
