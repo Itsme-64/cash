@@ -16,7 +16,7 @@ import LinkStatsDaily from './models/link-stats-daily.js';
 import { validationResult } from 'express-validator';
 import { transporter, getPasswordMailOptions, getVerifyMailOptions } from './services/email.js';
 import { shortIdValidation } from './middleware/shortId-config.js';
-import { checkAuthenticated, checkNotAuthenticated } from './middleware/auth.js';
+import { checkAuthenticated, checkNotAuthenticated, forceLogoutAll } from './middleware/auth.js';
 import { getAdvertiseData,
          getPayoutsData,
          getReferralData,
@@ -754,13 +754,14 @@ router.post('/you/password', checkAuthenticated, accountPasswordValidation, asyn
             user.password = newHashedPassword
 
             await user.save()
+            await forceLogoutAll(req, res, user._id)
+
+            return res.status(200).redirect('/login')
         } else {
             const err = new Error()
             err.status = 403
             return next(err)
         }
-
-        return res.status(200).redirect('/you')
     } catch (err) {
         err.status = 500
         next(err)
@@ -944,8 +945,9 @@ router.post('/password/reset', checkNotAuthenticated, passwordResetValidation, a
         user.password = newHashedPassword
 
         await user.save()
+        await forceLogoutAll(req, res, user._id)
 
-        return res.status(200).redirect('user/login')
+        return res.status(200).redirect('/login')
     } catch (err) {
         if (!err.status) err.status = 500
         return next(err)

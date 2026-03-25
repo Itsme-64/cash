@@ -1,6 +1,8 @@
+import mongoose from 'mongoose';
+
 function checkAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
-        return next();
+        return next()
     }
 
     res.status(401).redirect('./login')
@@ -22,7 +24,21 @@ function requireAdmin(req, res, next) {
         err.status = 403
         return next(err)
     }
-    next();
+    next()
 }
 
-export { checkAuthenticated, checkNotAuthenticated, requireAdmin };
+async function forceLogoutAll(req, res, userId) {
+    const db = mongoose.connection.db
+
+    await db.collection('sessions').deleteMany({
+        "session.passport.user": userId.toString()
+    })
+
+    req.logout(() => {})
+    req.session.destroy(() => {
+        res.clearCookie('connect.sid')
+        res.redirect('/login')
+    })
+}
+
+export { checkAuthenticated, checkNotAuthenticated, requireAdmin, forceLogoutAll };
