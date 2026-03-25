@@ -14,7 +14,7 @@ import ClickEvent from './models/click-event.js';
 import PayoutMethod from './models/payout-method.js';
 import LinkStatsDaily from './models/link-stats-daily.js';
 import { validationResult } from 'express-validator';
-import { transporter, getPasswordMailOptions, getVerifyMailOptions } from './services/email.js';
+import { transporter, getPasswordMailOptions, getVerifyMailOptions, getPasswordChangedMailOptions, getDeletedMailOptions } from './services/email.js';
 import { shortIdValidation } from './middleware/shortId-config.js';
 import { checkAuthenticated, checkNotAuthenticated, forceLogoutAll } from './middleware/auth.js';
 import { getAdvertiseData,
@@ -346,12 +346,12 @@ router.post('/new', checkAuthenticated, newLinkValidation, async (req, res, next
     }
 });
 
-router.post('/:link/status', checkAuthenticated, async (req, res, next) => {
+router.post('/link/status', checkAuthenticated, async (req, res, next) => {
     try {
         const user = req.user
-        const shortLink = await Link.findOne({ short: req.params.link })
+        const shortLink = await Link.findOne({ short: req.query.link })
 
-        if (shortLink === null) {
+        if (!shortLink) {
             const err = new Error()
             err.status = 404
             return next(err)
@@ -374,9 +374,9 @@ router.post('/:link/status', checkAuthenticated, async (req, res, next) => {
     }
 })
 
-router.post('/:clickId/validate', async (req, res, next) => {
+router.post('/click/validate', async (req, res, next) => {
     try {
-        const click = await ClickEvent.findById(req.params.clickId)
+        const click = await ClickEvent.findById(req.query.clickid)
         if (!click) return res.sendStatus(404)
 
         const link = await Link.findById(click.link)
@@ -534,10 +534,10 @@ router.post('/tickets/:link', checkAuthenticated, ticketMessageValidation, async
     }
 });
 
-router.post('/campaign/:link/update', checkAuthenticated, async (req, res, next) => { // create campaignUpdateValidation
+router.post('/campaign/update', checkAuthenticated, async (req, res, next) => { // create campaignUpdateValidation
     
     const userId = req.user._id
-    const campaign = await Campaign.findOne({ short: req.params.link })
+    const campaign = await Campaign.findOne({ short: req.query.campaign })
     
     if (campaign === null) {
         const err = new Error()
@@ -749,19 +749,25 @@ router.post('/you/password', checkAuthenticated, accountPasswordValidation, asyn
     try {
         const isMatch = await bcrypt.compare(req.body.password, user.password)
 
-        if (isMatch && req.body.newPassword === req.body.newPasswordVerification) {
-            const newHashedPassword = await bcrypt.hash(req.body.newPassword, 10)
-            user.password = newHashedPassword
-
-            await user.save()
-            await forceLogoutAll(req, res, user._id)
-
-            return res.status(200).redirect('/login')
-        } else {
+        if (!isMatch || req.body.newPassword !== req.body.newPasswordVerification) {
             const err = new Error()
             err.status = 403
             return next(err)
         }
+
+        const newHashedPassword = await bcrypt.hash(req.body.newPassword, 10)
+        user.password = newHashedPassword
+
+        await user.save()
+        await forceLogoutAll(req, res, user._id)
+
+        const mailOptions = getPasswordChangedMailOptions(user)
+
+        transporter.sendMail(mailOptions, (error) => {
+            if (error) console.error(error)
+        })
+
+        return res.status(200).redirect('/login')
     } catch (err) {
         err.status = 500
         next(err)
@@ -794,13 +800,25 @@ router.post('/you/delete', checkAuthenticated, async (req, res, next) => {
         return next(err)
     }
 
-    user.status = false
-    user.username = '__deleted__user__' + user.username + '__deleted__user__'
-    user.email = '__deleted__user__' + user.email + '__deleted__user__'
+    try {
+        const mailOptions = getDeletedMailOptions(user)
 
-    await user.save()
+        transporter.sendMail(mailOptions, (error) => {
+            if (error) console.error(error)
+        })
 
-    return res.status(200).redirect('/logout')
+        user.status = false
+        user.username = '__deleted__user__' + user.username + '__deleted__user__'
+        user.email = '__deleted__user__' + user.email + '__deleted__user__'
+
+        await user.save()
+        await forceLogoutAll(req, res, user._id)
+
+        return res.status(200).redirect('/logout')
+    } catch (err) {
+        if (!err.status) err.status = 500
+        return next(err)
+    }
 });
 
 router.post('/you/verify', userVerificationValidation, async (req, res, next) => {
@@ -888,7 +906,7 @@ router.post('/password/forgot', checkNotAuthenticated, tokenRateLimitVerificatio
         const email = req.body.email;
         const user = await User.findOne({ email })
 
-        if (!user) {
+        if (!user || !user.status) {
             const err = new Error()
             err.status = 400
             return next(err)
@@ -946,6 +964,12 @@ router.post('/password/reset', checkNotAuthenticated, passwordResetValidation, a
 
         await user.save()
         await forceLogoutAll(req, res, user._id)
+
+        const mailOptions = getPasswordChangedMailOptions(user)
+
+        transporter.sendMail(mailOptions, (error) => {
+            if (error) console.error(error)
+        })
 
         return res.status(200).redirect('/login')
     } catch (err) {

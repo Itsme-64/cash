@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 function checkAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
+    if (req.isAuthenticated() && req.user?.status) {
         return next()
     }
 

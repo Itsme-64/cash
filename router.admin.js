@@ -73,9 +73,9 @@ adminRouter.post('/period/create', createRevenuePeriodValidation, async (req, re
     }
 });
 
-adminRouter.post('/:payout/complete', async (req, res, next) => {
+adminRouter.post('/payout/complete', async (req, res, next) => {
     try {
-        const payout = await Payout.findOne({ short: req.params.payout })
+        const payout = await Payout.findOne({ short: req.query.payout })
 
         if (!payout) {
             const err = new Error()
@@ -94,9 +94,9 @@ adminRouter.post('/:payout/complete', async (req, res, next) => {
     }
 });
 
-adminRouter.post('/:payout/reject', async (req, res, next) => {
+adminRouter.post('/payout/reject', async (req, res, next) => {
     try {
-        const payout = await Payout.findOne({ short: req.params.payout })
+        const payout = await Payout.findOne({ short: req.query.payout })
 
         if (!payout) {
             const err = new Error()
@@ -140,9 +140,9 @@ adminRouter.post('/tickets/:ticket', async (req, res, next) => {
     }
 });
 
-adminRouter.post('/:ticket/resolve', async (req, res, next) => {
+adminRouter.post('/ticket/resolve', async (req, res, next) => {
     try {
-        const ticket = await Ticket.findOne({ short: req.params.ticket })
+        const ticket = await Ticket.findOne({ short: req.query.ticket })
 
         if (!ticket) {
             const err = new Error()
@@ -161,9 +161,9 @@ adminRouter.post('/:ticket/resolve', async (req, res, next) => {
     }
 });
 
-adminRouter.post('/:ticket/close', async (req, res, next) => {
+adminRouter.post('/ticket/close', async (req, res, next) => {
     try {
-        const ticket = await Ticket.findOne({ short: req.params.ticket })
+        const ticket = await Ticket.findOne({ short: req.query.ticket })
 
         if (!ticket) {
             const err = new Error()
@@ -182,9 +182,9 @@ adminRouter.post('/:ticket/close', async (req, res, next) => {
     }
 });
 
-adminRouter.post('/:campaign/approve', async (req, res, next) => {
+adminRouter.post('/campaign/approve', async (req, res, next) => {
     try {
-        const campaign = await Campaign.findOne({ short: req.params.campaign })
+        const campaign = await Campaign.findOne({ short: req.query.campaign })
 
         if (!campaign) {
             const err = new Error()
@@ -203,9 +203,9 @@ adminRouter.post('/:campaign/approve', async (req, res, next) => {
     }
 });
 
-adminRouter.post('/:campaign/remove', async (req, res, next) => {
+adminRouter.post('/campaign/remove', async (req, res, next) => {
     try {
-        const campaign = await Campaign.findOne({ short: req.params.campaign })
+        const campaign = await Campaign.findOne({ short: req.query.campaign })
 
         if (!campaign) {
             const err = new Error()

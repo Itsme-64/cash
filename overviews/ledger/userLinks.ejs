@@ -12,7 +12,7 @@
                             <% links.slice().reverse().forEach(link => { %>
                                 <div class="preview-item border-bottom scrollableCard">
                                     <div class="preview-thumbnail">
-                                        <form action="/<%= link.short %>/status?source=<%= source %>" method="POST">
+                                        <form action="/link/status?source=<%= source %>&link=<%= link.short %>" method="POST">
                                             <button type="submit" class="btn btn-link p-0 border-0 bg-transparent">
                                                 <% if (link.status) { %>
                                                     <div class="preview-icon bg-primary" data-bs-toggle="tooltip" data-bs-placement="right" title="deactivate link">

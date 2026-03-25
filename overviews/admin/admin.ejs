@@ -127,7 +127,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <td>
-                                                            <form action="/admin/<%= payout.short %>/complete" autocomplete="off" method="POST">
+                                                            <form action="/admin/payout/complete?payout=<%= payout.short %>" autocomplete="off" method="POST">
                                                                 <button type="submit" title="mark complete" class="btn btn-info me-2">
                                                                     # <%= payout.short %>
                                                                 </button>
@@ -188,12 +188,12 @@
                                                         </td>
                                                         <td>
                                                             <div style="display: flex; flex-direction: row;">
-                                                                <form action="/admin/<%= ticket.short %>/resolve" autocomplete="off" method="POST">
+                                                                <form action="/admin/ticket/resolve?ticket=<%= ticket.short %>" autocomplete="off" method="POST">
                                                                     <button type="submit" title="resolve ticket" class="btn btn-success me-2">
                                                                         <i class="mdi mdi-check-circle-outline"></i>
                                                                     </button>
                                                                 </form>
-                                                                <form action="/admin/<%= ticket.short %>/close" autocomplete="off" method="POST">
+                                                                <form action="/admin/ticket/close?ticket=<%= ticket.short %>" autocomplete="off" method="POST">
                                                                     <button type="submit" title="close ticket" class="btn btn-danger me-2">
                                                                         <i class="mdi mdi-cancel"></i>
                                                                     </button>
@@ -310,12 +310,12 @@
                                                         </td>
                                                         <td>
                                                             <div style="display: flex; flex-direction: row;">
-                                                                <form action="/admin/<%= campaign.short %>/approve" autocomplete="off" method="POST">
+                                                                <form action="/admin/campaign/approve?campaign=<%= campaign.short %>" autocomplete="off" method="POST">
                                                                     <button type="submit" title="approve campaign" class="btn btn-success me-2">
                                                                         <i class="mdi mdi-check-circle-outline"></i>
                                                                     </button>
                                                                 </form>
-                                                                <form action="/admin/<%= campaign.short %>/remove" autocomplete="off" method="POST">
+                                                                <form action="/admin/campaign/remove?campaign=<%= campaign.short %>" autocomplete="off" method="POST">
                                                                     <button type="submit" title="remove campaign" class="btn btn-danger me-2">
                                                                         <i class="mdi mdi-cancel"></i>
                                                                     </button>

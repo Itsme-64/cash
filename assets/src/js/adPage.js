@@ -28,7 +28,7 @@ function redirect() {
     clearInterval(updateCountdown);
 
     if (!example) {
-        fetch(`/${document.body.dataset.clickId}/validate`, {
+        fetch(`/click/validate?clickid=${document.body.dataset.clickId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' }
         }).catch((err) => { console.error(err) });
