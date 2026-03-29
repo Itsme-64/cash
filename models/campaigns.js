@@ -33,7 +33,7 @@ const campaignSchema = new mongoose.Schema({
         type: String,
         enum: ['draft', 'pending', 'active', 'deactivated', 'removed'],
         required: true,
-        default: false
+        default: 'draft'
     },
     business: {
         type: Boolean,
@@ -42,8 +42,7 @@ const campaignSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ['recurring', 'one-time', 'personal'],
-        required: true,
+        enum: ['recurring', 'one-time', 'personal']
     },
     specifications: {
         countries: {

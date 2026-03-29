@@ -209,6 +209,17 @@ dl li {
   -webkit-justify-content: center;
   justify-content: center;
 }
+.preview-list .preview-item .preview-thumbnail .preview-icon-wide {
+  width: 80px;
+  height: 40px;
+  text-align: center;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
 .preview-list .preview-item .preview-thumbnail img i,
 .preview-list .preview-item .preview-thumbnail .preview-icon i {
   font-size: 1.125rem;

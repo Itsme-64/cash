@@ -12,7 +12,7 @@ import UserRevenuePeriod from '../models/user-revenue-period.js';
 // Temp
 import { linkWeightsDaily } from '../services/jobs/link-weights-daily.job.js';
 
-export async function getAdvertiseData() {
+export async function getAdvertingData() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 

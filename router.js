@@ -17,7 +17,7 @@ import { validationResult } from 'express-validator';
 import { transporter, getPasswordMailOptions, getVerifyMailOptions, getPasswordChangedMailOptions, getDeletedMailOptions } from './services/email.js';
 import { shortIdValidation } from './middleware/shortId-config.js';
 import { checkAuthenticated, checkNotAuthenticated, forceLogoutAll } from './middleware/auth.js';
-import { getAdvertiseData,
+import { getAdvertingData,
          getPayoutsData,
          getReferralData,
          getLinkData,
@@ -64,19 +64,27 @@ router.get('/', checkNotAuthenticated, (req, res) => {
 
 router.get('/advertise', async (req, res, next) => {
     try {
-        const isAuthenticated = req.isAuthenticated()
-        let data = {}
+        const data = await getAdvertiseData(req)
 
-        if (isAuthenticated) {
-            data = await getAdvertiseData()
-        }
-
-        return res.status(200).render('advertise', { isAuthenticated, ...data })
+        return res.status(200).render('advertise', { ...data })
     } catch(err) {
         err.status = 500
         next(err)
     }
 });
+async function getAdvertiseData(req) {
+    const isAuthenticated = req.isAuthenticated()
+
+    let campaigns = {}
+    let data = {}
+
+    if (isAuthenticated) {
+        campaigns = Campaign.find({ user: req.user._id })
+        data = await getAdvertingData()
+    }
+
+    return { isAuthenticated, campaigns, ...data }
+}
 
 router.get('/analytics', checkAuthenticated, async (req, res, next) => {
     try {
@@ -493,7 +501,7 @@ router.post('/ticket', checkAuthenticated, ticketValidation, async (req, res, ne
 
         return res.status(201).redirect('/ticket')
     } catch (err) {
-        err.status = 500
+        if (!err.status) err.status = 500
         next(err)
     }
 });
@@ -529,7 +537,35 @@ router.post('/tickets/:link', checkAuthenticated, ticketMessageValidation, async
 
         return res.status(200).redirect(`/tickets/${ticket.short}`)
     } catch (err) {
-        err.status = 500
+        if (!err.status) err.status = 500
+        next(err)
+    }
+});
+
+router.post('/advertise', checkAuthenticated, async (req, res, next) => { // create campaignValidation (this method for creating base campaign)
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        try {
+            const data = await getAdvertiseData(req)
+            return res.render('tickets', { ...data, errors: errors.array(), data: req.body })
+        } catch (err) {
+            err.status = 500
+            next(err)
+        }
+    }
+
+    try {
+        await Campaign.create({
+            user: req.user._id,
+            title: req.body.title,
+            head: req.body.header,
+            endpoint: req.body.endpoint,
+            business: req.body.business ? true : false
+        })
+
+        return res.status(201).redirect('/advertise')
+    } catch (err) {
+        if (!err.status) err.status = 500
         next(err)
     }
 });
@@ -560,7 +596,7 @@ router.post('/campaign/update', checkAuthenticated, async (req, res, next) => { 
 
         return res.status(200).redirect(`/campaigns/${campaign.short}`)
     } catch (err) {
-        err.status = 500
+        if (!err.status) err.status = 500
         next(err)
     }
 });

@@ -1,30 +1,36 @@
 <div class="row">
-    <!-- here users can choose to create a new advertising campaign -->
     <div class="col-md-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title" id="updatePassword">Create New Campaign</h4>
+                <h4 class="card-title" id="updatePassword">Create A New Campaign</h4>
                 <p class="card-description">Additional details can be filled out once the campaign has been created.</p>
                 <form class="forms-sample" action="/advertise" method="post"> <!-- implement router functionality -->
-                    <!-- add here: title, header, endpoint, business vs personal -->
-                    <div class="form-group row">
-                        <label for="title">Title</label>
-                        <input type="text" class="form-control" id="title" minlength="0" name="title" placeholder="campaign title..." required>
+                    <div class="form-group position-relative">
+                        <label for="title">Title</label> <!-- have the title an business inputs be next to eachother -->
+                        <input type="text" class="form-control" id="title" minlength="0" name="title" placeholder="campaign title..." required
+                            value="<%= typeof data !== 'undefined' ? data?.title : "" %>">
                     </div>
                     <div class="form-group position-relative">
                         <label for="header">Header / Splash text</label>
-                        <input type="text" class="form-control" id="header" minlength="12" name="header" placeholder="campaign header..." required>
+                        <input type="text" class="form-control" id="header" minlength="12" name="header" placeholder="campaign header..." required
+                            value="<%= typeof data !== 'undefined' ? data?.header : "" %>">
                     </div>
                     <div class="form-group position-relative"> <!-- create an i icon for the endpoint containing data like mailto: etc details -->
                         <label for="endpoint">Endpoint</label>
-                        <input type="url" class="form-controL" id="endpoint" name="endpoint" placeholder="campaign endpoint..." required>
+                        <input type="url" class="form-control" id="endpoint" name="endpoint" placeholder="campaign endpoint..." required
+                            value="<%= typeof data !== 'undefined' ? data?.endpoint : "" %>">
                     </div>
-                    <!-- checkbox for business vs personal -->
+                    <div class="form-group d-flex align-items-center justify-content-between">
+                        <div class="form-check">
+                            <label for="business" class="form-check-label">
+                            <input type="checkbox" name="business" id="business" class="form-check-input">I am creating this campaign on behalf of a company</label>
+                        </div>
+                    </div>
                     <div class="d-flex align-items-center">
                         <button type="submit" class="btn btn-primary me-2">Create</button>
-                        <button type="reset" class="btn btn-dark" style="margin-left: 0.15rem">Cancel</button> <!-- allow users to edit some of these, however the campaign will be set to drafty again, create into hover abt that too. -->
+                        <button type="reset" class="btn btn-dark" style="margin-left: 0.15rem">Cancel</button> <!-- allow users to edit some of these, however the campaign will be set to draft again, create into hover abt that too. -->
                         <p class="text-danger mb-0" style="margin-left: 1rem">
-                            <% if (typeof errors != 'undefined' && typeof form !== 'undefined' && form == 'password') { %>
+                            <% if (typeof errors != 'undefined') { %>
                                 <%= errors[0].msg %>
                             <% } %>
                         </p>
@@ -35,3 +41,97 @@
     </div>
 </div>
 <!-- existing campaigns (userList) -->
+<div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex flex-row justify-content-between">
+                <h4 class="card-title mb-1">Your Campaigns</h4>
+                <p class="text-muted mb-1">data</p>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="preview-list fixedHeightScrollable" id="userLinks">
+                        <% if (Array.isArray(campaigns) && campaigns.length > 0) { %>
+                            <% campaigns.slice().reverse().forEach(campaign => { %>
+                                <div class="preview-item border-bottom scrollableCard">
+                                    <div class="preview-thumbnail">
+                                        <!-- add all statuses here and probably add some text so it's clear what everything is -->
+                                        <button type="submit" class="btn btn-link p-0 border-0 bg-transparent">
+                                            <% if (campaign.status == 'draft') { %> <!-- enum: enum: ['draft', 'pending', 'active', 'deactivated', 'removed'], -->
+                                                <div class="preview-icon-wide bg-primary" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                                    title="your campaign is currently a draft">
+                                                    <i class="mdi mdi-link-variant text-light">drft</i>
+                                                </div>
+                                            <% } else if (campaign.status == 'pending') { %>
+                                                <div class="preview-icon-wide bg-danger" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                                    title="your campaign is currently pending approval, please be patient and wait for it to be reviewd by an admin">
+                                                    <i class="mdi mdi-link-variant-off text-light">pdng</i>
+                                                </div>
+                                            <% } else if (campaign.status == 'active') { %>
+                                                <div class="preview-icon-wide bg-danger" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                                    title="your campaign is actively running & displaying advertisements on 159.cash. It was last updated on 
+                                                    <%= new Date(campaign.updatedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) %>">
+                                                    <i class="mdi mdi-link-variant-off text-light">actv</i>
+                                                </div>
+                                            <% } else if (campaign.status == 'deactivated') { %>
+                                                <div class="preview-icon-wide bg-danger"  data-bs-toggle="tooltip" data-bs-placement="right" 
+                                                    title="your campaign is currently deactivated and thus not displaying advertisements online. 
+                                                    If you did not deactivate it yourself you might need to supply additional funding for reinstatement">
+                                                    <i class="mdi mdi-link-variant-off text-light">deac</i>
+                                                </div>
+                                            <% } else if (campaign.status == 'removed') { %>
+                                                <div class="preview-icon-wide bg-danger"  data-bs-toggle="tooltip" data-bs-placement="right" 
+                                                    title="your campaign has been permanently removed from 159.cash, if you want help regarding this situation contact support">
+                                                    <i class="mdi mdi-link-variant-off text-light">remv</i>
+                                                </div>
+                                            <% } %>
+                                        </button>
+                                    </div>
+                                    <div class="preview-item-content d-sm-flex flex-grow"> 
+                                        <div class="flex-grow">
+                                            <h6 class="preview-subject"><%= campaign.title %></h6>
+                                            <p class="text-muted mb-0" style="max-width: 30vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                                <a class="text-muted" href="<%= campaign.endpoint %>"><%= campaign.endpoint %></a>
+                                            </p>
+                                        </div>
+                                        <div class="mr-auto text-sm-right pt-2 pt-sm-0">
+                                        <!-- above give some campaign data (todo) and below say information about remaining budget and such -->
+                                            <p>
+                                                <span><%= 'campaign analytics should show here' %> clicks</span>
+                                            </p>
+                                            <p class="text-muted mb-0">Remaining: 
+                                                <% if (campaign.active > 0.1) { %>
+                                                    <span class="text-success"><%= (campaign.active / 10000).toFixed(4) %></span>
+                                                <% } else { %>
+                                                    <span class="text-warning"><%= (campaign.active / 10000).toFixed(4) %></span>
+                                                <% } %>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <div class="preview-item border-bottom">
+                                <div class="preview-thumbnail">
+                                    <div class="preview-icon bg-info">
+                                        <i class="mdi mdi-exclamation-thick"></i>
+                                    </div>
+                                </div>
+                                <div class="preview-item-content d-sm-flex flex-grow">
+                                    <div class="flex-grow">
+                                        <h6 class="preview-subject">You don't have campaigns yet!</h6>
+                                        <p class="text-muted mb-0">Create one using the form above</p>
+                                    </div>
+                                    <div class="mr-auto text-sm-right pt-2 pt-sm-0">
+                                        <p class="text-muted"></p>
+                                        <p class="text-muted mb-0"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
