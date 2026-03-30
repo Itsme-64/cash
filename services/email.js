@@ -2,17 +2,16 @@ import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const BREVO_USER = process.env.ADMIN_EMAIL
-const SMTP_KEY = process.env.BREVO_SMTP
-const API_KEY = process.env.BREVO_API
+const BREVO_USER = process.env.BREVO_USER
+const BREVO_PASS = process.env.BREVO_PASS
 
 export const transporter = nodemailer.createTransport({
     host: "smtp-relay.brevo.com",
     port: 587,
     secure: false,
     auth: {
-        user: "a5a682001@smtp-brevo.com",
-        pass: "jyPTL16tD2Z80mMY"
+        user: BREVO_USER,
+        pass: BREVO_PASS
     }
 });
 
