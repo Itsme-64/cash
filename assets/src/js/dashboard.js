@@ -14,8 +14,6 @@ if (total !== 0) {
     referralLabel = String((finalSeries[2] / total).toFixed(0));
 }
 
-console.log(finalSeries)
-
 const options = {
     chart: {
         height: '180%',

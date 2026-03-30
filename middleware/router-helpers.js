@@ -89,7 +89,7 @@ export async function getReferralData(user) {
 }
 
 export async function getPayoutsData(user) {
-    const payouts = await Payout.find({ user: user._id });
+    const payouts = await Payout.find({ user: user._id }).sort({ createdAt: -1 });
     const userInfoThis = await UserInfo.findOne({ user: user._id });
     const payoutMethod = await getPayoutMethod(user._id);
 
@@ -119,7 +119,7 @@ export async function getLinkData(req, page) {
 
     // Link Data
     const links = await Link.find({ user: req.user._id })
-        .sort({ createdAt: 1 })
+        .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit);
 

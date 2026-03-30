@@ -13,7 +13,7 @@
                         </tr>
                     </thead>
                     <% if (Array.isArray(payouts) && payouts.length > 0) { %>
-                        <% payouts.slice().reverse().forEach(payout => { %>
+                        <% payouts.slice().forEach(payout => { %>
                             <tbody>
                                 <tr>
                                     <td><%= new Date(payout.createdAt).toLocaleDateString("en-US", {

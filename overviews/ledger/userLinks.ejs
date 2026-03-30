@@ -9,7 +9,7 @@
                 <div class="col-12">
                     <div class="preview-list fixedHeightScrollable" id="userLinks">
                         <% if (Array.isArray(links) && links.length > 0) { %>
-                            <% links.slice().reverse().forEach(link => { %>
+                            <% links.slice().forEach(link => { %>
                                 <div class="preview-item border-bottom scrollableCard">
                                     <div class="preview-thumbnail">
                                         <form action="/link/status?source=<%= source %>&link=<%= link.short %>" method="POST">

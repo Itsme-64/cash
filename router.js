@@ -155,7 +155,7 @@ router.get('/referral', checkAuthenticated, async (req, res, next) => {
 router.get('/ticket', async (req, res, next) => {
     if (req.isAuthenticated()) {
         try {
-            const tickets = await Ticket.find({ user: req.user._id })
+            const tickets = await Ticket.find({ user: req.user._id }).sort({ createdAt: -1 })
 
             return res.status(200).render('tickets', { tickets })
         } catch (err) {
@@ -210,7 +210,7 @@ router.get('/tickets/:link', checkAuthenticated, async (req, res, next) => {
 
 router.get('/advertise/apply', checkAuthenticated, async (req, res) => {
     try {
-        const tickets = await Ticket.find({ user: req.user._id })
+        const tickets = await Ticket.find({ user: req.user._id }).sort({ createdAt: -1 })
 
         const data = {}
         data.ticketTitle = `Advertiser Application: ${req.user.username} (${req.user.PID})`
@@ -484,7 +484,7 @@ router.post('/ticket', checkAuthenticated, ticketValidation, async (req, res, ne
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
         try {
-            const tickets = await Ticket.find({ user: userId })
+            const tickets = await Ticket.find({ user: userId }).sort({ createdAt: -1 })
             return res.render('tickets', { tickets, errors: errors.array(), data: req.body })
         } catch (err) {
             err.status = 500
@@ -844,8 +844,16 @@ router.post('/you/delete', checkAuthenticated, async (req, res, next) => {
         })
 
         user.status = false
-        user.username = '__deleted__user__' + user.username + '__deleted__user__'
+
+        user.username = user.PID
         user.email = '__deleted__user__' + user.email + '__deleted__user__'
+        user.password = ''
+
+        user.verified = false
+        user.premium = false
+        user.advertiser = false
+        
+        await UserInfo.deleteOne({ user: user._id })
 
         await user.save()
         await forceLogoutAll(req, res, user._id)
