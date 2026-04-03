@@ -312,8 +312,8 @@ export async function getDashboardData(user) {
     };
 
     function percentChange(oldValue, newValue, multiplier) {
-        if (oldValue === 0) return 0;
-        return Number(((newValue - oldValue) / oldValue) * 100 * multiplier).toPrecision(2);
+        if (oldValue === 0) return newValue === 0 ? 0 : 999;
+        return Math.min(parseFloat(((newValue - oldValue) / oldValue) * 100 * multiplier).toFixed(2), 999);
     }
 }
 

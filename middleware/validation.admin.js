@@ -4,7 +4,7 @@ import { getDoneDates } from './router-helpers.admin.js';
 export const createRevenuePeriodValidation = [
     body('amount')
         .notEmpty().withMessage('You must choose an amount to pay')
-        .isInt({ min: 0 }).withMessage('Payout amount must be a number greater than 0'),
+        .isInt({ min: 1 }).withMessage('Payout amount must be a number greater than 0'),
     body('dateSelection')
         .notEmpty().withMessage('You must provide a date range')
         .custom(async ({ req }) => {

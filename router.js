@@ -17,29 +17,14 @@ import { validationResult } from 'express-validator';
 import { transporter, getPasswordMailOptions, getVerifyMailOptions, getPasswordChangedMailOptions, getDeletedMailOptions } from './services/email.js';
 import { shortIdValidation } from './middleware/shortId-config.js';
 import { checkAuthenticated, checkNotAuthenticated, forceLogoutAll } from './middleware/auth.js';
-import { getAdvertingData,
-         getPayoutsData,
-         getReferralData,
-         getLinkData,
-         monthlyMonetization,
-         getPayoutMethod,
-         getDashboardData, 
-         getAnalyticsData, 
-         getUA } from './middleware/router-helpers.js';
-import { newLinkValidation, 
-         payoutValidation, 
-         ticketValidation, 
-         ticketMessageValidation, 
-         loginValidation, 
-         registerValidation, 
-         ticketSendValidation, 
-         accountUpdateValidation, 
-         accountPayoutValidation, 
-         accountPasswordValidation,
-         passwordForgottenValidation,
-         passwordResetValidation,
-         userVerificationValidation,
-         tokenRateLimitVerification } from './middleware/validation.js';
+import { 
+      getAdvertingData, getPayoutsData, getReferralData, getLinkData, monthlyMonetization, getPayoutMethod, getDashboardData,  getAnalyticsData,  getUA 
+    } from './middleware/router-helpers.js';
+import { 
+      newLinkValidation, payoutValidation, ticketValidation, ticketMessageValidation, loginValidation, registerValidation, ticketSendValidation, 
+      accountUpdateValidation, accountPayoutValidation, accountPasswordValidation,passwordForgottenValidation,passwordResetValidation,
+      userVerificationValidation, tokenRateLimitVerification, campaignValidation, campaignUpdateValidation
+    } from './middleware/validation.js';
 
 const router = express.Router();
 
@@ -79,7 +64,7 @@ async function getAdvertiseData(req) {
     let data = {}
 
     if (isAuthenticated) {
-        campaigns = Campaign.find({ user: req.user._id })
+        campaigns = await Campaign.find({ user: req.user._id })
         data = await getAdvertingData()
     }
 
@@ -248,11 +233,6 @@ router.get('/campaigns/:link', checkAuthenticated, async (req, res, next) => {
         next(err)
     } 
 });
-
-// router.get('/campaigns', checkAuthenticated, async (req, res, next) => {
-//     // TEMP
-//     return res.status(200).render('campaign')
-// });
 
 // User
 router.get('/login', checkNotAuthenticated, (req, res) => {
@@ -542,7 +522,7 @@ router.post('/tickets/:link', checkAuthenticated, ticketMessageValidation, async
     }
 });
 
-router.post('/advertise', checkAuthenticated, async (req, res, next) => { // create campaignValidation (this method for creating base campaign)
+router.post('/advertise', checkAuthenticated, campaignValidation, async (req, res, next) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
         try {
@@ -555,7 +535,7 @@ router.post('/advertise', checkAuthenticated, async (req, res, next) => { // cre
     }
 
     try {
-        await Campaign.create({
+        const campaign = await Campaign.create({
             user: req.user._id,
             title: req.body.title,
             head: req.body.header,
@@ -563,15 +543,14 @@ router.post('/advertise', checkAuthenticated, async (req, res, next) => { // cre
             business: req.body.business ? true : false
         })
 
-        return res.status(201).redirect('/advertise')
+        return res.status(201).redirect(`/campaigns/${campaign.short}`)
     } catch (err) {
         if (!err.status) err.status = 500
         next(err)
     }
 });
 
-router.post('/campaign/update', checkAuthenticated, async (req, res, next) => { // create campaignUpdateValidation
-    
+router.post('/campaign/update', checkAuthenticated, campaignUpdateValidation, async (req, res, next) => { // create campaignUpdateValidation
     const userId = req.user._id
     const campaign = await Campaign.findOne({ short: req.query.campaign })
     
@@ -595,6 +574,37 @@ router.post('/campaign/update', checkAuthenticated, async (req, res, next) => { 
         // TODO
 
         return res.status(200).redirect(`/campaigns/${campaign.short}`)
+    } catch (err) {
+        if (!err.status) err.status = 500
+        next(err)
+    }
+});
+
+router.post('/campaign/deactivate', checkAuthenticated, async (req, res, next) => {
+    try {
+        const userId = req.user._id
+        const campaign = await Campaign.findOne({ short: req.query.campaign })
+        
+        if (campaign === null) {
+            const err = new Error()
+            err.status = 404
+            return next(err)
+        }
+        if (String(campaign.user) !== String(userId)) {
+            const err = new Error()
+            err.status = 403
+            return next(err)
+        }
+        if (campaign.status != 'active') {
+            const err = new Error()
+            err.status = 400
+            return next(err)
+        }
+
+        campaign.status = 'deactivated'
+        await campaign.save();
+
+        return res.status(200)
     } catch (err) {
         if (!err.status) err.status = 500
         next(err)

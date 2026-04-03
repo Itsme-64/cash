@@ -293,3 +293,16 @@ export const tokenRateLimitVerification = [
             return true
         })
 ];
+
+export const campaignValidation = [
+    body('title').notEmpty().escape().withMessage('Campaign title cannot be empty'),
+    body('header').notEmpty().escape().withMessage('Campaign header cannot be empty'),
+    body('endpoint')
+        .notEmpty().withMessage('Campaign endpoint cannot be empty')
+        .isURL().withMessage('Campaign endpoint must be a valid URL')
+        .trim()
+];
+
+export const campaignUpdateValidation = [
+
+];
