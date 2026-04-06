@@ -27,7 +27,7 @@ export async function linkWeightsDaily() {
         const agg = linkStatsAgg.find(a => String(a._id) === String(link._id));
         if (!agg || link.weight === 0) continue;
 
-        const uniqueIps = agg.ips.filter(ip => ip !== "unknown").length;
+        const uniqueIps = Math.max(agg.ips.filter(ip => ip !== "unknown").length, 1);
         const totalClicks = agg.totalClicks;
 
         const ipRatio = uniqueIps / (totalClicks + 1);

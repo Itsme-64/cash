@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Contact | 159.cash</title>
-  <%- include('ledger/assets/css.ejs', { cssFiles: [ 'tables' ] }) %>
+  <%- include('ledger/assets/css.ejs', { cssFiles: [ 'tables', 'forms' ] }) %>
   <link rel="shortcut icon" href="/src/images/favicon.png" />
 </head>
 
@@ -25,16 +25,17 @@
                             </ol>
                         </nav>
                     </div>
-                    <div class="col-xl-12 col-sm-6 grid-margin stretch-card">
+                    <div class="col-md-12 col-sm-6 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-9">
                                         <div class="d-flex align-items-center align-self-start">
-                                            <i class="icon-md mdi mdi-link-variant text-primary ml-auto"></i>
+                                            <i class="icon-md mdi mdi-link-variant text-primary ml-auto"></i>&nbsp;
+                                            <i data-copy="https://159.cash?ref=<%= user.PID %>" class="icon-md mdi mdi-content-copy text-muted copy-button"></i>
                                             <h3 class="mb-0">
-                                                &nbsp;&nbsp;&nbsp;Your referral link is: 
-                                                <a href="https://159.cash/?ref=<%= user.PID %>" target="_blank"><b>https://159.cash/?ref=<%= user.PID %></b></a>
+                                                &nbsp;Your referral link is: 
+                                                <a href="https://159.cash?ref=<%= user.PID %>" target="_blank"><b>https://159.cash?ref=<%= user.PID %></b></a>
                                             </h3>
                                             <p class="text-success ms-2 mb-0 font-weight-medium"></p>
                                         </div>

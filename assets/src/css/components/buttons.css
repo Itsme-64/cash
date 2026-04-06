@@ -422,6 +422,6 @@
 }
 
 .copy-button.copied {
-  transform: scale(1.2) rotateY(180deg);
+  transform: scale(1.2);
   opacity: 0.8;
 }

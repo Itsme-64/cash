@@ -9,28 +9,23 @@ const clickEventSchema = new mongoose.Schema({
     },
     ip: {
         type: String,
-        required: false,
-        immutable: true
+        required: false
     },
     country: {
         type: String,
-        required: false,
-        immutable: true
+        required: false
     },
     language: {
         type: String,
-        required: false,
-        immutable: true
+        required: false
     },
     browser: {
         type: String,
-        required: false,
-        immutable: true
+        required: false
     },
     os: {
         type: String,
-        required: false,
-        immutable: true
+        required: false
     },
     valid: {
         type: Boolean,

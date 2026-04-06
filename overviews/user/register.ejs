@@ -24,7 +24,7 @@
                             <p class="text-danger"><%= errorMessages[0] %></p>
                         <% } %>
                         <form action="/register" method="POST">
-                            <input type="hidden" id="ref" name="ref" value="<%= ref %>">
+                            <input type="hidden" id="ref" name="ref" value="<%= typeof ref !== 'undefined' ? ref : '' %>">
                             <div class="form-group position-relative">
                                 <div class="position-relative">
                                     <label for="username">Username *</label>
