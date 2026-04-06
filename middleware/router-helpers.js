@@ -57,7 +57,7 @@ export async function getReferralData(user) {
         .find({ referrer: user.PID })
         .distinct("_id");
 
-    if (referredUserIds.length === 0) return [];
+    if (referredUserIds.length === 0) return { referralData: null, referralCount: 0 };
 
     const referralAgg = await UserRevenuePeriod.aggregate([
         { $match: { user: { $in: referredUserIds } } },
@@ -73,7 +73,7 @@ export async function getReferralData(user) {
 
     let prevAmount = 0;
 
-    const result = periods.map(period => {
+    const referralData = periods.map(period => {
         const agg = referralAgg.find(a => String(a._id) === String(period._id));
 
         const amount = agg?.amount || 0;
@@ -85,7 +85,9 @@ export async function getReferralData(user) {
         return { fromDate: period.fromDate, toDate: period.toDate, amount, difference: diff, income };
     });
 
-    return result;
+    const referralCount = referredUserIds.length
+
+    return { referralData, referralCount };
 }
 
 export async function getPayoutsData(user) {
@@ -319,7 +321,7 @@ export async function getDashboardData(user) {
 
 export async function getAnalyticsData(user) {
     // Temp cron job calling
-    await linkWeightsDaily();
+    // await linkWeightsDaily();
 
     // Dates
     const links = await Link.find({ user: user._id });

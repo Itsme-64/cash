@@ -128,9 +128,9 @@ router.get('/payout', checkAuthenticated, async (req, res, next) => {
 
 router.get('/referral', checkAuthenticated, async (req, res, next) => {
     try {
-        const referralData = await getReferralData(req.user)
+        const data = await getReferralData(req.user)
 
-       return res.status(200).render('referrals', { referralData })
+       return res.status(200).render('referrals', { ...data })
     } catch (err) {
         err.status = 500
         next(err)
