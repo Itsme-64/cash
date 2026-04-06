@@ -47,6 +47,10 @@ router.get('/', checkNotAuthenticated, (req, res) => {
     return res.status(200).render('index')
 });
 
+router.get('/index', checkNotAuthenticated, (req, res) => {
+    return res.status(200).render('index')
+})
+
 router.get('/advertise', async (req, res, next) => {
     try {
         const data = await getAdvertiseData(req)
@@ -540,7 +544,8 @@ router.post('/advertise', checkAuthenticated, campaignValidation, async (req, re
             title: req.body.title,
             head: req.body.header,
             endpoint: req.body.endpoint,
-            business: req.body.business ? true : false
+            business: req.body.business ? true : false,
+            type: req.body.type
         })
 
         return res.status(201).redirect(`/campaigns/${campaign.short}`)
