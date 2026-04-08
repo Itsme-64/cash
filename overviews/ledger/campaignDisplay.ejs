@@ -56,163 +56,173 @@
                         <% } %>
                     </div>
                 </div>
-                <hr>
-                <div class="row">
-    <!-- use the campaign type to determine what to show in terms of when users want to advertise it (day, month, recurring etc) -->
-    <!-- please make a ticket if you want to reclaim some of your advertising budget (amount to reclaim must be greater than $10) -->
-    <!-- tell users that the same content restrictions hold here as the site-wide ones for links, but also provide a quick summary (like no nsfw)66 -->
+                <% if (campaign.type == 'recurring') { %>
+                    <hr>
+                    <div class="row">
+                        <!-- use the campaign type to determine what to show in terms of when users want to advertise it (day, month, recurring etc) -->
+                        <!-- please make a ticket if you want to reclaim some of your advertising budget (amount to reclaim must be greater than $10) -->
+                        <!-- tell users that the same content restrictions hold here as the site-wide ones for links, but also provide a quick summary (like no nsfw) -->
+                        <!-- add functionality to add a campaign of type private at link creation -->
 
-    <!-- for all of these dropdowns, if the user has already selected something make that persistently show here -->
+                        <!-- for all of these dropdowns, if the user has already selected something make that persistently show here -->
+                        <div class="col-md-6">
+                            <h4 class="mb-3">Specifications</h4>
+                            <div class="form-group row" data-group="countries"> <!-- Countries -->
+                                <label class="col-sm-4 col-form-label">Countries</label>
+                                <div class="col-sm-8">
+                                    <div class="form-check mb-2" style="margin-top: 5px;">
+                                        <div class="col-6">
+                                            <input type="checkbox" class="form-check-input  group-all" value="all" <%= campaign.specifications?.countries == 'all' ? 'checked' : '' %>> Select all
+                                        </div>
+                                    </div>
+                                    <div class="row d-none group-options" id="countries-options">
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[countries][]" value="oth" <%= campaign.specifications?.countries?.includes('oth') ? 'checked' : '' %>> Others</div>
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[countries][]" value="us" <%= campaign.specifications?.countries?.includes('us') ? 'checked' : '' %>> United States</div>
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[countries][]" value="uk" <%= campaign.specifications?.countries?.includes('uk') ? 'checked' : '' %>> United Kingdom</div>
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[countries][]" value="cn" <%= campaign.specifications?.countries?.includes('cn') ? 'checked' : '' %>> China</div>
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[countries][]" value="pi" <%= campaign.specifications?.countries?.includes('pi') ? 'checked' : '' %>> Philippines</div>
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[countries][]" value="fr" <%= campaign.specifications?.countries?.includes('fr') ? 'checked' : '' %>> France</div>
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[countries][]" value="de" <%= campaign.specifications?.countries?.includes('de') ? 'checked' : '' %>> Germany</div>
+                                    </div>
+                                    <input type="hidden" name="specifications[countries]" value="all" class="group-hidden">
+                                </div>
+                            </div>
+                            <div class="form-group row" data-group="languages">
+                                <label class="col-sm-4 col-form-label">Languages</label>
+                                <div class="col-sm-8">
+                                    <div class="form-check mb-2" style="margin-top: 5px;">
+                                        <div class="col-6">
+                                            <input type="checkbox" class="form-check-input group-all" value="all" <%= campaign.specifications?.languages == 'all' ? 'checked' : '' %>> Select all
+                                        </div>
+                                    </div>
+                                    <div class="row d-none group-options">
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[languages][]" value="oth" <%= campaign.specifications?.languages?.includes('oth') ? 'checked' : '' %>> Others</div>
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[languages][]" value="en" <%= campaign.specifications?.languages?.includes('en') ? 'checked' : '' %>> English</div>
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[languages][]" value="es" <%= campaign.specifications?.languages?.includes('es') ? 'checked' : '' %>> Spanish</div>
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[languages][]" value="cn" <%= campaign.specifications?.languages?.includes('cn') ? 'checked' : '' %>> Mandarin Chinese</div>
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[languages][]" value="ar" <%= campaign.specifications?.languages?.includes('ar') ? 'checked' : '' %>> Arabic</div>
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[languages][]" value="fr" <%= campaign.specifications?.languages?.includes('fr') ? 'checked' : '' %>> French</div>
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[languages][]" value="de" <%= campaign.specifications?.languages?.includes('de') ? 'checked' : '' %>> German</div>
+                                    </div>
+                                    <input type="hidden" name="specifications[languages]" value="all" class="group-hidden">
+                                </div>
+                            </div>
+                            <div class="form-group row" data-group="browser">
+                                <label class="col-sm-4 col-form-label">Browser</label>
+                                <div class="col-sm-8">
+                                    <div class="form-check mb-2" style="margin-top: 5px;">
+                                        <div class="col-6">
+                                            <input type="checkbox" class="form-check-input group-all" value="all" <%= campaign.specifications?.browser == 'all' ? 'checked' : '' %>> Select all
+                                        </div>
+                                    </div>
+                                    <div class="row d-none group-options">
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[browser][]" value="edge" <%= campaign.specifications?.browser?.includes('edge') ? 'checked' : '' %>> Edge</div>
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[browser][]" value="chrome" <%= campaign.specifications?.browser?.includes('chrome') ? 'checked' : '' %>> Chrome</div>
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[browser][]" value="firefox" <%= campaign.specifications?.browser?.includes('firefox') ? 'checked' : '' %>> Firefox</div>
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[browser][]" value="opera" <%= campaign.specifications?.browser?.includes('opera') ? 'checked' : '' %>> Opera</div>
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[browser][]" value="safari" <%= campaign.specifications?.browser?.includes('safari') ? 'checked' : '' %>> Safari</div>
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[browser][]" value="explorer" <%= campaign.specifications?.browser?.includes('explorer') ? 'checked' : '' %>> Internet Explorer</div>
+                                    </div>
+                                    <input type="hidden" name="specifications[browser]" value="all" class="group-hidden">
+                                </div>
+                            </div>
+                            <div class="form-group row" data-group="system">
+                                <label class="col-sm-4 col-form-label">Operating System</label>
+                                <div class="col-sm-8">
+                                    <div class="form-check mb-2" style="margin-top: 5px;">
+                                        <div class="col-6">
+                                            <input type="checkbox" class="form-check-input group-all" value="all" <%= campaign.specifications?.system == 'all' ? 'checked' : '' %>> Select all
+                                        </div>
+                                    </div>
+                                    <div class="row d-none group-options">
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[system][]" value="windows" <%= campaign.specifications?.system?.includes('windows') ? 'checked' : '' %>> Windows</div>
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[system][]" value="macos" <%= campaign.specifications?.system?.includes('macos') ? 'checked' : '' %>> macOS</div>
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[system][]" value="linux" <%= campaign.specifications?.system?.includes('linux') ? 'checked' : '' %>> Linux</div>
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[system][]" value="android" <%= campaign.specifications?.system?.includes('android') ? 'checked' : '' %>> Android</div>
+                                        <div class="col-6 text-muted"><input type="checkbox" class="form-check-input" name="specifications[system][]" value="ios" <%= campaign.specifications?.system?.includes('ios') ? 'checked' : '' %>> iOS</div>
+                                    </div>
+                                    <input type="hidden" name="specifications[system]" value="all" class="group-hidden">
+                                </div>
+                            </div>
 
-    <!-- LEFT SIDE: SPECIFICATIONS -->
-    <div class="col-md-6">
-        <h4 class="mb-3">Specifications</h4>
+                            <!-- Categories -->
+                            <div class="form-group row">
+                                <label for="categories" class="col-sm-4 col-form-label">Categories</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control"
+                                        id="categories"
+                                        name="specifications[categories]"
+                                        value="<%= typeof data !== 'undefined' ? (data?.specifications?.categories ?? 'all') : '' %>">
+                                </div>
+                            </div>
+                            <div class="form-group row"> <!-- Returning -->
+                                <label for="returning" class="col-sm-4 col-form-label">Frequency cap</label>
+                                <div class="col-sm-8">
+                                    <input type="number" class="form-control" name="specifications[returning]" placeholder="..." <%= campaign.specifications?.returning ? campaign.specifications.returning : '' %>>
+                                </div>
+                            </div>
+                        </div>
 
-        <!-- Countries -->
-        <div class="form-group row">
-            <label for="countries" class="col-sm-4 col-form-label">Countries</label>
-            <div class="col-sm-8">
-                <select class="form-select" id="countries" name="specifications[countries]">
-                    <option value="all" <%= typeof data !== 'undefined' ? (data?.specifications?.countries === 'all' ? 'selected' : '') : '' %>>All</option>
-                    <option value="nl" <%= typeof data !== 'undefined' ? (data?.specifications?.countries === 'nl' ? 'selected' : '') : '' %>>Netherlands</option>
-                    <option value="us" <%= typeof data !== 'undefined' ? (data?.specifications?.countries === 'us' ? 'selected' : '') : '' %>>United States</option>
-                </select>
-            </div>
-        </div>
+                        <div class="col-md-6">
+                            <h4 class="mb-3">Budget</h4>
 
-        <!-- Languages -->
-        <div class="form-group row">
-            <label for="languages" class="col-sm-4 col-form-label">Languages</label>
-            <div class="col-sm-8">
-                <select class="form-select" id="languages" name="specifications[languages]">
-                    <option value="all">All</option>
-                    <option value="oth">Others</option>
-                    <option value="en">English</option>
-                    <option value="es">Spanish</option>
-                    <option value="ma">Mandarin Chinese</option>
-                    <option value="ar">Arabic</option>
-                    <option value="fr">French</option>
-                    <option value="de">German</option>
-                </select>
-            </div>
-        </div>
+                            <!-- Active Budget -->
+                            <div class="form-group row">
+                                <label for="active" class="col-sm-4 col-form-label">Active Budget</label>
+                                <div class="col-sm-8">
+                                    <input type="number" class="form-control"
+                                        id="active"
+                                        name="budget[active]"
+                                        value="<%= typeof data !== 'undefined' ? (data?.budget?.active ?? 0) : 0 %>">
+                                </div>
+                            </div>
 
-        <!-- Categories -->
-        <div class="form-group row">
-            <label for="categories" class="col-sm-4 col-form-label">Categories</label>
-            <div class="col-sm-8">
-                <input type="text" class="form-control"
-                    id="categories"
-                    name="specifications[categories]"
-                    value="<%= typeof data !== 'undefined' ? (data?.specifications?.categories ?? 'all') : '' %>">
-            </div>
-        </div>
+                            <!-- Dates -->
+                            <div class="form-group row">
+                                <label for="dates" class="col-sm-4 col-form-label">Dates</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control"
+                                        id="dates"
+                                        name="budget[dates]"
+                                        value="<%= typeof data !== 'undefined' ? (data?.budget?.dates ?? '') : 0 %>">
+                                </div>
+                            </div>
 
-        <!-- Browser -->
-        <div class="form-group row">
-            <label for="browser" class="col-sm-4 col-form-label">Browser</label>
-            <div class="col-sm-8">
-                <select class="form-select" id="browser" name="specifications[browser]">
-                    <option value="edge">Edge</option>
-                    <option value="chrome">Chrome</option>
-                    <option value="firefox">Firefox</option>
-                    <option value="opera">Opera</option>
-                    <option value="safari">Safari</option>
-                    <option value="explorer">Internet Explorer</option>
-                </select>
-            </div>
-        </div>
+                            <!-- Times -->
+                            <div class="form-group row">
+                                <label for="times" class="col-sm-4 col-form-label">Times</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control"
+                                        id="times"
+                                        name="budget[times]"
+                                        value="<%= typeof data !== 'undefined' ? (data?.budget?.times ?? 'all day') : 0 %>">
+                                </div>
+                            </div>
 
-        <!-- OS -->
-        <div class="form-group row">
-            <label for="oss" class="col-sm-4 col-form-label">Operating System</label>
-            <div class="col-sm-8">
-                <select class="form-select" id="oss" name="specifications[oss][]" multiple>
-                    <option value="windows">Windows</option>
-                    <option value="macos">macOS</option>
-                    <option value="linux">Linux</option>
-                    <option value="android">Android</option>
-                    <option value="ios">iOS</option>
-                    <option value="ipados">iPadOS</option>
-                </select>
-            </div>
-        </div>
+                            <!-- Daily Budget -->
+                            <div class="form-group row">
+                                <label for="daily" class="col-sm-4 col-form-label">Daily Budget</label>
+                                <div class="col-sm-8">
+                                    <input type="number" class="form-control"
+                                        id="daily"
+                                        name="budget[daily]"
+                                        value="<%= typeof data !== 'undefined' ? (data?.budget?.daily ?? 0) : 0 %>">
+                                </div>
+                            </div>
 
-        <!-- Returning -->
-        <div class="form-group row">
-            <label for="returning" class="col-sm-4 col-form-label">Returning Users</label> <!-- still make good name for this and change to number input -->
-            <div class="col-sm-8">
-                <select class="form-select" id="returning" name="specifications[returning]">
-                    <option value="-1">All</option>
-                    <option value="0">New Only</option>
-                    <option value="1">Returning Only</option>
-                </select>
-            </div>
-        </div>
-    </div>
-
-    <!-- RIGHT SIDE: BUDGET -->
-    <div class="col-md-6">
-        <h4 class="mb-3">Budget</h4>
-
-        <!-- Active Budget -->
-        <div class="form-group row">
-            <label for="active" class="col-sm-4 col-form-label">Active Budget</label>
-            <div class="col-sm-8">
-                <input type="number" class="form-control"
-                    id="active"
-                    name="budget[active]"
-                    value="<%= typeof data !== 'undefined' ? (data?.budget?.active ?? 0) : 0 %>">
-            </div>
-        </div>
-
-        <!-- Dates -->
-        <div class="form-group row">
-            <label for="dates" class="col-sm-4 col-form-label">Dates</label>
-            <div class="col-sm-8">
-                <input type="text" class="form-control"
-                    id="dates"
-                    name="budget[dates]"
-                    value="<%= typeof data !== 'undefined' ? (data?.budget?.dates ?? '') : 0 %>">
-            </div>
-        </div>
-
-        <!-- Times -->
-        <div class="form-group row">
-            <label for="times" class="col-sm-4 col-form-label">Times</label>
-            <div class="col-sm-8">
-                <input type="text" class="form-control"
-                    id="times"
-                    name="budget[times]"
-                    value="<%= typeof data !== 'undefined' ? (data?.budget?.times ?? 'all day') : 0 %>">
-            </div>
-        </div>
-
-        <!-- Daily Budget -->
-        <div class="form-group row">
-            <label for="daily" class="col-sm-4 col-form-label">Daily Budget</label>
-            <div class="col-sm-8">
-                <input type="number" class="form-control"
-                    id="daily"
-                    name="budget[daily]"
-                    value="<%= typeof data !== 'undefined' ? (data?.budget?.daily ?? 0) : 0 %>">
-            </div>
-        </div>
-
-        <!-- Target CPM -->
-        <div class="form-group row">
-            <label for="targetCpm" class="col-sm-4 col-form-label">Target CPM</label>
-            <div class="col-sm-8">
-                <input type="number" step="0.01" class="form-control"
-                    id="targetCpm"
-                    name="budget[targetCpm]"
-                    value="<%= typeof data !== 'undefined' ? (data?.budget?.targetCpm ?? 1) : 0 %>">
-            </div>
-        </div>
-
-    </div>
-</div>
-                
+                            <!-- Target CPM -->
+                            <div class="form-group row">
+                                <label for="targetCpm" class="col-sm-4 col-form-label">Target CPM</label>
+                                <div class="col-sm-8">
+                                    <input type="number" step="0.01" class="form-control"
+                                        id="targetCpm"
+                                        name="budget[targetCpm]"
+                                        value="<%= typeof data !== 'undefined' ? (data?.budget?.targetCpm ?? 1) : 0 %>">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
             </div>
         </div>
     </div>
@@ -224,7 +234,7 @@
                 Update & publish
             <% } %>
         </button>
-        <a href="/advertise" class="btn border-danger me-2" style="margin-left: 0.15rem">Cancel</a>
+        <a href="/campaigns/<%= campaign.short %>" class="btn border-danger me-2" style="margin-left: 0.15rem">Cancel</a>
         <button type="submit" id="submitBtn" class="btn border-warning me-2" style="margin-left: 0.15rem">Save as draft</button>
         <p class="text-danger mb-0" style="margin-left: 1rem">
             <% if (typeof errors !== 'undefined') { %>
@@ -232,19 +242,20 @@
             <% } %>
         </p>
         <label for="type" class="col-sm-4 col-form-label"></label>
-        <select class="form-select" id="type" name="type">
+        <select class="form-select" id="type" name="type" id="type">
             <option value="personal" <%= campaign.type === 'personal' ? 'selected' : '' %>>personal use only</option>
-            <option value="recurring" <%= campaign.type === 'recurring' ? 'selected' : '' %>>recurring online advertising</option>
             <option value="one-time" <%= campaign.type === 'one-time' ? 'selected' : '' %>>one-time online advertising campaign</option>
         </select>
     </div>
 </form>
 
-<!-- campaign analytics -->
-<div class="col-12 grid-margin stretch-card" style="margin-top: 4rem;">
-    <div class="card">
-        <div class="card-body">
+<form class="forms-sample" action="/campaign/decorate?campaign=<%= campaign.short %>" method="post"> <!-- IMPLEMENT -->
+    <div class="col-12 grid-margin stretch-card" style="margin-top: 4rem;">
+        <div class="card">
+            <div class="card-body">
 
+            </div>
         </div>
     </div>
-</div>
+</form>
+<!-- campaign analytics on an other page /analytics/campaigns/short -->

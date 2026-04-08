@@ -42,39 +42,36 @@ const campaignSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ['recurring', 'one-time', 'personal'],
+        enum: ['recurring', 'personal'],
         required: true,
         default: 'personal'
     },
     specifications: {
         countries: {
             type: String,
-            enum: [],
             default: 'all'
         },
         languages: {
             type: String,
-            enum: [],
             default: 'all'
         },
         categories: {
             type: String,
-            enum: [],
             default: 'all'
         },
         browser: {
             type: String,
-            enum: [],
             default: 'all'
         },
-        oss: {
+        system: {
             type: String,
-            enum: [],
             default: 'all'
         },
         returning: {
             type: Number,
-            default: -1,
+            min: 1,
+            max: 100,
+            default: 20,
         }
     },
     budget: {

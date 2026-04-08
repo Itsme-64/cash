@@ -576,7 +576,43 @@ router.post('/campaign/update', checkAuthenticated, campaignUpdateValidation, as
     }
     
     try {
-        // TODO
+        let review = false;
+
+        campaign.specifications = {
+            countries: req.body.specifications?.countries || 'all',
+            languages: req.body.specifications?.languages || 'all',
+            categories: req.body.specifications?.categories || 'all',
+            browser: req.body.specifications?.browser || 'all',
+            system: req.body.specifications?.system || 'all',
+            returning: parseInt(req.body.specifications.returning) || 20,
+        }
+
+        const newType = req.body.type;
+        const newHeader = req.body.header;
+        const newEndpoint = req.body.endpoint;
+
+        if (campaign.type != newType) {
+            campaign.type = newType;
+            review = true;
+        }
+
+        if (campaign.head != newHeader) {
+            campaign.head = newHeader;
+            review = true;
+        }
+
+        if (campaign.endpoint != req.body.endpoint) {
+            campaign.endpoint = newEndpoint;
+            review = true;
+        }
+
+        if (review) campaign.status = pending; // Also check to see if the campaign was submitted as draft.
+
+        // campaign.budget = { TODO
+
+        // }
+
+        await campaign.save();
 
         return res.status(200).redirect(`/campaigns/${campaign.short}`)
     } catch (err) {

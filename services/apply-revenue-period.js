@@ -125,7 +125,7 @@ async function calculateLinkTotalWeight(session, link, fromDate, toDate) {
 }
 
 export function calculateCountryMultiplier(country) {
-    if (!country) return 0.4;
+    if (!country) return 0.4;   
     country = country.toLowerCase();
 
     const multipliers = {
