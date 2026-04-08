@@ -17,7 +17,7 @@ export async function applyRevenuePeriod(periodID) {
         if (period.applied) throw new Error('Already applied');
 
         // All calculations in hundredths of cents
-        const amount = period.payableAmount * 10000;
+        const amount = period.payableAmount * 100;
 
         let paidAmount = 0;
         let referrerAmount = 0;
@@ -54,7 +54,7 @@ export async function applyRevenuePeriod(periodID) {
 
         period.paidAmount = paidAmount;
         period.referralAmount = referrerAmount;
-        period.adminAmount = (period.amount * 10000) - (paidAmount + referrerAmount);
+        period.adminAmount = (period.amount * 100) - (paidAmount + referrerAmount);
         period.weightAmount = (weightValue / 100);
 
         period.applied = true;
@@ -125,6 +125,7 @@ async function calculateLinkTotalWeight(session, link, fromDate, toDate) {
 }
 
 export function calculateCountryMultiplier(country) {
+    if (!country) return 0.4;
     country = country.toLowerCase();
 
     const multipliers = {

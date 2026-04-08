@@ -23,7 +23,7 @@
         <div class="main-panel-noheader">
             <div class="content-wrapper">
                 <div class="page-header">
-                    <h3 class="page-title"> Admin Panel </h3>
+                    <h3 class="page-title">Admin Panel</h3>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/operator">159.cash</a></li>
@@ -58,7 +58,7 @@
                                                             <span class="text-danger">No</span>
                                                         <% } %>
                                                         | Amount: 
-                                                        <span class="text-success"><%= selectedPeriod.amount %></span>
+                                                        <span class="text-success"><%= (selectedPeriod.amount / 100).toFixed(2) %></span>
                                                     </p>
                                                 </div>
                                                 <div class="form-group row" style="margin: 0px;">
@@ -90,7 +90,7 @@
                                     <div class="form-group hidden-label row">
                                         <div class="col">
                                             <label for="amount"></label>
-                                            <input type="number" min="1" class="form-control" id="amount" name="amount" placeholder="Amount">
+                                            <input type="number" min="100" class="form-control" id="amount" name="amount" placeholder="Amount in CENTS">
                                         </div>
                                         <div class="col">
                                             <label for="dateSelection"></label>
